@@ -9,6 +9,8 @@
  *   <% base_tag %>
  *   $MetaTagsSunnySideUp
  * </head>
+ * in page_controller->init()
+ * add: $this->addRequirements() - this adds all the basic JS and CSS
  *
  **/
 
