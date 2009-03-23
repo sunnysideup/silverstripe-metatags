@@ -1,0 +1,30 @@
+###############################################
+MetaTagsSunnySideUp
+Pre 0.1 proof of concept
+###############################################
+
+Developer
+-----------------------------------------------
+Nicolaas Francken [at] sunnysideup.co.nz
+
+Requirements
+-----------------------------------------------
+SilverStripe 2.3.0 or greater.
+
+Documentation
+-----------------------------------------------
+This Module allows you to add metatags easily...
+add the following to your Page.ss file:
+ <head>
+  <% base_tag %>
+   $MetaTagsSunnySideUp
+ </head>
+ in page_controller->init()
+ add: $this->addRequirements() - this adds all the basic JS and CSS
+
+
+Installation Instructions
+-----------------------------------------------
+add module, review ideas in _config.php,
+place configurations into your mysite/_config.php file
+
