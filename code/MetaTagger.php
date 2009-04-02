@@ -12,6 +12,9 @@ class MetaTagger extends DataObjectDecorator {
 
 	function addRequirements() {
 		$themeDir = $this->owner->ThemeDir().'/';
+		if(!self::$themeFolderAndSubfolder) {
+			self::$themeFolderAndSubfolder = $themedir;
+		}
 		$jsArray =
 			array(
 				"jsparty/jquery/jquery.js",
@@ -43,7 +46,6 @@ class MetaTagger extends DataObjectDecorator {
 		Requirements::combine_files($themeDir."css/MainCombination.css",$cssArray);
 		Requirements::combine_files("mysite/javascript/MainCombination.js", $jsArray);
 		Requirements::combine_files("mysite/javascript/SapphirePrototypeCombination.js", $prototypeArray);
-
 	}
 
 	function MetaTagsSunnySideUp() {
@@ -81,8 +83,8 @@ class MetaTagger extends DataObjectDecorator {
 			<meta http-equiv="imagetoolbar" content="no" />
 			<link rel="icon" href="/favicon.ico" type="image/x-icon" />
 			<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-			<!--[if IE 6]><style type="text/css">@import url('.self::$themeFolderAndSubfolder.'/css/ie6.css);</style><![endif]-->
-			<!--[if IE 7]><style type="text/css">@import url('.self::$themeFolderAndSubfolder.'/css/ie7.css);</style><![endif]-->';
+			<!--[if IE 6]><style type="text/css">@import url('.self::$themeFolderAndSubfolder.'css/ie6.css);</style><![endif]-->
+			<!--[if IE 7]><style type="text/css">@import url('.self::$themeFolderAndSubfolder.'css/ie7.css);</style><![endif]-->';
 		return $tags;
 	}
 }
