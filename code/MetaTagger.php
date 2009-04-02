@@ -8,12 +8,21 @@ class MetaTagger extends DataObjectDecorator {
 	static $project = 'mysite';
 	static $coding = "";
 
-	static $themeFolderAndSubfolder = '';
+	static $theme_folder = '';
+
+	static $combine_files_in_one_file = false;
+
+	static function set_theme_folder($folderName) {
+		self::$theme_folder = $folderName;
+	}
+
+	static function set_combine_files_in_one_file($value) {
+		self::$combine_files_in_one_file = $value;
+	}
 
 	function addRequirements() {
-		$themeDir = $this->owner->ThemeDir().'/';
-		if(!self::$themeFolderAndSubfolder) {
-			self::$themeFolderAndSubfolder = $themedir;
+		if(!self::$theme_folder) {
+			self::$theme_folder = $this->owner->ThemeDir().'/';
 		}
 		$jsArray =
 			array(
@@ -22,12 +31,12 @@ class MetaTagger extends DataObjectDecorator {
 			);
 		$cssArray =
 			array(
-				$themeDir.'css/reset.css',
-				$themeDir.'css/layout.css',
-				$themeDir.'css/typography.css',
-				$themeDir.'css/form.css',
-				$themeDir.'css/menu.css',
-				$themeDir.'css/print.css'
+				self::$theme_folder.'css/reset.css',
+				self::$theme_folder.'css/layout.css',
+				self::$theme_folder.'css/typography.css',
+				self::$theme_folder.'css/form.css',
+				self::$theme_folder.'css/menu.css',
+				self::$theme_folder.'css/print.css'
 			);
 		$prototypeArray =
 			array(
@@ -43,9 +52,11 @@ class MetaTagger extends DataObjectDecorator {
 		foreach($cssArray as $css) {
 			Requirements::css($css);
 		}
-		Requirements::combine_files($themeDir."css/MainCombination.css",$cssArray);
-		Requirements::combine_files("mysite/javascript/MainCombination.js", $jsArray);
-		Requirements::combine_files("mysite/javascript/SapphirePrototypeCombination.js", $prototypeArray);
+		if(self::$combine_files_in_one_file) {
+			Requirements::combine_files(self::$theme_folder."css/MainCombination.css",$cssArray);
+			Requirements::combine_files("mysite/javascript/MainCombination.js", $jsArray);
+			Requirements::combine_files("mysite/javascript/SapphirePrototypeCombination.js", $prototypeArray);
+		}
 	}
 
 	function MetaTagsSunnySideUp() {
@@ -70,21 +81,17 @@ class MetaTagger extends DataObjectDecorator {
 			<meta name="robots" content="'.$noopd.'all, index, follow" />
 			<meta name="googlebot" content="'.$noopd.'all, index, follow" />
 			<meta name="keywords" http-equiv="keywords" content="'.$keywords.'" />'.$description.'
-			<meta name="revisit" content="2 Days" />
-			<meta name="revisit-after" content="2 Days" />
 			<meta name="copyright" content="'.self::$copyright.'" />
 			<meta name="alexa" content="100" />
-			<meta name="doc-type" content="Web Page" />
 			<meta name="coding" content="'.self::$coding.'" />
 			<meta name="design" content="'.self::$design.'" />
 			<meta name="date-modified-yyyymmdd" content="'.Date("Ymd").'" />
-			<meta name="title" content="'.$title.'" />
 			<meta name="country" content="'.self::$country.'" />
 			<meta http-equiv="imagetoolbar" content="no" />
 			<link rel="icon" href="/favicon.ico" type="image/x-icon" />
 			<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-			<!--[if IE 6]><style type="text/css">@import url('.self::$themeFolderAndSubfolder.'css/ie6.css);</style><![endif]-->
-			<!--[if IE 7]><style type="text/css">@import url('.self::$themeFolderAndSubfolder.'css/ie7.css);</style><![endif]-->';
+			<!--[if IE 6]><style type="text/css">@import url('.self::$theme_folder.'css/ie6.css);</style><![endif]-->
+			<!--[if IE 7]><style type="text/css">@import url('.self::$theme_folder.'css/ie7.css);</style><![endif]-->';
 		return $tags;
 	}
 }
