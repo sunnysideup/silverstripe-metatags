@@ -68,7 +68,7 @@ class MetaTagger extends DataObjectDecorator {
 		$keywords = Convert::raw2xml(($page->MetaKeywords) ? $page->MetaKeywords : $page->Title );
 		if($page->MetaDescription) {
 		 $description = '
-			<meta name="description" http-equiv="description" content="'.Convert::raw2xml($page->MetaDescription).'" />';
+			<meta name="description" http-equiv="description" content="'.Convert::raw2att($page->MetaDescription).'" />';
 		 $noopd = '';
 		}
 		else {
@@ -80,9 +80,8 @@ class MetaTagger extends DataObjectDecorator {
 			<title>'.$title.'</title>
 			<meta name="robots" content="'.$noopd.'all, index, follow" />
 			<meta name="googlebot" content="'.$noopd.'all, index, follow" />
-			<meta name="keywords" http-equiv="keywords" content="'.$keywords.'" />'.$description.'
+			<meta name="keywords" http-equiv="keywords" content="'.Convert::raw2att($keywords).'" />'.$description.'
 			<meta name="copyright" content="'.self::$copyright.'" />
-			<meta name="alexa" content="100" />
 			<meta name="coding" content="'.self::$coding.'" />
 			<meta name="design" content="'.self::$design.'" />
 			<meta name="date-modified-yyyymmdd" content="'.Date("Ymd").'" />
