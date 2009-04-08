@@ -38,6 +38,9 @@ class MetaTagger extends DataObjectDecorator {
 				self::$theme_folder.'css/menu.css',
 				self::$theme_folder.'css/print.css'
 			);
+		if(Session::set("testforiesix")) {
+			$cssArray[] = self::$theme_folder.'css/ie6.css';
+		}
 		$prototypeArray =
 			array(
 				"sapphire/javascript/Validator.js",
@@ -57,6 +60,14 @@ class MetaTagger extends DataObjectDecorator {
 			Requirements::combine_files("mysite/javascript/MainCombination.js", $jsArray);
 			Requirements::combine_files("mysite/javascript/SapphirePrototypeCombination.js", $prototypeArray);
 		}
+	}
+
+	function starttestforiesix() {
+		Session::set("testforiesix", true);
+	}
+
+	function stoptestforiesix() {
+		Session::set("testforiesix", false);
 	}
 
 	function MetaTagsSunnySideUp() {
