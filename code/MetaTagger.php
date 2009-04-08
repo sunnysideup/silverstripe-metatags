@@ -38,7 +38,7 @@ class MetaTagger extends DataObjectDecorator {
 				self::$theme_folder.'css/menu.css',
 				self::$theme_folder.'css/print.css'
 			);
-		if(Session::set("testforiesix")) {
+		if(Session::get("testforiesix")) {
 			$cssArray[] = self::$theme_folder.'css/ie6.css';
 		}
 		$prototypeArray =
