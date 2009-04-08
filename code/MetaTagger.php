@@ -38,9 +38,6 @@ class MetaTagger extends DataObjectDecorator {
 				self::$theme_folder.'css/menu.css',
 				self::$theme_folder.'css/print.css'
 			);
-		if(Session::get("testforiesix")) {
-			$cssArray[] = self::$theme_folder.'css/ie6.css';
-		}
 		$prototypeArray =
 			array(
 				"sapphire/javascript/Validator.js",
@@ -60,15 +57,25 @@ class MetaTagger extends DataObjectDecorator {
 			Requirements::combine_files("mysite/javascript/MainCombination.js", $jsArray);
 			Requirements::combine_files("mysite/javascript/SapphirePrototypeCombination.js", $prototypeArray);
 		}
+		if(Session::get("testforie") > 0) {
+			Requirements::insertHeadTags('<style type="text/css">@import url('.self::$theme_folder.'css/ie'.Session::get("testforie").'.css);</style>');
+		}
+		else {
+			Requirements::insertHeadTags('<!--[if IE 6]><style type="text/css">@import url('.self::$theme_folder.'css/ie6.css);</style><![endif]-->');
+			Requirements::insertHeadTags('<!--[if IE 7]><style type="text/css">@import url('.self::$theme_folder.'css/ie7.css);</style><![endif]-->');
+			Requirements::insertHeadTags('<!--[if IE 8]><style type="text/css">@import url('.self::$theme_folder.'css/ie8.css);</style><![endif]-->');
+		}
 	}
 
-	function starttestforiesix() {
-		Session::set("testforiesix", true);
-		die('starting test for ie six - to stop go to <a href="'.$this->owner->URLSegment.'"/stoptestforiesix">'.$this->owner->URLSegment.'"/stoptestforiesix"</a>');
+	function starttestforie() {
+		Session::set("testforie", Director::urlParam("ID"));
+		Requirements::customScript('alert("starting test for IE'.Session::get("testforie").' - to stop go to '.$this->owner->URLSegment.'/stoptestforie");');
+		return array();
 	}
 
-	function stoptestforiesix() {
-		Session::set("testforiesix", false);
+	function stoptestforie() {
+		Session::set("testforie", 0);
+		Requirements::customScript('alert("stopped test for IE'.Session::get("testforie").' - to start go to '.$this->owner->URLSegment.'/starttestforie");');
 		return array();
 	}
 
@@ -101,17 +108,15 @@ class MetaTagger extends DataObjectDecorator {
 			<meta name="country" content="'.self::$country.'" />
 			<meta http-equiv="imagetoolbar" content="no" />
 			<link rel="icon" href="/favicon.ico" type="image/x-icon" />
-			<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-			<!--[if IE 6]><style type="text/css">@import url('.self::$theme_folder.'css/ie6.css);</style><![endif]-->
-			<!--[if IE 7]><style type="text/css">@import url('.self::$theme_folder.'css/ie7.css);</style><![endif]-->';
+			<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />';
 		return $tags;
 	}
 }
 
 class MetaTagger_controller extends Extension {
 	static $allowed_actions = array(
-		"starttestforiesix",
-		"stoptestforiesix"
+		"starttestforie",
+		"stoptestforie"
 	);
 
 }
