@@ -64,10 +64,12 @@ class MetaTagger extends DataObjectDecorator {
 
 	function starttestforiesix() {
 		Session::set("testforiesix", true);
+		die('starting test for ie six - to stop go to <a href="'.$this->owner->URLSegment.'"/stoptestforiesix">'.$this->owner->URLSegment.'"/stoptestforiesix"</a>');
 	}
 
 	function stoptestforiesix() {
 		Session::set("testforiesix", false);
+		return array();
 	}
 
 	function MetaTagsSunnySideUp() {

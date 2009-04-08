@@ -5,6 +5,7 @@
  **/
 
 //DataObject::add_extension('SiteTree', 'MetaTagger');
+Object::add_extension('ContentController', 'MetaTagger_Controller');
 //MetaTagger::$country = "New Zealand";
 //MetaTagger::$copyright = 'owner';
 //MetaTagger::$design = '';
