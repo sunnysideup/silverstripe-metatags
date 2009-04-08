@@ -74,8 +74,8 @@ class MetaTagger extends DataObjectDecorator {
 	}
 
 	function stoptestforie() {
-		Session::set("testforie", 0);
 		Requirements::customScript('alert("stopped test for IE'.Session::get("testforie").' - to start go to '.$this->owner->URLSegment.'/starttestforie");');
+		Session::set("testforie", 0);
 		return array();
 	}
 
