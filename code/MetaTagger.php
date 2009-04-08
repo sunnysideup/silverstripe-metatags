@@ -107,3 +107,11 @@ class MetaTagger extends DataObjectDecorator {
 		return $tags;
 	}
 }
+
+class MetaTagger_controller extends Extension {
+	static $allowed_actions = array(
+		"starttestforiesix",
+		"stoptestforiesix"
+	);
+
+}
