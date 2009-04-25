@@ -2,6 +2,8 @@
 
 class MetaTagger extends DataObjectDecorator {
 
+	static $allowed_actions = array("starttestforiesix");
+
 	static $country = "New Zealand";
 	static $copyright = 'owner';
 	static $design = '';
@@ -66,6 +68,7 @@ class MetaTagger extends DataObjectDecorator {
 			Requirements::insertHeadTags('<!--[if IE 8]><style type="text/css">@import url('.self::$theme_folder.'css/ie8.css);</style><![endif]-->');
 		}
 	}
+
 
 	function starttestforie() {
 		Session::set("testforie", Director::urlParam("ID"));
