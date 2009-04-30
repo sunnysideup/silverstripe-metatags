@@ -82,7 +82,7 @@ class MetaTagger extends DataObjectDecorator {
 		return array();
 	}
 
-	function MetaTagsSunnySideUp() {
+	function MetaTagsSunnySideUp($includeTitle = true) {
 
 		//$themeFolderAndSubfolder = "----";
 		$tags = "";
@@ -99,9 +99,9 @@ class MetaTagger extends DataObjectDecorator {
 		 $description = '';
 		}
 		$tags .= '
-			<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-			<title>'.$title.'</title>
-			<meta name="robots" content="'.$noopd.'all, index, follow" />
+			<meta http-equiv="Content-type" content="text/html; charset=utf-8" />'.
+			($includeTitle ? '<title>'.$title.'</title>' : '')
+			.'<meta name="robots" content="'.$noopd.'all, index, follow" />
 			<meta name="googlebot" content="'.$noopd.'all, index, follow" />
 			<meta name="keywords" http-equiv="keywords" content="'.Convert::raw2att($keywords).'" />'.$description.'
 			<meta name="copyright" content="'.self::$copyright.'" />
