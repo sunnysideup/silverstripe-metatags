@@ -25,6 +25,9 @@ add the following to your Page.ss file:
 
 Installation Instructions
 -----------------------------------------------
-add module, review ideas in _config.php,
-place configurations into your mysite/_config.php file
+1. Find out how to add modules to SS and add module as per usual.
+2. copy configurations from this module's _config.php file
+into mysite/_config.php file and edit settings as required.
+NB. the idea is not to edit the module, but instead customise it
+in your mysite folder at all so that you can upgrade it later.
 
