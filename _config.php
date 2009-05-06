@@ -13,5 +13,5 @@
 //MetaTagger::$design = '';
 //MetaTagger::$project = 'mysite';
 //MetaTagger::$coding = "";
-//===================---------------- START metatags MODULE ----------------===================
+//===================---------------- END metatags MODULE ----------------===================
 
