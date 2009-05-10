@@ -1,9 +1,6 @@
 <?php
 
 class MetaTagger extends DataObjectDecorator {
-
-	static $allowed_actions = array("starttestforiesix");
-
 	static $country = "New Zealand";
 	static $copyright = 'owner';
 	static $design = '';
@@ -15,16 +12,26 @@ class MetaTagger extends DataObjectDecorator {
 	static $combine_files_in_one_file = false;
 
 	static function set_theme_folder($folderName) {
-		self::$theme_folder = $folderName;
+		MetaTagger::$theme_folder = $folderName;
 	}
 
 	static function set_combine_files_in_one_file($value) {
-		self::$combine_files_in_one_file = $value;
+		MetaTagger::$combine_files_in_one_file = $value;
 	}
+}
+
+class MetaTagger_controller extends Extension {
+
+	static $allowed_actions = array(
+		"starttestforie",
+		"stoptestforie"
+	);
+
+
 
 	function addRequirements() {
-		if(!self::$theme_folder) {
-			self::$theme_folder = $this->owner->ThemeDir().'/';
+		if(!MetaTagger::$theme_folder) {
+			MetaTagger::$theme_folder = $this->owner->ThemeDir().'/';
 		}
 		$jsArray =
 			array(
@@ -33,12 +40,12 @@ class MetaTagger extends DataObjectDecorator {
 			);
 		$cssArray =
 			array(
-				self::$theme_folder.'css/reset.css',
-				self::$theme_folder.'css/layout.css',
-				self::$theme_folder.'css/typography.css',
-				self::$theme_folder.'css/form.css',
-				self::$theme_folder.'css/menu.css',
-				self::$theme_folder.'css/print.css'
+				MetaTagger::$theme_folder.'css/reset.css',
+				MetaTagger::$theme_folder.'css/layout.css',
+				MetaTagger::$theme_folder.'css/typography.css',
+				MetaTagger::$theme_folder.'css/form.css',
+				MetaTagger::$theme_folder.'css/menu.css',
+				MetaTagger::$theme_folder.'css/print.css'
 			);
 		$prototypeArray =
 			array(
@@ -54,18 +61,18 @@ class MetaTagger extends DataObjectDecorator {
 		foreach($cssArray as $css) {
 			Requirements::css($css);
 		}
-		if(self::$combine_files_in_one_file) {
-			Requirements::combine_files(self::$theme_folder."css/MainCombination.css",$cssArray);
+		if(MetaTagger::$combine_files_in_one_file) {
+			Requirements::combine_files(MetaTagger::$theme_folder."css/MainCombination.css",$cssArray);
 			Requirements::combine_files("mysite/javascript/MainCombination.js", $jsArray);
 			Requirements::combine_files("mysite/javascript/SapphirePrototypeCombination.js", $prototypeArray);
 		}
 		if(Session::get("testforie") > 0) {
-			Requirements::insertHeadTags('<style type="text/css">@import url('.self::$theme_folder.'css/ie'.Session::get("testforie").'.css);</style>');
+			Requirements::insertHeadTags('<style type="text/css">@import url('.MetaTagger::$theme_folder.'css/ie'.Session::get("testforie").'.css);</style>');
 		}
 		else {
-			Requirements::insertHeadTags('<!--[if IE 6]><style type="text/css">@import url('.self::$theme_folder.'css/ie6.css);</style><![endif]-->');
-			Requirements::insertHeadTags('<!--[if IE 7]><style type="text/css">@import url('.self::$theme_folder.'css/ie7.css);</style><![endif]-->');
-			Requirements::insertHeadTags('<!--[if IE 8]><style type="text/css">@import url('.self::$theme_folder.'css/ie8.css);</style><![endif]-->');
+			Requirements::insertHeadTags('<!--[if IE 6]><style type="text/css">@import url('.MetaTagger::$theme_folder.'css/ie6.css);</style><![endif]-->');
+			Requirements::insertHeadTags('<!--[if IE 7]><style type="text/css">@import url('.MetaTagger::$theme_folder.'css/ie7.css);</style><![endif]-->');
+			Requirements::insertHeadTags('<!--[if IE 8]><style type="text/css">@import url('.MetaTagger::$theme_folder.'css/ie8.css);</style><![endif]-->');
 		}
 	}
 
@@ -104,22 +111,17 @@ class MetaTagger extends DataObjectDecorator {
 			.'<meta name="robots" content="'.$noopd.'all, index, follow" />
 			<meta name="googlebot" content="'.$noopd.'all, index, follow" />
 			<meta name="keywords" http-equiv="keywords" content="'.Convert::raw2att($keywords).'" />'.$description.'
-			<meta name="copyright" content="'.self::$copyright.'" />
-			<meta name="coding" content="'.self::$coding.'" />
-			<meta name="design" content="'.self::$design.'" />
+			<meta name="copyright" content="'.MetaTagger::$copyright.'" />
+			<meta name="coding" content="'.MetaTagger::$coding.'" />
+			<meta name="design" content="'.MetaTagger::$design.'" />
 			<meta name="date-modified-yyyymmdd" content="'.Date("Ymd").'" />
-			<meta name="country" content="'.self::$country.'" />
+			<meta name="country" content="'.MetaTagger::$country.'" />
 			<meta http-equiv="imagetoolbar" content="no" />
 			<link rel="icon" href="/favicon.ico" type="image/x-icon" />
 			<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />';
 		return $tags;
 	}
-}
 
-class MetaTagger_controller extends Extension {
-	static $allowed_actions = array(
-		"starttestforie",
-		"stoptestforie"
-	);
+
 
 }
