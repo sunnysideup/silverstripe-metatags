@@ -14,13 +14,6 @@ SilverStripe 2.3.0 or greater.
 Documentation
 -----------------------------------------------
 This Module allows you to add metatags easily...
-add the following to your Page.ss file:
- <head>
-  <% base_tag %>
-   $MetaTagsSunnySideUp
- </head>
- in page_controller->init()
- add: $this->addRequirements() - this adds all the basic JS and CSS
 
 
 Installation Instructions
@@ -30,4 +23,67 @@ Installation Instructions
 into mysite/_config.php file and edit settings as required.
 NB. the idea is not to edit the module, but instead customise it
 in your mysite folder at all so that you can upgrade it later.
+
+3. add the following to your Page.ss file:
+ <head>
+  <% base_tag %>
+   $MetaTagsSunnySideUp
+ </head>
+
+ 4.
+ in page_controller::init()
+ add: $this->addRequirements() - this adds all the basic JS and CSS
+
+ 5. add the following files:
+
+ themes/mythemeblabla/css/layout.css
+ themes/mythemeblabla/css/typography.css
+ themes/mythemeblabla/css/ie6.css
+ themes/mythemeblabla/css/ie7.css
+ themes/mythemeblabla/css/ie8.css
+ themes/mythemeblabla/css/menu.css
+ themes/mythemeblabla/css/reset.css
+ themes/mythemeblabla/css/editor.css
+ themes/mythemeblabla/css/print.css
+
+ mysite/javascript/j.js
+
+
+ ================= editor.css content ===
+
+ /**
+ * This support file is used to style the WYSIWYG editor in the CMS
+ */
+
+@import "typography.css";
+
+body.mceContentBody {
+	min-height: 200px;
+	font-size: 62.5%;
+}
+body.mceContentBody a.broken {
+	background-color: #FF7B71;
+	border: 1px red solid;
+}
+
+============================ reset.css content ===
+
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td
+
+{border:0pt none;font-family:inherit;font-size:100%;font-style:inherit;font-weight:inherit;margin:0pt;outline-color:invert;outline-style:none;outline-width:0pt;padding:0pt;vertical-align:baseline;}
+
+*:focus{outline-color:invert;outline-style:none;outline-width:0pt;}
+
+body{background:white none repeat scroll 0%;color:black;line-height:1;}
+
+ol,ul{list-style-image:none;list-style-position:outside;list-style-type:none;}
+
+table{border-collapse:separate;border-spacing:0pt;}
+
+caption,th,td{font-weight:normal;text-align:left;}
+
+blockquote:before,blockquote:after,q:before,q:after{content:"";}
+
+blockquote,q{quotes:"" "";}
+
 
