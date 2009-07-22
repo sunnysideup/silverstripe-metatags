@@ -89,6 +89,13 @@ class MetaTagger_controller extends Extension {
 		return array();
 	}
 
+	function handleAction(HTTPRequest $request) {
+		if(Session::get("testforie") == 7) {
+			$request->addHeader('X-UA-Compatible', 'IE=EmulateIE7');
+		}
+		return parent::handleAction($request);
+	}
+
 	function MetaTagsSunnySideUp($includeTitle = true) {
 
 		//$themeFolderAndSubfolder = "----";
