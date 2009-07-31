@@ -89,8 +89,9 @@ class MetaTagger_controller extends Extension {
 		return array();
 	}
 
+	/* need to work out how this can be called from the content_controller */
 	function handleAction(HTTPRequest $request) {
-		if(Session::get("testforie") == 7) {
+		if(7 == Session::get("testforie")) {
 			$request->addHeader('X-UA-Compatible', 'IE=EmulateIE7');
 		}
 		return parent::handleAction($request);
