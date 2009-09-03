@@ -1,0 +1,345 @@
+<?php
+
+class MetaTagger extends SiteTreeDecorator {
+
+	protected static $number_of_keywords = 15;
+		static function set_number_of_keywords($var) {self::$number_of_keywords = $var;}
+	protected static $min_word_char = 3;
+		static function set_min_word_char($var) {self::$min_word_char = $var;}
+	protected static $exclude_words = '';
+		static function set_exclude_words($var) {self::$exclude_words = $var;}
+	protected static $checkbox_state = 0;
+		static function set_checkbox_state($var) {self::$checkbox_state = $var;}
+	protected static $checkbox_pos = '';
+		static function set_checkbox_pos($var) {self::$checkbox_pos = $var;}
+	protected static $show_checkbox = 0;
+		static function set_show_checkbox($var) {self::$show_checkbox = $var;}
+	protected static $show_meta_messages = 0;
+	 static function set_show_meta_messages($var) {self::$show_meta_messages = $var;}
+	protected static $update_meta_title = 0;
+		static function set_update_meta_title($var) {self::$update_meta_title = $var;}
+	protected static $update_meta_desc = 0;
+		static function set_update_meta_desc($var) {self::$update_meta_desc = $var;}
+	protected static $meta_desc_length = 0;
+		static function set_meta_desc_length($var) {self::$meta_desc_length = $var;}
+	protected static $update_meta_keys = 0;
+		static function set_update_meta_keys($var) {self::$update_meta_keys = $var;}
+	protected static $hide_extra_meta = 0;
+		static function set_hide_extra_meta($var) {self::$hide_extra_meta = $var;}
+	protected static $disable_update_popup = 0;
+		static function set_disable_update_popup($var) {self::$disable_update_popup = $var;}
+	protected static $update_url = 0;
+		static function set_update_url($var) {self::$update_url = $var;}
+
+	protected static $country = "New Zealand";
+		static function set_country($var) {self::$country = $var;}
+	protected static $copyright = 'owner';
+		static function set_copyright($var) {self::$copyright = $var;}
+	protected static $design = '';
+		static function set_design($var) {self::$design = $var;}
+	protected static $project = 'mysite';
+		static function set_project($var) {self::$project = $var;}
+	protected static $coding = "";
+		static function set_coding($var) {self::$coding = $var;}
+	protected static $file_name_for_combined_js_files = "";
+		static function set_file_name_for_combined_js_files($var) {self::$file_name_for_combined_js_files = $var;}
+	protected static $file_name_for_combined_css_files = "";
+		static function set_file_name_for_combined_css_files($var) {self::$file_name_for_combined_css_files = $var;}
+	protected static $theme_folder = '';
+		public static function set_theme_folder($folderName) {self::$theme_folder = $folderName;}
+
+
+	/**
+	 * Compose string to show wich fields are set to auto update
+	 * @param string $updated_field_string
+	 */
+
+	protected function updatedFields(){
+
+		$updated_field_string = '';
+
+		if(self::$show_meta_messages == 1){
+			$updatedfields = array();
+
+			if(self::$update_url == 1) 				$updatedfields[] = _t('SiteTree.URLSegment','URL Segment ');
+			if(self::$update_meta_title == 1) $updatedfields[] = _t('SiteTree.METATITLE','Title ');
+			if(self::$update_meta_desc == 1) 	$updatedfields[] = _t('SiteTree.METADESC','Description ');
+			if(self::$update_meta_keys == 1) 	$updatedfields[] = _t('SiteTree.METAKEYWORDS','Keywords ');
+
+			$updated_field_string = "(".implode(", ", $updatedfields).")";
+	 	}
+		return $updated_field_string;
+	}
+
+
+	/**
+	 * add a checkbox to the contenttab to choose wether to update the metafields or not.
+	 */
+	public function getCMSFields() {
+		$fields = parent::getCMSFields();
+		$this->extend('updateCMSFields', $fields);
+		return $fields;
+	}
+
+	public function updateCMSFields(FieldSet &$fields) {
+
+		if(1 == self::$show_checkbox){
+			$fields->addFieldToTab('Root.Content.Main', new CheckboxField('UpdateMeta', _t('MetaManager.UPDATEMETA','Update Meta-data '). self::updatedFields() , self::$checkbox_state), self::$checkbox_pos);
+		}
+		else {
+			$fields->addFieldToTab('Root.Content.Main', new HiddenField('UpdateMeta', _t('MetaManager.UPDATEMETA','Update Meta-data '), self::$checkbox_state), self::$checkbox_pos);
+		}
+		if(1 == self::$hide_extra_meta){
+			$fields->removeFieldsFromTab('Root.Content.Metadata', array('ExtraMeta'));
+		}
+		if(1 == self::$disable_update_popup){
+			Requirements::clear('sapphire/javascript/UpdateURL.js');
+			if(1 == self::$update_url){
+				Requirements::javascript('metamanager/javascript/UpdateURL.js');
+			}
+		}
+	}
+
+
+	static $combine_files_in_one_file = false;
+
+
+}
+
+class MetaTagger_controller extends Extension {
+
+	static $allowed_actions = array(
+		"starttestforie",
+		"stoptestforie"
+	);
+
+
+
+	function addRequirements() {
+		if(!MetaTagger::$theme_folder) {
+			MetaTagger::$theme_folder = $this->owner->ThemeDir().'/';
+		}
+		$jsArray =
+			array(
+				"jsparty/jquery/jquery.js",
+				'mysite/javascript/j.js'
+			);
+		$cssArray =
+			array(
+				MetaTagger::$theme_folder.'css/reset.css',
+				MetaTagger::$theme_folder.'css/layout.css',
+				MetaTagger::$theme_folder.'css/typography.css',
+				MetaTagger::$theme_folder.'css/form.css',
+				MetaTagger::$theme_folder.'css/menu.css',
+				MetaTagger::$theme_folder.'css/print.css'
+			);
+		$prototypeArray =
+			array(
+				"sapphire/javascript/Validator.js",
+				"jsparty/prototype.js",
+				"jsparty/behaviour.js",
+				"jsparty/prototype_improvements.js"
+			);
+
+		foreach($jsArray as $js) {
+			Requirements::javascript($js);
+		}
+		foreach($cssArray as $css) {
+			Requirements::css($css);
+		}
+		if(MetaTagger::$combine_files_in_one_file) {
+			Requirements::combine_files(MetaTagger::$theme_folder."css/MainCombination.css",$cssArray);
+			Requirements::combine_files("mysite/javascript/MainCombination.js", $jsArray);
+			Requirements::combine_files("mysite/javascript/SapphirePrototypeCombination.js", $prototypeArray);
+		}
+		if(Session::get("testforie") > 0) {
+			Requirements::insertHeadTags('<style type="text/css">@import url('.MetaTagger::$theme_folder.'css/ie'.Session::get("testforie").'.css);</style>');
+		}
+		else {
+			Requirements::insertHeadTags('<!--[if IE 6]><style type="text/css">@import url('.MetaTagger::$theme_folder.'css/ie6.css);</style><![endif]-->');
+			Requirements::insertHeadTags('<!--[if IE 7]><style type="text/css">@import url('.MetaTagger::$theme_folder.'css/ie7.css);</style><![endif]-->');
+			Requirements::insertHeadTags('<!--[if IE 8]><style type="text/css">@import url('.MetaTagger::$theme_folder.'css/ie8.css);</style><![endif]-->');
+		}
+	}
+
+
+	function starttestforie() {
+		Session::set("testforie", Director::urlParam("ID"));
+		Requirements::customScript('alert("starting test for IE'.Session::get("testforie").' - to stop go to '.$this->owner->URLSegment.'/stoptestforie");');
+		return array();
+	}
+
+	function stoptestforie() {
+		Requirements::customScript('alert("stopped test for IE'.Session::get("testforie").' - to start go to '.$this->owner->URLSegment.'/starttestforie");');
+		Session::set("testforie", 0);
+		return array();
+	}
+
+	/* need to work out how this can be called from the content_controller */
+	function handleAction(HTTPRequest $request) {
+		if(7 == Session::get("testforie")) {
+			$request->addHeader('X-UA-Compatible', 'IE=EmulateIE7');
+		}
+		return parent::handleAction($request);
+	}
+
+	function MetaTagsSunnySideUp($includeTitle = true) {
+
+		//$themeFolderAndSubfolder = "----";
+		$tags = "";
+		$page = $this->owner;
+		$title = Convert::raw2xml(($page->MetaTitle) ? $page->MetaTitle : $page->Title );
+		$keywords = Convert::raw2xml(($page->MetaKeywords) ? $page->MetaKeywords : $page->Title );
+		if($page->MetaDescription) {
+		 $description = '
+			<meta name="description" http-equiv="description" content="'.Convert::raw2att($page->MetaDescription).'" />';
+		 $noopd = '';
+		}
+		else {
+		 $noopd = "NOODP, ";
+		 $description = '';
+		}
+		$tags .= '
+			<meta http-equiv="Content-type" content="text/html; charset=utf-8" />'.
+			($includeTitle ? '<title>'.$title.'</title>' : '')
+			.'<meta name="robots" content="'.$noopd.'all, index, follow" />
+			<meta name="googlebot" content="'.$noopd.'all, index, follow" />
+			<meta name="keywords" http-equiv="keywords" content="'.Convert::raw2att($keywords).'" />'.$description.'
+			<meta name="copyright" content="'.MetaTagger::$copyright.'" />
+			<meta name="coding" content="'.MetaTagger::$coding.'" />
+			<meta name="design" content="'.MetaTagger::$design.'" />
+			<meta name="date-modified-yyyymmdd" content="'.Date("Ymd").'" />
+			<meta name="country" content="'.MetaTagger::$country.'" />
+			<meta http-equiv="imagetoolbar" content="no" />
+			<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+			<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />';
+		return $tags;
+	}
+
+
+	/**
+	 * Update Metadata fields function
+	 */
+	public function onBeforeWrite () {
+
+		$id 				= $this->owner->ID;
+		if($id){
+
+			// if UpdateMeta checkbox is checked, update metadata based on content and title
+			if(isset($_REQUEST['UpdateMeta']) && $_REQUEST['UpdateMeta']){
+
+				if(self::$update_meta_title == 1){
+					// Empty MetaTitle
+					$this->owner->MetaTitle = '';
+					// Check for Content, to prevent errors
+					if($this->owner->Title){
+						$this->owner->MetaTitle = strip_tags($this->owner->Title);
+					}
+				}
+				if(self::$update_meta_desc == 1){
+					// Empty MetaDescription
+					$this->owner->MetaDescription = '';
+					// Check for Content, to prevent errors
+					if($this->owner->Content){
+						$this->owner->MetaDescription = strip_tags($this->owner->Content);
+						if(self::$meta_desc_length > 0){
+							$this->owner->MetaDescription = substr($this->owner->MetaDescription, 0, self::$meta_desc_length);
+						}
+					}
+				}
+
+				if(self::$update_meta_keys == 1){
+					// Empty MetaKeywords
+					$this->owner->MetaKeywords = '';
+					// Check for Content, to prevent errors
+					if($this->owner->Content){
+						// calculateKeywords
+						$keystring = self::calculateKeywords($this->owner->Content, self::$min_word_char, self::$number_of_keywords, self::$exclude_words);
+						if($keystring){
+							$this->owner->MetaKeywords = $keystring;
+						}
+					}
+				}
+			}
+		}
+
+  parent::onBeforeWrite ();
+ }
+
+	public function onAfterWrite(){
+
+		if(self::$update_meta_title == 1 || self::$update_meta_desc == 1 || self::$update_meta_keys == 1){
+			// TODO : find a nicer way to reload the page
+			LeftAndMain::ForceReload ();
+		}
+		parent::onAfterWrite ();
+	}
+
+	/**
+	 * Extract Keywords
+	 * Returns a lowercase string with keywords ordered by occurance in content seperated with comma's
+	 * @var $string
+	 * @var $min_word_char
+	 * @var $number_of_keywords
+	 * @var $exclude_words
+	 */
+	private function calculateKeywords($string = '', $min_word_char = 4, $number_of_keywords = 15, $exclude_words = '' ) {
+
+		$exclude_words = explode(", ", $exclude_words);
+		// get rid off the htmltags
+		$string = strip_tags($string);
+
+		// count all words
+		$initial_words_array = str_word_count($string, 1);
+		$total_words = sizeof($initial_words_array);
+
+		$new_string = $string;
+
+		// strip excluded words
+		foreach($exclude_words as $filter_word)	{
+			$new_string = preg_replace("/\b".$filter_word."\b/i", "", $new_string);
+		}
+
+		// calculate words again without the excluded words
+		$words_array = str_word_count($new_string, 1);
+		$words_array = array_filter($words_array, create_function('$var', 'return (strlen($var) >= '.$min_word_char.');'));
+
+		$popularity = array();
+		$unique_words_array = array_unique($words_array);
+
+		// create density array
+		foreach($unique_words_array as $key => $word)	{
+			preg_match_all('/\b'.$word.'\b/i', $string, $out);
+			$count = count($out[0]);
+			$popularity[$key]['count'] = $count;
+			$popularity[$key]['word'] = $word;
+
+		}
+
+		usort($popularity, array($this,'cmp'));
+
+		// sort array form higher to lower
+		krsort($popularity);
+
+		// create keyword array with only words
+		$keywords = array();
+		foreach($popularity as $value){
+						$keywords[] = $value['word'];
+					}
+
+		// glue keywords to string seperated by comma, maximum 15 words
+		$keystring = strtolower(implode(', ', array_slice($keywords, 0, self::$number_of_keywords)));
+
+		// return the keywords
+		return $keystring;
+	}
+
+	/**
+	 * Sort array by count value
+	 */
+	private static function cmp($a, $b) {
+		return ($a['count'] > $b['count']) ? +1 : -1;
+	}
+
+
+}
