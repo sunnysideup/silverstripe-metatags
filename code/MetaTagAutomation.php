@@ -253,12 +253,12 @@ class MetaTagAutomation_controller extends Extension {
 		foreach($cssArray as $css) {
 			Requirements::css($css);
 		}
-		if(self::$combine_css_files_into_one()) {
-			Requirements::combine_files(self::$folder_for_combined_files()."/MetaTagAutomation.css",$cssArray);
+		if(self::$combine_css_files_into_one) {
+			Requirements::combine_files(self::$folder_for_combined_files."/MetaTagAutomation.css",$cssArray);
 		}
-		if(self::$combine_js_files_into_one()) {
-			Requirements::combine_files(self::$folder_for_combined_files()."/MetaTagAutomationPrototype.js", $prototypeArray);
-			Requirements::combine_files(self::$folder_for_combined_files()."/MetaTagAutomation.js", $jsArray);
+		if(self::$combine_js_files_into_one) {
+			Requirements::combine_files(self::$folder_for_combined_files."/MetaTagAutomationPrototype.js", $prototypeArray);
+			Requirements::combine_files(self::$folder_for_combined_files."/MetaTagAutomation.js", $jsArray);
 		}
 		if(Session::get("testforie") > 0) {
 			Requirements::insertHeadTags('<style type="text/css">@import url('.MetaTagAutomation::$theme_folder.'css/ie'.Session::get("testforie").'.css);</style>');
