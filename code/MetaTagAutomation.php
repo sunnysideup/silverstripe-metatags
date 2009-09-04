@@ -266,8 +266,7 @@ class MetaTagAutomation_controller extends Extension {
 	 * this function will add more metatags to your template - make sure to add it at the start of your metatags
 	 */
 
-	function ExtendedMetatags($includeTitle = true, $onlyShowBareMinimum = false) {
-		//to do: GET LAST SAVE DATE INSTEAD OF DATE!
+	function ExtendedMetatags($includeTitle = true, $addExtraSearchEngineData = true) {
 		$tags = "";
 		$page = $this->owner;
 		$title = Convert::raw2xml(($page->MetaTitle) ? $page->MetaTitle : $page->Title );
@@ -281,21 +280,23 @@ class MetaTagAutomation_controller extends Extension {
 		 $noopd = "NOODP, ";
 		 $description = '';
 		}
+		$lastEdited = new SSDatetime();
+		$lastEdited->value = $this->owner->LastEdited;
 		$tags .= '
 			<meta http-equiv="Content-type" content="text/html; charset=utf-8" />'.
 			($includeTitle ? '<title>'.$title.'</title>' : '')
 			.'<link rel="icon" href="/favicon.ico" type="image/x-icon" />
 			<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-			<meta name="keywords" http-equiv="keywords" content="'.Convert::raw2att($keywords).'" />'.$description.'
-			<meta name="robots" content="'.$noopd.'all, index, follow" />';
-		if(!$onlyShowBareMinimum) {
+			<meta name="keywords" http-equiv="keywords" content="'.Convert::raw2att($keywords).'" />'.$description;
+		if($addExtraSearchEngineData) {
 			$tags .= '
+			<meta name="robots" content="'.$noopd.'all, index, follow" />
 			<meta name="googlebot" content="'.$noopd.'all, index, follow" />
-			<meta name="copyright" content="'.self::$copyright().'" />
-			<meta name="coding" content="'.self::$coding().'" />
-			<meta name="design" content="'.self::$design().'" />
-			<meta name="date-modified-yyyymmdd" content="'.Date("Ymd").'" />
-			<meta name="country" content="'.self::$country().'" />
+			<meta name="copyright" content="'.self::$copyright.'" />
+			<meta name="coding" content="'.self::$coding.'" />
+			<meta name="design" content="'.self::$design.'" />
+			<meta name="date-modified-yyyymmdd" content="'.$lastEdited->Format("Ymd").'" />
+			<meta name="country" content="'.self::$country.'" />
 			<meta http-equiv="imagetoolbar" content="no" />';
 		}
 		return $tags;
