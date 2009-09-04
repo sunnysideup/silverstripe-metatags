@@ -126,7 +126,7 @@ class MetaTagAutomation extends SiteTreeDecorator {
 
 	private function updatedFieldsArray(){
 		$updateDatedFieldArray = array();
-		if(self::$disable_update_popup) {$updateDatedFieldArray["URLSegment"] = _t('SiteTree.URLSegment','URL Segment ');}
+		if(self::$disable_update_popup) { $updateDatedFieldArray["URLSegment"] = _t('SiteTree.URLSegment','URL Segment ');}
 		if(self::$update_meta_title) 		{ $updateDatedFieldArray["Title"] = _t('SiteTree.METATITLE','Title '); }
 		if(self::$update_meta_desc) 		{ $updateDatedFieldArray["Description"] = _t('SiteTree.METADESC','Description '); }
 		if(self::$update_meta_keys) 		{ $updateDatedFieldArray["Keywords"] = _t('SiteTree.METAKEYWORDS','Keywords ');}
@@ -204,16 +204,13 @@ class MetaTagAutomation_controller extends Extension {
 	protected static $combine_js_files_into_one = false;
 		public static function set_combine_js_files_into_one($var) {self::$combine_js_files_into_one = $var;}
 
-
 	static $allowed_actions = array(
 		"starttestforie",
 		"stoptestforie"
 	);
 
-
-
 	/**
-	 * add all the basic js and css files
+	 * add all the basic js and css files - call from Page::init()
 	 */
 
 	function addRequirements($additionalJS = array(), $additionalCSS = array()) {
@@ -266,38 +263,6 @@ class MetaTagAutomation_controller extends Extension {
 	}
 
 	/**
-	 * start internet explorer test
-	 */
-
-	function starttestforie() {
-		Session::set("testforie", Director::urlParam("ID"));
-		Requirements::customScript('alert("starting test for IE'.Session::get("testforie").' - to stop go to '.$this->owner->URLSegment.'/stoptestforie");');
-		return array();
-	}
-
-
-	/**
-	 * end internet explorer test
-	 */
-
-	function stoptestforie() {
-		Requirements::customScript('alert("stopped test for IE'.Session::get("testforie").' - to start go to '.$this->owner->URLSegment.'/starttestforie");');
-		Session::set("testforie", 0);
-		return array();
-	}
-
-	/**
-	 * need to work out how this action can be called without adding an action to the URL and without interfering with potential other actions
-	 */
-
-	function handleAction(HTTPRequest $request) {
-		if(7 == Session::get("testforie")) {
-			$request->addHeader('X-UA-Compatible', 'IE=EmulateIE7');
-		}
-		return parent::handleAction($request);
-	}
-
-	/**
 	 * this function will add more metatags to your template - make sure to add it at the start of your metatags
 	 */
 
@@ -334,6 +299,38 @@ class MetaTagAutomation_controller extends Extension {
 			<meta http-equiv="imagetoolbar" content="no" />';
 		}
 		return $tags;
+	}
+
+	/**
+	 * start internet explorer test
+	 */
+
+	function starttestforie() {
+		Session::set("testforie", Director::urlParam("ID"));
+		Requirements::customScript('alert("starting test for IE'.Session::get("testforie").' - to stop go to '.$this->owner->URLSegment.'/stoptestforie");');
+		return array();
+	}
+
+
+	/**
+	 * end internet explorer test
+	 */
+
+	function stoptestforie() {
+		Requirements::customScript('alert("stopped test for IE'.Session::get("testforie").' - to start go to '.$this->owner->URLSegment.'/starttestforie");');
+		Session::set("testforie", 0);
+		return array();
+	}
+
+	/**
+	 * need to work out how this action can be called without adding an action to the URL and without interfering with potential other actions
+	 */
+
+	function handleAction(HTTPRequest $request) {
+		if(7 == Session::get("testforie")) {
+			$request->addHeader('X-UA-Compatible', 'IE=EmulateIE7');
+		}
+		return parent::handleAction($request);
 	}
 
 	//maybe replaced with something more universal (e.g. SSViewer::get_theme_folder())
