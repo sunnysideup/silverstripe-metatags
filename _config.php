@@ -25,7 +25,7 @@
 //MetaTagAutomation::set_prepend_to_meta_title("");
 //MetaTagAutomation::set_append_to_meta_title("");
 /* meta descriptions */
-//MetaTagAutomation::set_update_meta_desc(0)
+//MetaTagAutomation::set_update_meta_desc(0);
 //MetaTagAutomation::set_meta_desc_length(12);
 /* meta keywords */
 //MetaTagAutomation::set_update_meta_keys(0);
