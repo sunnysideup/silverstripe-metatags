@@ -4,6 +4,7 @@
  * authors:
  * martijn: marvanni [at] hotmail.com
  * Nicolaas modules [at] sunnysideup.co.nz
+ * dont
  **/
 
 //copy the lines between the START AND END line to your /mysite/_config.php file and choose the right settings
@@ -16,6 +17,7 @@
 //MetaTagger::$project = 'mysite';
 //MetaTagger::$coding = "";
 //================ OR ==============================
+//dont forget to add $this->addBasicMetatagRequirements to Page_Controller->init();
 //DataObject::add_extension('SiteTree', 'MetaTagAutomation');
 //Object::add_extension('ContentController', 'MetaTagAutomation_controller');
 /* pop-ups and form interaction */

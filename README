@@ -21,6 +21,7 @@ basic requirements without too much hassle.
 Installation Instructions
 -----------------------------------------------
 1. Find out how to add modules to SS and add module as per usual.
+
 2. copy configurations from this module's _config.php file
 into mysite/_config.php file and edit settings as required.
 NB. the idea is not to edit the module, but instead customise it
@@ -29,12 +30,16 @@ in your mysite folder at all so that you can upgrade it later.
 3. add the following to your Page.ss file:
  <head>
   <% base_tag %>
-   $ExtendedMetatags(
+   $ExtendedMetatags
  </head>
+
+Note, you can add two variables:
+includeMetaTitle (default = true),
+addExtraSearchEngineData (default = true)
 
 4.
 in page_controller::init()
-add: $this->addRequirements()
+add: $this->addBasicMetatagRequirements()
 this adds all the basic JS and CSS. you can also add additional css and JS:
 $this->addRequirements($additionalJS = array(), $additionalCSS = array()
 doing so adds the following files:

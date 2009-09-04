@@ -221,7 +221,7 @@ class MetaTagAutomation_controller extends Extension {
 	 * add all the basic js and css files - call from Page::init()
 	 */
 
-	function addRequirements($additionalJS = array(), $additionalCSS = array()) {
+	function addBasicMetatagRequirements($additionalJS = array(), $additionalCSS = array()) {
 		$themeFolder = $this->getThemeFolder();
 		$jsArray =
 			array(
