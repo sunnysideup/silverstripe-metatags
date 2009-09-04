@@ -13,5 +13,31 @@
 //MetaTagger::$design = '';
 //MetaTagger::$project = 'mysite';
 //MetaTagger::$coding = "";
+//================ OR ==============================
+/* pop-ups and form interaction */
+//MetaTagAutomation::set_disable_update_popup(0);
+/* default value for auto-update pages' metatags */
+//MetaTagAutomation::set_default_state_auto_update_checkbox($var) {self::$default_state_auto_update_checkbox = $var;}
+/* meta-title */
+//MetaTagAutomation::set_update_meta_title(0);
+//MetaTagAutomation::set_prepend_to_meta_title("");
+//MetaTagAutomation::set_append_to_meta_title("");
+/* meta descriptions */
+//MetaTagAutomation::set_update_meta_desc(0)
+//MetaTagAutomation::set_meta_desc_length(12);
+/* meta keywords */
+//MetaTagAutomation::set_update_meta_keys(0);
+//MetaTagAutomation::set_number_of_keywords(12);
+//MetaTagAutomation::set_min_word_char(3);
+//MetaTagAutomation::set_exclude_words("the,and,from");
+/* additional metatag information */
+//MetaTagAutomation_controller::set_country("New Zealand");
+//MetaTagAutomation_controller::set_copyright("owner");
+//MetaTagAutomation_controller::set_design("owner");
+//MetaTagAutomation_controller::set_coding("owner");
+/* combined files */
+//MetaTagAutomation_controller::set_folder_for_combined_files("assets");
+//MetaTagAutomation_controller::set_combine_css_files_into_one(0);
+//MetaTagAutomation_controller::set_combine_js_files_into_one(0);
 //===================---------------- END metatags MODULE ----------------===================
 
