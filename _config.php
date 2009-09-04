@@ -1,7 +1,9 @@
 <?php
 /**
  * developed by www.sunnysideup.co.nz
- * author: Nicolaas modules [at] sunnysideup.co.nz
+ * authors:
+ * martijn: marvanni [at] hotmail.com
+ * Nicolaas modules [at] sunnysideup.co.nz
  **/
 
 //copy the lines between the START AND END line to your /mysite/_config.php file and choose the right settings
