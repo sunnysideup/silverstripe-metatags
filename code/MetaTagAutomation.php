@@ -75,9 +75,6 @@ class MetaTagAutomation extends SiteTreeDecorator {
 				$fields->addFieldToTab('Root.Content.Metadata', $newField);
 			}
 		}
-		if(1 == self::$hide_extra_meta){
-			$fields->removeFieldsFromTab('Root.Content.Metadata', array('ExtraMeta'));
-		}
 		if(1 == self::$disable_update_popup){
 			Requirements::clear('sapphire/javascript/UpdateURL.js');
 			Requirements::javascript('metatags/javascript/UpdateURL.js');
