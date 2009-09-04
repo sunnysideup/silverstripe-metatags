@@ -223,6 +223,7 @@ class MetaTagAutomation_controller extends Extension {
 
 	function addBasicMetatagRequirements($additionalJS = array(), $additionalCSS = array()) {
 		$themeFolder = $this->getThemeFolder();
+		die($themeFolder);
 		$jsArray =
 			array(
 				"jsparty/jquery/jquery.js",
