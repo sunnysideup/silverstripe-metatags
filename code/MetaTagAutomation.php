@@ -57,7 +57,7 @@ class MetaTagAutomation extends SiteTreeDecorator {
 	}
 
 	public function updateCMSFields(FieldSet &$fields) {
-		$automatedFields =  $this->updatedFieldsArray()
+		$automatedFields =  $this->updatedFieldsArray();
 		$updated_field_string = "(".implode(", ", $automatedFields).")";
 		$fields->addFieldToTab('Root.Content.Metadata', new CheckboxField('AutomateMetatags', _t('MetaManager.UPDATEMETA','Automatically Update Meta-data Fields:'). $updated_field_string), "URLSegment");
 		foreach($fields as $field) {
