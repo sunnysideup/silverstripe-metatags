@@ -223,11 +223,10 @@ class MetaTagAutomation_controller extends Extension {
 
 	function addBasicMetatagRequirements($additionalJS = array(), $additionalCSS = array()) {
 		$themeFolder = $this->getThemeFolder()."/";
-		die($themeFolder.$this->owner->project());
 		$jsArray =
 			array(
 				"jsparty/jquery/jquery.js",
-				$this->owner->project().'mysite/javascript/j.js'
+				$this->owner->project().'/javascript/j.js'
 			);
 		array_merge($jsArray, $additionalJS);
 		$cssArray =
