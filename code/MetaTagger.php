@@ -1,5 +1,13 @@
 <?php
 
+/**
+*
+* PLEASE USE MetaTagAutomation - this is only here to legacy reasons!
+*
+*/
+
+
+
 class MetaTagger extends DataObjectDecorator {
 	static $country = "New Zealand";
 	static $copyright = 'owner';

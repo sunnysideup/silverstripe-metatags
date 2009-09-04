@@ -4,7 +4,7 @@
 * @Author Martijn van Nieuwenhoven & Nicolaas Francken
 *
 * @Silverstripe version 2.3.2
-* @package AutoMetaDataUpdater
+* @package metatags
 *
 **/
 
