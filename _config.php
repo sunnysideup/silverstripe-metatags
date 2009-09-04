@@ -14,6 +14,8 @@
 //MetaTagger::$project = 'mysite';
 //MetaTagger::$coding = "";
 //================ OR ==============================
+//DataObject::add_extension('SiteTree', 'MetaTagAutomation');
+//Object::add_extension('ContentController', 'MetaTagAutomation_controller');
 /* pop-ups and form interaction */
 //MetaTagAutomation::set_disable_update_popup(0);
 /* default value for auto-update pages' metatags */
