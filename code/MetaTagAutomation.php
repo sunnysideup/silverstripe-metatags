@@ -72,7 +72,7 @@ class MetaTagAutomation extends SiteTreeDecorator {
 		}
 		if(1 == self::$disable_update_popup){
 			Requirements::clear('sapphire/javascript/UpdateURL.js');
-			Requirements::javascript('metamanager/javascript/UpdateURL.js');
+			Requirements::javascript('metatags/javascript/UpdateURL.js');
 		}
 	}
 
