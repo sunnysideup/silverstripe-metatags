@@ -19,7 +19,7 @@
 /* pop-ups and form interaction */
 //MetaTagAutomation::set_disable_update_popup(0);
 /* default value for auto-update pages' metatags */
-//MetaTagAutomation::set_default_state_auto_update_checkbox($var) {self::$default_state_auto_update_checkbox = $var;}
+//MetaTagAutomation::set_default_state_auto_update_checkbox(0);
 /* meta-title */
 //MetaTagAutomation::set_update_meta_title(0);
 //MetaTagAutomation::set_prepend_to_meta_title("");
