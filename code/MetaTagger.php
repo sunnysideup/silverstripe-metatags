@@ -3,7 +3,7 @@
 /**
 *
 * PLEASE USE MetaTagAutomation - this is only here to legacy reasons!
-*
+* @TODO: make this an extension of MetatagAutomation and only leave the bare necesitities
 */
 
 
