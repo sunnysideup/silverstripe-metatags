@@ -239,7 +239,7 @@ class MetaTagAutomation_controller extends Extension {
 			);
 		$cssArrayWithoutReset = $cssArray;
 		array_shift($cssArrayWithoutReset);
-		array_merge($cssArray, $additionalCSS);
+		array_merge($cssArrayWithoutReset, $additionalCSS);
 		$prototypeArray =
 			array(
 				"sapphire/javascript/Validator.js",
