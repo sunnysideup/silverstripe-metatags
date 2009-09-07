@@ -237,6 +237,8 @@ class MetaTagAutomation_controller extends Extension {
 				$themeFolder.'css/menu.css',
 				$themeFolder.'css/print.css'
 			);
+		$cssArrayWithoutReset = $cssArray;
+		array_shift($cssArrayWithoutReset);
 		array_merge($cssArray, $additionalCSS);
 		$prototypeArray =
 			array(
