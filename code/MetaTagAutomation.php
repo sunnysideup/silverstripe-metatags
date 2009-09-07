@@ -253,9 +253,7 @@ class MetaTagAutomation_controller extends Extension {
 			Requirements::css($css);
 		}
 		if(self::$combine_css_files_into_one) {
-			$cssWithoutReset = $cssArray;
-			array_shift($cssWithoutReset);
-			Requirements::combine_files(self::$folder_for_combined_files."/MetaTagAutomation.css",$cssWithoutReset);
+			Requirements::combine_files(self::$folder_for_combined_files."/MetaTagAutomation.css",$cssArray);
 		}
 		if(self::$combine_js_files_into_one) {
 			Requirements::combine_files(self::$folder_for_combined_files."/MetaTagAutomationPrototype.js", $prototypeArray);
