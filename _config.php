@@ -17,7 +17,7 @@
 //MetaTagger::$project = 'mysite';
 //MetaTagger::$coding = "";
 //================ OR ==============================
-//dont forget to add $this->addBasicMetatagRequirements to Page_Controller->init();
+//dont forget to add $this->addBasicMetatagRequirements to Page_Controller->init(); and add this to your theme: $ExtendedMetatags
 //DataObject::add_extension('SiteTree', 'MetaTagAutomation');
 //Object::add_extension('ContentController', 'MetaTagAutomation_controller');
 /* pop-ups and form interaction */
