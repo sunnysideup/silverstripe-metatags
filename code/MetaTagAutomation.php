@@ -26,7 +26,7 @@ class MetaTagAutomation extends SiteTreeDecorator {
 		static function get_prepend_to_meta_title() {return self::$prepend_to_meta_title;}
 	protected static $append_to_meta_title = "";
 		static function set_append_to_meta_title($var) {self::$append_to_meta_title = $var;}
-		static function get_append_to_meta_title() {self::$append_to_meta_title;}
+		static function get_append_to_meta_title() {return self::$append_to_meta_title;}
 
 	/* meta descriptions */
 	protected static $update_meta_desc = 0;
@@ -67,8 +67,8 @@ class MetaTagAutomation extends SiteTreeDecorator {
 	public function updateCMSFields(FieldSet &$fields) {
 		$automatedFields =  $this->updatedFieldsArray();
 		if(count($automatedFields)) {
-			$updated_field_string = "(".implode(", ", $automatedFields).")";
-			$fields->addFieldToTab('Root.Content.Metadata', new CheckboxField('AutomateMetatags', _t('MetaManager.UPDATEMETA','Automatically Update Meta-data Fields:'). $updated_field_string), "URL");
+			$updated_field_string = " (updated are:".implode(", ", $automatedFields).") ";
+			$fields->addFieldToTab('Root.Content.Metadata', new CheckboxField('AutomateMetatags', _t('MetaManager.UPDATEMETA','Automatically Update Meta-data Fields '). $updated_field_string), "URL");
 			foreach($fields as $field) {
 				if(in_array($field->Title, $automatedFields)) {
 					$fields->removeFieldsFromTab('Root.Content.Metadata', $field->Title);
@@ -90,22 +90,23 @@ class MetaTagAutomation extends SiteTreeDecorator {
 		// if UpdateMeta checkbox is checked, update metadata based on content and title
 		// we only update this from the CMS to limit slow-downs in programatic updates
 		if(isset($_REQUEST['AutomateMetatags']) && $_REQUEST['AutomateMetatags']){
-			if(self::$update_meta_title == 1){
+			if(self::$update_meta_title){
 				// Empty MetaTitle
 				$this->owner->MetaTitle = '';
 				// Check for Content, to prevent errors
 				if($this->owner->Title){
-					$this->owner->MetaTitle = MetaTagAutomation::get_prepend_to_meta_title().strip_tags($this->owner->Title).MetaTagAutomation::get_append_to_meta_title();
+					$this->owner->MetaTitle = strip_tags($this->owner->Title);
 				}
 			}
-			if(self::$update_meta_desc == 1){
+			if(self::$update_meta_desc && self::$meta_desc_length ){
 				// Empty MetaDescription
 				$this->owner->MetaDescription = '';
 				// Check for Content, to prevent errors
 				if($this->owner->Content){
-					$this->owner->MetaDescription = strip_tags($this->owner->Content);
-					if(self::$meta_desc_length > 0){
-						$this->owner->MetaDescription = substr($this->owner->MetaDescription, 0, self::$meta_desc_length);
+					$text = strip_tags($this->owner->Content);
+					$textFieldObject = Text::create("Text", $text);
+					if($textFieldObject) {
+						$this->owner->MetaDescription = strip_tags($textFieldObject->LimitWordCountXML(self::$meta_desc_length));
 					}
 				}
 			}
@@ -141,53 +142,32 @@ class MetaTagAutomation extends SiteTreeDecorator {
 	}
 
 	private function calculateKeywords() {
-		$content = $this->owner->Content;
-		$exclude_words_array = explode(", ", self::$exclude_words);
-		// get rid off the htmltags
-		$string = strip_tags($string);
-		// count all words
-		$initial_words_array = str_word_count($string, 1);
-		$total_words = sizeof($initial_words_array);
-		$new_string = $content;
+		$string = strtolower(strip_tags($this->owner->Content));
+		$excludedWordsArray = explode(", ", self::$exclude_words);
 		// strip excluded words
-		if(is_array($exclude_words_array) && count($exclude_words_array)) {
-			foreach($exclude_words_array as $filter_word)	{
-				$new_string = preg_replace("/\b".$filter_word."\b/i", "", $new_string);
+		if(is_array($excludedWordsArray) && count($excludedWordsArray)) {
+			foreach($excludedWordsArray as $filterWord)	{
+				$string = preg_replace("/\b".$filterWord."\b/i", "", $string );
 			}
 		}
 		// calculate words again without the excluded words
-		$words_array = str_word_count($new_string, 1);
-		$words_array = array_filter($words_array, create_function('$var', 'return (strlen($var) >= '.self::$min_word_char.');'));
-		$popularity = array();
-		$unique_words_array = array_unique($words_array);
-		// create density array
-		foreach($unique_words_array as $key => $word)	{
+		$wordsArray = str_word_count($string , 1);
+		$wordsArray = array_filter($wordsArray, create_function('$var', 'return (strlen($var) >= '.self::$min_word_char.');'));
+		$uniqueWordsArray = array_unique($wordsArray);
+		$rankedKeywordsArray = array();
+		foreach($uniqueWordsArray as $key => $word)	{
 			//should this be string or newstring
-			preg_match_all('/\b'.$word.'\b/i', $content, $out);
+			preg_match_all('/\b'.$word.'\b/i', $string, $out);
 			$count = count($out[0]);
-			$popularity[$key]['count'] = $count;
-			$popularity[$key]['word'] = $word;
+			$rankedKeywordsArray[$count.'_'.$word] = $word;
 		}
-		usort($popularity, array($this,'cmp'));
-		// sort array form higher to lower
-		krsort($popularity);
-		// create keyword array with only words
-		$keywords = array();
-		foreach($popularity as $value){
-			$keywords[] = $value['word'];
-		}
+		krsort($rankedKeywordsArray);
+		// sort array form higher to lower cmp
 		// glue keywords to string seperated by comma, maximum 15 words
-		$keystring = strtolower(implode(', ', array_slice($keywords, 0, self::$number_of_keywords)));
+		$keystring = strtolower(implode(', ', array_slice($rankedKeywordsArray, 0, self::$number_of_keywords)));
 		// return the keywords
 		return $keystring;
 	}
-	/**
-	 * Sort array by count value
-	 */
-	private static function cmp($a, $b) {
-		return ($a['count'] > $b['count']) ? +1 : -1;
-	}
-
 
 }
 
@@ -291,7 +271,7 @@ class MetaTagAutomation_controller extends Extension {
 		$lastEdited->value = $this->owner->LastEdited;
 		$tags .= '
 			<meta http-equiv="Content-type" content="text/html; charset=utf-8" />'.
-			($includeTitle ? '<title>'.$title.'</title>' : '')
+			($includeTitle ? '<title>'.MetaTagAutomation::get_prepend_to_meta_title().$title.MetaTagAutomation::get_append_to_meta_title().'</title>' : '')
 			.'<link rel="icon" href="/favicon.ico" type="image/x-icon" />
 			<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 			<meta name="keywords" http-equiv="keywords" content="'.Convert::raw2att($keywords).'" />'.$description;
