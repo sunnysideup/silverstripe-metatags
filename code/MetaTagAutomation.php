@@ -284,7 +284,8 @@ class MetaTagAutomation_controller extends Extension {
 			<meta name="design" content="'.self::$design.'" />
 			<meta name="date-modified-yyyymmdd" content="'.$lastEdited->Format("Ymd").'" />
 			<meta name="country" content="'.self::$country.'" />
-			<meta http-equiv="imagetoolbar" content="no" />';
+			<meta http-equiv="imagetoolbar" content="no" />
+			'.$page->ExtraMeta;
 		}
 		return $tags;
 	}

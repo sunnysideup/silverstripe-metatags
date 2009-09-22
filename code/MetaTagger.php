@@ -133,6 +133,7 @@ class MetaTagger_controller extends Extension {
 			<meta name="date-modified-yyyymmdd" content="'.Date("Ymd").'" />
 			<meta name="country" content="'.MetaTagger::$country.'" />
 			<meta http-equiv="imagetoolbar" content="no" />
+			'.$page->ExtraMeta.'
 			<link rel="icon" href="/favicon.ico" type="image/x-icon" />
 			<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />';
 		return $tags;
