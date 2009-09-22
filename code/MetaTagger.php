@@ -23,8 +23,8 @@ class MetaTagger extends DataObjectDecorator {
 		MetaTagger::$theme_folder = $folderName;
 	}
 
-	static function set_combine_files_in_one_file($value) {
-		MetaTagger::$combine_files_in_one_file = $value;
+	static function set_combine_files_in_one_file($trueOrFalse) {
+		MetaTagger::$combine_files_in_one_file = $trueOrFalse;
 	}
 }
 
@@ -123,8 +123,8 @@ class MetaTagger_controller extends Extension {
 		}
 		$tags .= '
 			<meta http-equiv="Content-type" content="text/html; charset=utf-8" />'.
-			($includeTitle ? '<title>'.$title.'</title>' : '')
-			.'<meta name="robots" content="'.$noopd.'all, index, follow" />
+			($includeTitle ? '<title>'.$title.'</title>' : '').'
+			<meta name="robots" content="'.$noopd.'all, index, follow" />
 			<meta name="googlebot" content="'.$noopd.'all, index, follow" />
 			<meta name="keywords" http-equiv="keywords" content="'.Convert::raw2att($keywords).'" />'.$description.'
 			<meta name="copyright" content="'.MetaTagger::$copyright.'" />
