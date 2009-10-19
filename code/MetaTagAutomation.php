@@ -240,7 +240,7 @@ class MetaTagAutomation_controller extends Extension {
 			Requirements::combine_files(self::$folder_for_combined_files."/MetaTagAutomation.js", $jsArray);
 		}
 		if(Session::get("testforie") > 0) {
-			Requirements::insertHeadTags('<style type="text/css">@import url('.MetaTagAutomation::$theme_folder.'css/ie'.Session::get("testforie").'.css);</style>');
+			Requirements::insertHeadTags('<style type="text/css">@import url('.$themeFolder.'css/ie'.Session::get("testforie").'.css);</style>');
 		}
 		else {
 			Requirements::insertHeadTags('<!--[if IE 6]><style type="text/css">@import url('.$themeFolder.'css/ie6.css);</style><![endif]-->');
