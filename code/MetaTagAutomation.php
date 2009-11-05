@@ -143,7 +143,7 @@ class MetaTagAutomation extends SiteTreeDecorator {
 
 	private function calculateKeywords() {
 		$string = strtolower(strip_tags($this->owner->Content));
-		$excludedWordsArray = explode(", ", self::$exclude_words);
+		$excludedWordsArray = explode(",", self::$exclude_words);
 		// strip excluded words
 		if(is_array($excludedWordsArray) && count($excludedWordsArray)) {
 			foreach($excludedWordsArray as $filterWord)	{
