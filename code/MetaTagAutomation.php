@@ -147,7 +147,7 @@ class MetaTagAutomation extends SiteTreeDecorator {
 		// strip excluded words
 		if(is_array($excludedWordsArray) && count($excludedWordsArray)) {
 			foreach($excludedWordsArray as $filterWord)	{
-				$string = preg_replace("/\b".$filterWord."\b/i", "", $string );
+				$string = preg_replace("/\b".trim($filterWord)."\b/i", "", $string );
 			}
 		}
 		// calculate words again without the excluded words
