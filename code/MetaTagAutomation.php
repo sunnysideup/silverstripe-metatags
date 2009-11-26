@@ -267,7 +267,12 @@ class MetaTagAutomation_controller extends Extension {
 		 $noopd = "NOODP, ";
 		 $description = '';
 		}
-		$lastEdited = new SSDatetime();
+		if(class_exists("SSDatetime")) {
+			$lastEdited = new SSDatetime();
+		}
+		else {
+			$lastEdited = new DateTime();
+		}
 		$lastEdited->value = $this->owner->LastEdited;
 		$tags .= '
 			<meta http-equiv="Content-type" content="text/html; charset=utf-8" />'.
