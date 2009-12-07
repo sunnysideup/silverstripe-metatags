@@ -204,7 +204,7 @@ class MetaTagAutomation_controller extends Extension {
 		$themeFolder = $this->getThemeFolder()."/";
 		$jsArray =
 			array(
-				"jsparty/jquery/jquery.js",
+				THIRDPARTY_DIR."/jquery/jquery.js",
 				$this->owner->project().'/javascript/j.js'
 			);
 		array_merge($jsArray, $additionalJS);
@@ -221,9 +221,9 @@ class MetaTagAutomation_controller extends Extension {
 		$prototypeArray =
 			array(
 				"sapphire/javascript/Validator.js",
-				"jsparty/prototype.js",
-				"jsparty/behaviour.js",
-				"jsparty/prototype_improvements.js"
+				THIRDPARTY_DIR."/prototype.js",
+				THIRDPARTY_DIR."/behaviour.js",
+				THIRDPARTY_DIR."/prototype_improvements.js"
 			);
 
 		foreach($jsArray as $js) {

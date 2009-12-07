@@ -43,7 +43,7 @@ class MetaTagger_controller extends Extension {
 		}
 		$jsArray =
 			array(
-				"jsparty/jquery/jquery.js",
+				THIRDPARTY_DIR."/jquery/jquery.js",
 				'mysite/javascript/j.js'
 			);
 		$cssArray =
@@ -58,9 +58,9 @@ class MetaTagger_controller extends Extension {
 		$prototypeArray =
 			array(
 				"sapphire/javascript/Validator.js",
-				"jsparty/prototype.js",
-				"jsparty/behaviour.js",
-				"jsparty/prototype_improvements.js"
+				THIRDPARTY_DIR."/prototype.js",
+				THIRDPARTY_DIR."/behaviour.js",
+				THIRDPARTY_DIR."/prototype_improvements.js"
 			);
 
 		foreach($jsArray as $js) {
