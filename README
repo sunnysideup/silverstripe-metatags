@@ -22,37 +22,41 @@ Installation Instructions
 -----------------------------------------------
 1. Find out how to add modules to SS and add module as per usual.
 
-2. copy configurations from this module's _config.php file
+2. Copy configurations from this module's _config.php file
 into mysite/_config.php file and edit settings as required.
-NB. the idea is not to edit the module, but instead customise it
+NB. The idea is not to edit the module, but instead customise it
 in your mysite folder at all so that you can upgrade it later.
 
 3. add the following to your Page.ss file:
  <head>
-  <% base_tag %>
-   $ExtendedMetatags
+ <% base_tag %>
+  $ExtendedMetatags
  </head>
 
 Note, you can add two variables:
 includeMetaTitle (default = true),
 addExtraSearchEngineData (default = true)
 
-4.
-in page_controller::init()
-add: $this->addBasicMetatagRequirements()
-this adds all the basic JS and CSS. you can also add additional css and JS:
-$this->addRequirements($additionalJS = array(), $additionalCSS = array()
-doing so adds the following files:
+4. in page_controller::init() add:
 
- themes/mythemeblabla/css/layout.css
- themes/mythemeblabla/css/typography.css
- themes/mythemeblabla/css/ie6.css
- themes/mythemeblabla/css/ie7.css
- themes/mythemeblabla/css/ie8.css
- themes/mythemeblabla/css/menu.css
- themes/mythemeblabla/css/reset.css
- themes/mythemeblabla/css/editor.css
- themes/mythemeblabla/css/print.css
+$this->addBasicMetatagRequirements();
 
- myproject/javascript/j.js
+This adds all the basic JS and CSS. you can also add additional css and JS:
+$this->addBasicMetatagRequirements($additionalJS = array(), $additionalCSS = array());
 
+Doing so adds the following files if they exist:
+
+ themes/mytheme/css/layout.css
+ themes/mytheme/css/typography.css
+ themes/mytheme/css/ie6.css
+ themes/mytheme/css/ie7.css
+ themes/mytheme/css/ie8.css
+ themes/mytheme/css/menu.css
+ themes/mytheme/css/reset.css
+ themes/mytheme/css/editor.css
+ themes/mytheme/css/print.css
+
+ mysite/javascript/j.js
+
+
+###############################################
