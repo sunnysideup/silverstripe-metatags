@@ -9,14 +9,6 @@
 
 //copy the lines between the START AND END line to your /mysite/_config.php file and choose the right settings
 //===================---------------- START metatags MODULE ----------------===================
-//Object::add_extension('SiteTree', 'MetaTagger');
-//Object::add_extension('ContentController', 'MetaTagger_Controller');
-//MetaTagger::$country = "New Zealand";
-//MetaTagger::$copyright = 'owner';
-//MetaTagger::$design = '';
-//MetaTagger::$project = 'mysite';
-//MetaTagger::$coding = "";
-//================ OR ==============================
 //dont forget to add $this->addBasicMetatagRequirements to Page_Controller->init(); and add this to your theme: $ExtendedMetatags
 //Object::add_extension('SiteTree', 'MetaTagAutomation');
 //Object::add_extension('ContentController', 'MetaTagAutomation_controller');
@@ -47,3 +39,12 @@
 //MetaTagAutomation_controller::set_combine_js_files_into_one(0);
 //===================---------------- END metatags MODULE ----------------===================
 
+//===================---------------- START OLD metatags MODULE ----------------===================
+//Object::add_extension('SiteTree', 'MetaTagger');
+//Object::add_extension('ContentController', 'MetaTagger_Controller');
+//MetaTagger::$country = "New Zealand";
+//MetaTagger::$copyright = 'owner';
+//MetaTagger::$design = '';
+//MetaTagger::$project = 'mysite';
+//MetaTagger::$coding = "";
+//===================---------------- END OLD metatags MODULE ----------------===================
