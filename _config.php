@@ -9,7 +9,7 @@
 
 //copy the lines between the START AND END line to your /mysite/_config.php file and choose the right settings
 //===================---------------- START metatags MODULE ----------------===================
-//dont forget to add $this->addBasicMetatagRequirements to Page_Controller->init(); and add this to your theme: $ExtendedMetatags
+//dont forget to add $this->addBasicMetatagRequirements() to Page_Controller->init(); and add this to your theme: $ExtendedMetatags
 //Object::add_extension('SiteTree', 'MetaTagAutomation');
 //Object::add_extension('ContentController', 'MetaTagAutomation_controller');
 /* pop-ups and form interaction */

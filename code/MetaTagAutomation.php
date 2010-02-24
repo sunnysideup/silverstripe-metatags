@@ -95,7 +95,7 @@ class MetaTagAutomation extends SiteTreeDecorator {
 				$this->owner->MetaTitle = '';
 				// Check for Content, to prevent errors
 				if($this->owner->Title){
-					$this->owner->MetaTitle = strip_tags($this->owner->Title);
+					$this->owner->MetaTitle = $this->cleanInput($this->owner->Title, 0);
 				}
 			}
 			if(self::$update_meta_desc && self::$meta_desc_length ){
@@ -103,11 +103,7 @@ class MetaTagAutomation extends SiteTreeDecorator {
 				$this->owner->MetaDescription = '';
 				// Check for Content, to prevent errors
 				if($this->owner->Content){
-					$text = strip_tags($this->owner->Content);
-					$textFieldObject = Text::create("Text", $text);
-					if($textFieldObject) {
-						$this->owner->MetaDescription = strip_tags($textFieldObject->LimitWordCountXML(self::$meta_desc_length));
-					}
+					$this->owner->MetaDescription = $this->cleanInput($this->Content, self::$meta_desc_length);
 				}
 			}
 			if(self::$update_meta_keys == 1){
@@ -126,6 +122,17 @@ class MetaTagAutomation extends SiteTreeDecorator {
 		parent::onBeforeWrite();
  	}
 
+	private function cleanInput($string, $numberOfWords = 0) {
+		$newString = preg_replace("/[^a-zA-Z0-9\s]/", "", strip_tags($string));
+		if($numberOfWords) {
+			$textFieldObject = Text::create("Text", $newString);
+			if($textFieldObject) {
+				$newString = strip_tags($textFieldObject->LimitWordCountXML($numberOfWords));
+			}
+		}
+		return $newString;
+	}
+
 	public function onAfterWrite(){
 		// TODO : find a nicer way to reload the page and when exactly it needs reloading
 		//LeftAndMain::ForceReload ();
@@ -142,7 +149,7 @@ class MetaTagAutomation extends SiteTreeDecorator {
 	}
 
 	private function calculateKeywords() {
-		$string = strtolower(strip_tags($this->owner->Content));
+		$string = $this->cleanInput($this->owner->Content, 0);
 		$excludedWordsArray = explode(",", self::$exclude_words);
 		// strip excluded words
 		if(is_array($excludedWordsArray) && count($excludedWordsArray)) {
