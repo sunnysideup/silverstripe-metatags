@@ -103,7 +103,7 @@ class MetaTagAutomation extends SiteTreeDecorator {
 				$this->owner->MetaDescription = '';
 				// Check for Content, to prevent errors
 				if($this->owner->Content){
-					$this->owner->MetaDescription = $this->cleanInput($this->Content, self::$meta_desc_length);
+					$this->owner->MetaDescription = $this->cleanInput($this->owner->Content, self::$meta_desc_length);
 				}
 			}
 			if(self::$update_meta_keys == 1){
@@ -123,13 +123,19 @@ class MetaTagAutomation extends SiteTreeDecorator {
  	}
 
 	private function cleanInput($string, $numberOfWords = 0) {
-		$newString = preg_replace("/[^a-zA-Z0-9\s]/", "", strip_tags($string));
+		$newString = str_replace("&nbsp;", "", $string);
+		$newString = str_replace("&amp;", " and ", $newString);
+		$newString = str_replace("&ndash;", " - ", $newString);
+
+		$newString = strip_tags($newString);
 		if($numberOfWords) {
 			$textFieldObject = Text::create("Text", $newString);
 			if($textFieldObject) {
 				$newString = strip_tags($textFieldObject->LimitWordCountXML($numberOfWords));
 			}
 		}
+		$newString = html_entity_decode($newString, ENT_QUOTES);
+		$newString = html_entity_decode($newString, ENT_QUOTES);
 		return $newString;
 	}
 
@@ -200,7 +206,8 @@ class MetaTagAutomation_controller extends Extension {
 
 	static $allowed_actions = array(
 		"starttestforie",
-		"stoptestforie"
+		"stoptestforie",
+		"updateallmetatitles"
 	);
 
 	/**
@@ -337,6 +344,16 @@ class MetaTagAutomation_controller extends Extension {
 	//maybe replaced with something more universal (e.g. SSViewer::get_theme_folder())
 	private function getThemeFolder() {
 		return SSViewer::current_theme() ? THEMES_DIR . "/" . SSViewer::current_theme() : $this->owner->project();
+	}
+
+	/* admin only functions */
+	function updateallmetatitles() {
+		if($m = Member::CurrentMember()) {
+			if($m->IsAdmin()) {
+				DB::query("UPDATE `SiteTree` SET `MetaTitle` = `Title`");
+				DB::query("UPDATE `SiteTree_Live` SET `MetaTitle` = `Title`");
+			}
+		}
 	}
 
 }
