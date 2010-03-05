@@ -234,13 +234,7 @@ class MetaTagAutomation_controller extends Extension {
 				$themeFolder.'css/print.css'
 			);
 		array_merge($cssArray, $additionalCSS);
-		$prototypeArray =
-			array(
-				"sapphire/javascript/Validator.js",
-				THIRDPARTY_DIR."/prototype.js",
-				THIRDPARTY_DIR."/behaviour.js",
-				THIRDPARTY_DIR."/prototype_improvements.js"
-			);
+
 
 		foreach($jsArray as $js) {
 			Requirements::javascript($js);
@@ -252,6 +246,13 @@ class MetaTagAutomation_controller extends Extension {
 			Requirements::combine_files(self::$folder_for_combined_files."/MetaTagAutomation.css",$cssArray);
 		}
 		if(self::$combine_js_files_into_one) {
+			$prototypeArray =
+				array(
+					"sapphire/javascript/Validator.js",
+					THIRDPARTY_DIR."/prototype.js",
+					THIRDPARTY_DIR."/behaviour.js",
+					THIRDPARTY_DIR."/prototype_improvements.js"
+				);
 			Requirements::combine_files(self::$folder_for_combined_files."/MetaTagAutomationPrototype.js", $prototypeArray);
 			Requirements::combine_files(self::$folder_for_combined_files."/MetaTagAutomation.js", $jsArray);
 		}
