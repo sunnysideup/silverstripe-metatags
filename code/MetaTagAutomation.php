@@ -143,6 +143,20 @@ class MetaTagAutomation extends SiteTreeDecorator {
 		// TODO : find a nicer way to reload the page and when exactly it needs reloading
 		//LeftAndMain::ForceReload ();
 		parent::onAfterWrite ();
+		$oldMetaTitle = $this->owner->MetaTitle;
+		if(self::get_prepend_to_meta_title()) {
+			if(strpos($this->owner->MetaTitle, self::get_prepend_to_meta_title()) === 0) {
+				$this->owner->MetaTitle = str_replace(self::get_prepend_to_meta_title(), "", $this->owner->MetaTile);
+			}
+		}
+		if(self::get_append_to_meta_title()) {
+			if(strpos($this->owner->MetaTitle, self::get_append_to_meta_title()) === (strlen($this->owner->MetaTitle) - strlen(self::get_append_to_meta_title()))) {
+				$this->owner->MetaTitle = str_replace(self::get_append_to_meta_title(), "", $this->owner->MetaTile);
+			}
+		}
+		if($this->owner->MetaTitle != $oldMetaTitle) {
+			$this->owner->write();
+		}
 	}
 
 	private function updatedFieldsArray(){
