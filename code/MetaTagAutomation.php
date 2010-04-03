@@ -255,6 +255,7 @@ class MetaTagAutomation_controller extends Extension {
 		foreach($cssArray as $css) {
 			Requirements::css($css);
 		}
+		Requirements::themedCSS($this->owner->ClassName);
 		if(self::$combine_css_files_into_one) {
 			Requirements::combine_files(self::$folder_for_combined_files."/MetaTagAutomation.css",$cssArray);
 		}
