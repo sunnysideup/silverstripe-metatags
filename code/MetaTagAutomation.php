@@ -365,10 +365,11 @@ class MetaTagAutomation_controller extends Extension {
 
 	/* admin only functions */
 	function updateallmetatitles() {
+		$bt = defined('DB::USE_ANSI_SQL') ? "\"" : "`";
 		if($m = Member::CurrentMember()) {
 			if($m->IsAdmin()) {
-				DB::query("UPDATE `SiteTree` SET `MetaTitle` = `Title`");
-				DB::query("UPDATE `SiteTree_Live` SET `MetaTitle` = `Title`");
+				DB::query("UPDATE {$bt}SiteTree{$bt} SET {$bt}MetaTitle{$bt} = {$bt}Title{$bt}");
+				DB::query("UPDATE {$bt}SiteTree_Live{$bt} SET {$bt}MetaTitle{$bt} = {$bt}Title{$bt}");
 			}
 		}
 	}
