@@ -239,12 +239,12 @@ class MetaTagAutomation_controller extends Extension {
 		array_merge($jsArray, $additionalJS);
 		$cssArray =
 			array(
-				$themeFolder.'css/reset.css',
-				$themeFolder.'css/layout.css',
-				$themeFolder.'css/typography.css',
-				$themeFolder.'css/form.css',
-				$themeFolder.'css/menu.css',
-				$themeFolder.'css/print.css'
+				array("media" => null, "location" => $themeFolder.'css/reset.css'),
+				array("media" => null, "location" => $themeFolder.'css/layout.css'),
+				array("media" => null, "location" => $themeFolder.'css/typography.css'),
+				array("media" => null, "location" => $themeFolder.'css/form.css'),
+				array("media" => null, "location" => $themeFolder.'css/menu.css'),
+				array("media" => "print", "location" => $themeFolder.'css/print.css')
 			);
 		array_merge($cssArray, $additionalCSS);
 
@@ -252,8 +252,8 @@ class MetaTagAutomation_controller extends Extension {
 		foreach($jsArray as $js) {
 			Requirements::javascript($js);
 		}
-		foreach($cssArray as $css) {
-			Requirements::css($css);
+		foreach($cssArray as $cssArraySub) {
+			Requirements::css($cssArraySub["location"], $cssArraySub["media"]);
 		}
 		Requirements::themedCSS($this->owner->ClassName);
 		if(self::$combine_css_files_into_one) {
