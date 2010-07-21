@@ -231,6 +231,7 @@ class MetaTagAutomation_controller extends Extension {
 
 	function addBasicMetatagRequirements($additionalJS = array(), $additionalCSS = array()) {
 		$themeFolder = $this->getThemeFolder()."/";
+		$cssArrayLocationOnly = array();
 		$jsArray =
 			array(
 				THIRDPARTY_DIR."/jquery/jquery.js",
@@ -254,10 +255,11 @@ class MetaTagAutomation_controller extends Extension {
 		}
 		foreach($cssArray as $cssArraySub) {
 			Requirements::css($cssArraySub["location"], $cssArraySub["media"]);
+			$cssArrayLocationOnly[] = $cssArraySub["location"];
 		}
 		Requirements::themedCSS($this->owner->ClassName);
 		if(self::$combine_css_files_into_one) {
-			Requirements::combine_files(self::$folder_for_combined_files."/MetaTagAutomation.css",$cssArray);
+			Requirements::combine_files(self::$folder_for_combined_files."/MetaTagAutomation.css",$cssArrayLocationOnly);
 		}
 		if(self::$combine_js_files_into_one) {
 			$prototypeArray =
