@@ -39,12 +39,3 @@
 //MetaTagAutomation_controller::set_combine_js_files_into_one(0);
 //===================---------------- END metatags MODULE ----------------===================
 
-//===================---------------- START OLD metatags MODULE ----------------===================
-//Object::add_extension('SiteTree', 'MetaTagger');
-//Object::add_extension('ContentController', 'MetaTagger_Controller');
-//MetaTagger::$country = "New Zealand";
-//MetaTagger::$copyright = 'owner';
-//MetaTagger::$design = '';
-//MetaTagger::$project = 'mysite';
-//MetaTagger::$coding = "";
-//===================---------------- END OLD metatags MODULE ----------------===================
