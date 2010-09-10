@@ -266,7 +266,8 @@ class MetaTagAutomation_controller extends Extension {
 				array(
 					"sapphire/javascript/Validator.js",
 					THIRDPARTY_DIR."/prototype/prototype.js",
-					THIRDPARTY_DIR."/behaviour/behaviour.js"
+					THIRDPARTY_DIR."/behaviour/behaviour.js",
+					"sapphire/javascript/prototype_improvements.js"
 				);
 			Requirements::combine_files(self::$folder_for_combined_files."/MetaTagAutomationPrototype.js", $prototypeArray);
 			Requirements::combine_files(self::$folder_for_combined_files."/MetaTagAutomation.js", $jsArray);
