@@ -34,7 +34,9 @@ class MetaTagAutomation extends SiteTreeDecorator {
 	protected static $meta_desc_length = 12;
 		static function set_meta_desc_length($var) {self::$meta_desc_length = $var;}
 
-	/* meta keywords */
+	/* meta keywords
+		TO DO: remove all of this keyword stuff
+	*/
 	protected static $update_meta_keys = 0;
 		static function set_update_meta_keys($var) {self::$update_meta_keys = $var;}
 	protected static $number_of_keywords = 15;
