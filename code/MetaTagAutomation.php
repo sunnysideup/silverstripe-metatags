@@ -311,6 +311,8 @@ class MetaTagAutomation_controller extends Extension {
 			$lastEdited = new DateTime();
 		}
 		$lastEdited->value = $this->owner->LastEdited;
+
+        //use base url rather than / so that sites that aren't a run from the root directory can have a favicon
         $base = Director::baseURL();
 		$tags .= '
 			<meta http-equiv="Content-type" content="text/html; charset=utf-8" />'.
