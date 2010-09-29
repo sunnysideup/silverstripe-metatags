@@ -311,11 +311,12 @@ class MetaTagAutomation_controller extends Extension {
 			$lastEdited = new DateTime();
 		}
 		$lastEdited->value = $this->owner->LastEdited;
+        $base = Director::baseURL();
 		$tags .= '
 			<meta http-equiv="Content-type" content="text/html; charset=utf-8" />'.
 			($includeTitle ? '<title>'.MetaTagAutomation::get_prepend_to_meta_title().$title.MetaTagAutomation::get_append_to_meta_title().'</title>' : '')
-			.'<link rel="icon" href="/favicon.ico" type="image/x-icon" />
-			<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+			.'<link rel="icon" href="'.$base.'favicon.ico" type="image/x-icon" />
+			<link rel="shortcut icon" href="'.$base.'favicon.ico" type="image/x-icon" />
 			<meta name="keywords" http-equiv="keywords" content="'.Convert::raw2att($keywords).'" />'.$description;
 		if($addExtraSearchEngineData) {
 			$tags .= '
