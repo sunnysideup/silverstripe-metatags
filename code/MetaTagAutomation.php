@@ -246,6 +246,7 @@ class MetaTagAutomation_controller extends Extension {
 			array(
 				array("media" => null, "location" => $themeFolder.'css/reset.css'),
 				array("media" => null, "location" => $themeFolder.'css/layout.css'),
+				array("media" => null, "location" => $themeFolder.'css/pages.css'),
 				array("media" => null, "location" => $themeFolder.'css/typography.css'),
 				array("media" => null, "location" => $themeFolder.'css/form.css'),
 				array("media" => null, "location" => $themeFolder.'css/menu.css'),
