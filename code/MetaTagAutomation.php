@@ -247,10 +247,10 @@ class MetaTagAutomation_controller extends Extension {
 				array("media" => null, "location" => $themeFolder.'css/reset.css'),
 				array("media" => null, "location" => $themeFolder.'css/layout.css'),
 				array("media" => null, "location" => $themeFolder.'css/typography.css'),
-				array("media" => null, "location" => $themeFolder.'css/individualPages.css'),
 				array("media" => null, "location" => $themeFolder.'css/form.css'),
 				array("media" => null, "location" => $themeFolder.'css/menu.css'),
-				array("media" => "print", "location" => $themeFolder.'css/print.css')
+				array("media" => "print", "location" => $themeFolder.'css/print.css'),
+				array("media" => null, "location" => $themeFolder.'css/individualPages.css')
 			);
 		array_merge($cssArray, $additionalCSS);
 
