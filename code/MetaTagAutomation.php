@@ -237,7 +237,6 @@ class MetaTagAutomation_controller extends Extension {
 		$cssArrayLocationOnly = array();
 		$jsArray =
 			array(
-				THIRDPARTY_DIR."/jquery/jquery.js",
 				$this->owner->project().'/javascript/j.js'
 			);
 		array_merge($jsArray, $additionalJS);
@@ -252,8 +251,8 @@ class MetaTagAutomation_controller extends Extension {
 				array("media" => null, "location" => $themeFolder.'css/individualPages.css')
 			);
 		array_merge($cssArray, $additionalCSS);
-
-
+		Requirements::javascript("http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js");
+		Requirements::customScript('!window.jQuery && document.write(\'<script src="/'.THIRDPARTY_DIR."/jquery/jquery.js".'" type="text/javascript"><\/script>\')');
 		foreach($jsArray as $js) {
 			Requirements::javascript($js);
 		}
