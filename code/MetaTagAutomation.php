@@ -46,6 +46,10 @@ class MetaTagAutomation extends SiteTreeDecorator {
 	protected static $exclude_words = 'the,and,from';
 		static function set_exclude_words($var) {self::$exclude_words = $var;}
 
+	protected static $google_font_collection = array();
+		static function add_google_font($v) {self::$google_font_collection[$v] = $v;}
+		static function get_google_font_collection() {return self::$google_font_collection;}
+
 	public function extraStatics() {
 		return array (
 			'db' => array(
@@ -281,6 +285,12 @@ class MetaTagAutomation_controller extends Extension {
 			Requirements::insertHeadTags('<!--[if IE 6]><style type="text/css">@import url('.$themeFolder.'css/ie6.css);</style><![endif]-->');
 			Requirements::insertHeadTags('<!--[if IE 7]><style type="text/css">@import url('.$themeFolder.'css/ie7.css);</style><![endif]-->');
 			Requirements::insertHeadTags('<!--[if IE 8]><style type="text/css">@import url('.$themeFolder.'css/ie8.css);</style><![endif]-->');
+		}
+		$array = MetaTagAutomation::get_google_font_collection();
+		if($array && count($array)) {
+			foreach($array as $font) {
+				Requirements::insertHeadTags('<link href="http://fonts.googleapis.com/css?family='.$font.'" rel="stylesheet" type="text/css" />');
+			}
 		}
 	}
 

@@ -33,6 +33,8 @@
 //MetaTagAutomation_controller::set_copyright("owner");
 //MetaTagAutomation_controller::set_design("owner");
 //MetaTagAutomation_controller::set_coding("owner");
+//FONTTS
+//MetaTagAutomation::add_google_font("Inconsolata");
 /* combined files */
 //MetaTagAutomation_controller::set_folder_for_combined_files("cache");
 //MetaTagAutomation_controller::set_combine_css_files_into_one(0);
