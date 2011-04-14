@@ -11,43 +11,46 @@
 class MetaTagAutomation extends SiteTreeDecorator {
 
 	/* pop-ups and form interaction */
-	protected static $disable_update_popup = 0;
-		static function set_disable_update_popup($var) {self::$disable_update_popup = $var;}
+	protected static $disable_update_popup = false;
+		static function set_disable_update_popup($b) {self::$disable_update_popup = $b;}
 
 	/* default value for auto-update pages' metatags */
-	protected static $default_state_auto_update_checkbox = 0;
-		static function set_default_state_auto_update_checkbox($var) {self::$default_state_auto_update_checkbox = $var;}
+	protected static $default_state_auto_update_checkbox = false;
+		static function set_default_state_auto_update_checkbox($b) {self::$default_state_auto_update_checkbox = $b;}
 
 	/* meta-title */
-	protected static $update_meta_title = 0;
-		static function set_update_meta_title($var) {self::$update_meta_title = $var;}
+	protected static $update_meta_title = false;
+		static function set_update_meta_title($b) {self::$update_meta_title = $b;}
 	protected static $prepend_to_meta_title = "";
-		static function set_prepend_to_meta_title($var) {self::$prepend_to_meta_title = $var;}
+		static function set_prepend_to_meta_title($s) {self::$prepend_to_meta_title = $s;}
 		static function get_prepend_to_meta_title() {return self::$prepend_to_meta_title;}
 	protected static $append_to_meta_title = "";
-		static function set_append_to_meta_title($var) {self::$append_to_meta_title = $var;}
+		static function set_append_to_meta_title($s) {self::$append_to_meta_title = $s;}
 		static function get_append_to_meta_title() {return self::$append_to_meta_title;}
 
 	/* meta descriptions */
-	protected static $update_meta_desc = 0;
-		static function set_update_meta_desc($var) {self::$update_meta_desc = $var;}
+	protected static $update_meta_desc = false;
+		static function set_update_meta_desc($b) {self::$update_meta_desc = $b;}
 	protected static $meta_desc_length = 12;
-		static function set_meta_desc_length($var) {self::$meta_desc_length = $var;}
+		static function set_meta_desc_length($i) {self::$meta_desc_length = $i;}
 
 	/* meta keywords
 		TO DO: remove all of this keyword stuff
 	*/
-	protected static $update_meta_keys = 0;
-		static function set_update_meta_keys($var) {self::$update_meta_keys = $var;}
+	protected static $hide_keywords_altogether = true
+		static function set_update_meta_keys($b) {self::$hide_keywords_altogether = $b;}
+	protected static $update_meta_keys = false;
+		static function set_update_meta_keys($b) {self::$update_meta_keys = $b;}
 	protected static $number_of_keywords = 15;
-		static function set_number_of_keywords($var) {self::$number_of_keywords = $var;}
+		static function set_number_of_keywords($i) {self::$number_of_keywords = $i;}
 	protected static $min_word_char = 3;
-		static function set_min_word_char($var) {self::$min_word_char = $var;}
+		static function set_min_word_char($i) {self::$min_word_char = $i;}
 	protected static $exclude_words = 'the,and,from';
-		static function set_exclude_words($var) {self::$exclude_words = $var;}
+		static function set_exclude_words($s) {self::$exclude_words = $s;}
 
 	protected static $google_font_collection = array();
-		static function add_google_font($v) {self::$google_font_collection[$v] = $v;}
+		static function add_google_font($s) {self::$google_font_collection[$s] = $s;}
+		static function remove_google_font($s) {unset(self::$google_font_collection[$s]);}
 		static function get_google_font_collection() {return self::$google_font_collection;}
 
 	public function extraStatics() {
@@ -72,10 +75,12 @@ class MetaTagAutomation extends SiteTreeDecorator {
 
 	public function updateCMSFields(FieldSet &$fields) {
 		$automatedFields =  $this->updatedFieldsArray();
+		if(self::$hide_keywords_altogether) {
+			$fields->removeFieldFromTab("Root.Content.Metadata", "MetaKeywords");
+		}
 		if(count($automatedFields)) {
 			$updated_field_string = " (updated are: ".implode(", ", $automatedFields).") ";
 			$fields->addFieldToTab('Root.Content.Metadata', new CheckboxField('AutomateMetatags', _t('MetaManager.UPDATEMETA','Automatically Update Meta-data Fields '). $updated_field_string, self::$default_state_auto_update_checkbox ? 1 : null), "URL");
-			$fields->removeFieldFromTab("Root.Content.Metadata", "MetaKeywords");
 			foreach($fields as $field) {
 				if(in_array($field->Title, $automatedFields)) {
 					$fields->removeFieldsFromTab('Root.Content.Metadata', $field->Title);
@@ -210,21 +215,21 @@ class MetaTagAutomation_controller extends Extension {
 
 	/* additional metatag information */
 	protected static $country = "New Zealand";
-		static function set_country($var) {self::$country = $var;}
+		static function set_country($s) {self::$country = $s;}
 	protected static $copyright = 'owner';
-		static function set_copyright($var) {self::$copyright = $var;}
+		static function set_copyright($s) {self::$copyright = $s;}
 	protected static $design = 'owner';
-		static function set_design($var) {self::$design = $var;}
+		static function set_design($s) {self::$design = $s;}
 	protected static $coding = "owner";
-		static function set_coding($var) {self::$coding = $var;}
+		static function set_coding($s) {self::$coding = $s;}
 
 	/* combined files */
 	protected static $folder_for_combined_files = "assets";
-		static function set_folder_for_combined_files($var) {self::$folder_for_combined_files = $var;}
+		static function set_folder_for_combined_files($s) {self::$folder_for_combined_files = $s;}
 	protected static $combine_css_files_into_one = false;
-		public static function set_combine_css_files_into_one($var) {self::$combine_css_files_into_one = $var;}
+		public static function set_combine_css_files_into_one($s) {self::$combine_css_files_into_one = $s;}
 	protected static $combine_js_files_into_one = false;
-		public static function set_combine_js_files_into_one($var) {self::$combine_js_files_into_one = $var;}
+		public static function set_combine_js_files_into_one($s) {self::$combine_js_files_into_one = $s;}
 
 	static $allowed_actions = array(
 		"starttestforie",
