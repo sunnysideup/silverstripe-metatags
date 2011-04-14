@@ -37,7 +37,7 @@ class MetaTagAutomation extends SiteTreeDecorator {
 	/* meta keywords
 		TO DO: remove all of this keyword stuff
 	*/
-	protected static $hide_keywords_altogether = true
+	protected static $hide_keywords_altogether = true;
 		static function set_hide_keywords_altogether($b) {self::$hide_keywords_altogether = $b;  if($b) {self::$update_meta_keys = false;} }
 		static function get_hide_keywords_altogether() {return self::$hide_keywords_altogether; }
 	protected static $update_meta_keys = false;
