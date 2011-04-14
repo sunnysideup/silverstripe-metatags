@@ -38,9 +38,10 @@ class MetaTagAutomation extends SiteTreeDecorator {
 		TO DO: remove all of this keyword stuff
 	*/
 	protected static $hide_keywords_altogether = true
-		static function set_update_meta_keys($b) {self::$hide_keywords_altogether = $b;}
+		static function set_hide_keywords_altogether($b) {self::$hide_keywords_altogether = $b;  if($b) {self::$update_meta_keys = false;} }
+		static function get_hide_keywords_altogether() {return self::$hide_keywords_altogether; }
 	protected static $update_meta_keys = false;
-		static function set_update_meta_keys($b) {self::$update_meta_keys = $b;}
+		static function set_update_meta_keys($b) {self::$update_meta_keys = $b; if($b) {self::$hide_keywords_altogether = false;} }
 	protected static $number_of_keywords = 15;
 		static function set_number_of_keywords($i) {self::$number_of_keywords = $i;}
 	protected static $min_word_char = 3;
@@ -75,7 +76,7 @@ class MetaTagAutomation extends SiteTreeDecorator {
 
 	public function updateCMSFields(FieldSet &$fields) {
 		$automatedFields =  $this->updatedFieldsArray();
-		if(self::$hide_keywords_altogether) {
+		if(self::get_hide_keywords_altogether()) {
 			$fields->removeFieldFromTab("Root.Content.Metadata", "MetaKeywords");
 		}
 		if(count($automatedFields)) {
@@ -307,7 +308,9 @@ class MetaTagAutomation_controller extends Extension {
 		$tags = "";
 		$page = $this->owner;
 		$title = Convert::raw2xml(($page->MetaTitle) ? $page->MetaTitle : $page->Title );
-		$keywords = Convert::raw2xml(($page->MetaKeywords) ? $page->MetaKeywords : $page->Title );
+		if(!MetaTagAutomation::get_hide_keywords_altogether()) {
+			$keywords = Convert::raw2xml(($page->MetaKeywords) ? $page->MetaKeywords : $page->Title );
+		}
 		if($page->MetaDescription) {
 		 $description = '
 			<meta name="description" http-equiv="description" content="'.Convert::raw2att($page->MetaDescription).'" />';
@@ -331,8 +334,11 @@ class MetaTagAutomation_controller extends Extension {
 			<meta http-equiv="Content-type" content="text/html; charset=utf-8" />'.
 			($includeTitle ? '<title>'.MetaTagAutomation::get_prepend_to_meta_title().$title.MetaTagAutomation::get_append_to_meta_title().'</title>' : '')
 			.'<link rel="icon" href="'.$base.'favicon.ico" type="image/x-icon" />
-			<link rel="shortcut icon" href="'.$base.'favicon.ico" type="image/x-icon" />
+			<link rel="shortcut icon" href="'.$base.'favicon.ico" type="image/x-icon" />';
+		if(!MetaTagAutomation::get_hide_keywords_altogether()) {
+			$tags .= '
 			<meta name="keywords" http-equiv="keywords" content="'.Convert::raw2att($keywords).'" />'.$description;
+		}
 		if($addExtraSearchEngineData) {
 			$tags .= '
 			<meta name="robots" content="'.$noopd.'all, index, follow" />
