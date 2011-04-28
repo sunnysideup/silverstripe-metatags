@@ -10,6 +10,7 @@
 
 class MetaTagAutomation extends SiteTreeDecorator {
 
+
 	/* pop-ups and form interaction */
 	protected static $disable_update_popup = false;
 		static function set_disable_update_popup($b) {self::$disable_update_popup = $b;}
@@ -53,6 +54,11 @@ class MetaTagAutomation extends SiteTreeDecorator {
 		static function add_google_font($s) {self::$google_font_collection[$s] = $s;}
 		static function remove_google_font($s) {unset(self::$google_font_collection[$s]);}
 		static function get_google_font_collection() {return self::$google_font_collection;}
+
+	/* favicon */
+	protected static $use_themed_favicon = false;
+		static function set_use_themed_favicon($b) {self::$use_themed_favicon = $b;}
+		static function get_use_themed_favicon() {return self::$use_themed_favicon;}
 
 	public function extraStatics() {
 		return array (
@@ -328,13 +334,16 @@ class MetaTagAutomation_controller extends Extension {
 		}
 		$lastEdited->value = $this->owner->LastEdited;
 
-        //use base url rather than / so that sites that aren't a run from the root directory can have a favicon
-        $base = Director::baseURL();
+		//use base url rather than / so that sites that aren't a run from the root directory can have a favicon
+    $faviconBase = Director::baseURL();
+		if(MetaTagAutomation::get_use_themed_favicon()) {
+    	$faviconBase = $this->getThemeFolder()."/";
+		}
 		$tags .= '
 			<meta http-equiv="Content-type" content="text/html; charset=utf-8" />'.
 			($includeTitle ? '<title>'.MetaTagAutomation::get_prepend_to_meta_title().$title.MetaTagAutomation::get_append_to_meta_title().'</title>' : '')
-			.'<link rel="icon" href="'.$base.'favicon.ico" type="image/x-icon" />
-			<link rel="shortcut icon" href="'.$base.'favicon.ico" type="image/x-icon" />';
+			.'<link rel="icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />
+			<link rel="shortcut icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />';
 		if(!MetaTagAutomation::get_hide_keywords_altogether()) {
 			$tags .= '
 			<meta name="keywords" http-equiv="keywords" content="'.Convert::raw2att($keywords).'" />'.$description;
