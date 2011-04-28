@@ -337,7 +337,7 @@ class MetaTagAutomation_controller extends Extension {
 		//use base url rather than / so that sites that aren't a run from the root directory can have a favicon
     $faviconBase = Director::baseURL();
 		if(MetaTagAutomation::get_use_themed_favicon()) {
-    	$faviconBase = $this->getThemeFolder()."/";
+    	$faviconBase .= $this->getThemeFolder()."/";
 		}
 		$tags .= '
 			<meta http-equiv="Content-type" content="text/html; charset=utf-8" />'.
