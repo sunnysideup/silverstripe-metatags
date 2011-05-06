@@ -40,5 +40,7 @@
 //MetaTagAutomation_controller::set_folder_for_combined_files("cache");
 //MetaTagAutomation_controller::set_combine_css_files_into_one(false);
 //MetaTagAutomation_controller::set_combine_js_files_into_one(false);
+/* favicons */
+//MetaTagAutomation::set_use_themed_favicon(true);
 //===================---------------- END metatags MODULE ----------------===================
 
