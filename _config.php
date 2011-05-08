@@ -34,7 +34,7 @@
 //MetaTagAutomation_controller::set_copyright("owner");
 //MetaTagAutomation_controller::set_design("owner");
 //MetaTagAutomation_controller::set_coding("owner");
-//FONTTS
+//FONTS - see google fonts for options, include within CSS file as: body {font-family: Inconsolata;}
 //MetaTagAutomation::add_google_font("Inconsolata");
 /* combined files */
 //MetaTagAutomation_controller::set_folder_for_combined_files("cache");
