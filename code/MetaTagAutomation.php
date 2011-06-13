@@ -15,40 +15,15 @@ class MetaTagAutomation extends SiteTreeDecorator {
 	protected static $disable_update_popup = false;
 		static function set_disable_update_popup($b) {self::$disable_update_popup = $b;}
 
-	/* default value for auto-update pages' metatags */
-	protected static $default_state_auto_update_checkbox = false;
-		static function set_default_state_auto_update_checkbox($b) {self::$default_state_auto_update_checkbox = $b;}
-
-	/* meta-title */
-	protected static $update_meta_title = false;
-		static function set_update_meta_title($b) {self::$update_meta_title = $b;}
-	protected static $prepend_to_meta_title = "";
-		static function set_prepend_to_meta_title($s) {self::$prepend_to_meta_title = $s;}
-		static function get_prepend_to_meta_title() {return self::$prepend_to_meta_title;}
-	protected static $append_to_meta_title = "";
-		static function set_append_to_meta_title($s) {self::$append_to_meta_title = $s;}
-		static function get_append_to_meta_title() {return self::$append_to_meta_title;}
-
 	/* meta descriptions */
-	protected static $update_meta_desc = false;
-		static function set_update_meta_desc($b) {self::$update_meta_desc = $b;}
 	protected static $meta_desc_length = 12;
 		static function set_meta_desc_length($i) {self::$meta_desc_length = $i;}
 
 	/* meta keywords
-		TO DO: remove all of this keyword stuff
 	*/
 	protected static $hide_keywords_altogether = true;
 		static function set_hide_keywords_altogether($b) {self::$hide_keywords_altogether = $b;  if($b) {self::$update_meta_keys = false;} }
 		static function get_hide_keywords_altogether() {return self::$hide_keywords_altogether; }
-	protected static $update_meta_keys = false;
-		static function set_update_meta_keys($b) {self::$update_meta_keys = $b; if($b) {self::$hide_keywords_altogether = false;} }
-	protected static $number_of_keywords = 15;
-		static function set_number_of_keywords($i) {self::$number_of_keywords = $i;}
-	protected static $min_word_char = 3;
-		static function set_min_word_char($i) {self::$min_word_char = $i;}
-	protected static $exclude_words = 'the,and,from';
-		static function set_exclude_words($s) {self::$exclude_words = $s;}
 
 	protected static $google_font_collection = array();
 		static function add_google_font($s) {self::$google_font_collection[$s] = $s;}
@@ -63,14 +38,11 @@ class MetaTagAutomation extends SiteTreeDecorator {
 	public function extraStatics() {
 		return array (
 			'db' => array(
-				'AutomateMetatags' => 'Boolean'
+				'AutomateMetatags' => 'Boolean',
+			),
+			'defaults' => array(
+				'AutomateMetatags' => true
 			)
-		);
-	}
-
-	function populateDefaults() {
-		return array(
-			"AutomateMetatags" => self::$default_state_auto_update_checkbox
 		);
 	}
 
@@ -87,7 +59,7 @@ class MetaTagAutomation extends SiteTreeDecorator {
 		}
 		if(count($automatedFields)) {
 			$updated_field_string = " (updated are: ".implode(", ", $automatedFields).") ";
-			$fields->addFieldToTab('Root.Content.Metadata', new CheckboxField('AutomateMetatags', _t('MetaManager.UPDATEMETA','Automatically Update Meta-data Fields '). $updated_field_string, self::$default_state_auto_update_checkbox ? 1 : null), "URL");
+			$fields->addFieldToTab('Root.Content.Metadata', new CheckboxField('AutomateMetatags', _t('MetaManager.UPDATEMETA','Automatically Update Meta-data Fields '). $updated_field_string), "URL");
 			foreach($fields as $field) {
 				if(in_array($field->Title, $automatedFields)) {
 					$fields->removeFieldsFromTab('Root.Content.Metadata', $field->Title);
@@ -106,10 +78,11 @@ class MetaTagAutomation extends SiteTreeDecorator {
 	 * Update Metadata fields function
 	 */
 	public function onBeforeWrite () {
+		$siteConfig = SiteConfig::current_site_config();
 		// if UpdateMeta checkbox is checked, update metadata based on content and title
 		// we only update this from the CMS to limit slow-downs in programatic updates
 		if(isset($_REQUEST['AutomateMetatags']) && $_REQUEST['AutomateMetatags']){
-			if(self::$update_meta_title){
+			if($siteConfig->UpdateMetaTitle){
 				// Empty MetaTitle
 				$this->owner->MetaTitle = '';
 				// Check for Content, to prevent errors
@@ -117,24 +90,12 @@ class MetaTagAutomation extends SiteTreeDecorator {
 					$this->owner->MetaTitle = $this->cleanInput($this->owner->Title, 0);
 				}
 			}
-			if(self::$update_meta_desc && self::$meta_desc_length ){
+			if($siteConfig->UpdateMetaDescription && self::$meta_desc_length ){
 				// Empty MetaDescription
 				$this->owner->MetaDescription = '';
 				// Check for Content, to prevent errors
 				if($this->owner->Content){
 					$this->owner->MetaDescription = $this->cleanInput($this->owner->Content, self::$meta_desc_length);
-				}
-			}
-			if(self::$update_meta_keys == 1){
-				// Empty MetaKeywords
-				$this->owner->MetaKeywords = '';
-				// Check for Content, to prevent errors
-				if($this->owner->Content){
-					// calculateKeywords
-					$keystring = self::calculateKeywords();
-					if($keystring){
-						$this->owner->MetaKeywords = $keystring;
-					}
 				}
 			}
 		}
@@ -161,15 +122,16 @@ class MetaTagAutomation extends SiteTreeDecorator {
 		// TODO : find a nicer way to reload the page and when exactly it needs reloading
 		//LeftAndMain::ForceReload ();
 		parent::onAfterWrite ();
+		$siteConfig = SiteConfig::current_site_config();
 		$oldMetaTitle = $this->owner->MetaTitle;
-		if(self::get_prepend_to_meta_title()) {
-			if(strpos($this->owner->MetaTitle, self::get_prepend_to_meta_title()) === 0) {
-				$this->owner->MetaTitle = str_replace(self::get_prepend_to_meta_title(), "", $this->owner->MetaTile);
+		if($siteConfig->PrependToMetaTitle) {
+			if(strpos($this->owner->MetaTitle, $siteConfig->PrependToMetaTitle) === 0) {
+				$this->owner->MetaTitle = str_replace($siteConfig->PrependToMetaTitle, "", $this->owner->MetaTile);
 			}
 		}
-		if(self::get_append_to_meta_title()) {
-			if(strpos($this->owner->MetaTitle, self::get_append_to_meta_title()) === (strlen($this->owner->MetaTitle) - strlen(self::get_append_to_meta_title()))) {
-				$this->owner->MetaTitle = str_replace(self::get_append_to_meta_title(), "", $this->owner->MetaTile);
+		if($siteConfig->AppendToMetaTitle) {
+			if(strpos($this->owner->MetaTitle, $siteConfig->AppendToMetaTitle) === (strlen($this->owner->MetaTitle) - strlen($siteConfig->AppendToMetaTitle))) {
+				$this->owner->MetaTitle = str_replace($siteConfig->AppendToMetaTitle, "", $this->owner->MetaTile);
 			}
 		}
 		if($this->owner->MetaTitle != $oldMetaTitle) {
@@ -178,57 +140,31 @@ class MetaTagAutomation extends SiteTreeDecorator {
 	}
 
 	private function updatedFieldsArray(){
+		$siteConfig = SiteConfig::current_site_config();
 		$updateDatedFieldArray = array();
-		if(self::$disable_update_popup) { $updateDatedFieldArray["URLSegment"] = _t('SiteTree.URLSegment','URL Segment ');}
-		if(self::$update_meta_title) 		{ $updateDatedFieldArray["Title"] = _t('SiteTree.METATITLE','Title '); }
-		if(self::$update_meta_desc) 		{ $updateDatedFieldArray["Description"] = _t('SiteTree.METADESC','Description '); }
-		if(self::$update_meta_keys) 		{ $updateDatedFieldArray["Keywords"] = _t('SiteTree.METAKEYWORDS','Keywords ');}
+		if(self::$disable_update_popup) 					{ $updateDatedFieldArray["URLSegment"] = _t('SiteTree.URLSegment','URL Segment ');}
+		if($siteConfig->UpdateMetaTitle) 					{ $updateDatedFieldArray["Title"] = _t('SiteTree.METATITLE','Title '); }
+		if($siteConfig->AppendToMetaDescription) 	{ $updateDatedFieldArray["Description"] = _t('SiteTree.METADESC','Description '); }
 		return $updateDatedFieldArray;
 	}
 
-	private function calculateKeywords() {
-		$string = $this->cleanInput($this->owner->Content, 0);
-		$string = strtolower($string);
-
-		$excludedWordsArray = explode(",", self::$exclude_words);
-		// strip excluded words
-		if(is_array($excludedWordsArray) && count($excludedWordsArray)) {
-			foreach($excludedWordsArray as $filterWord)	{
-				$string = preg_replace("/\b".trim($filterWord)."\b/i", "", $string );
-			}
-		}
-		// calculate words again without the excluded words
-		$wordsArray = str_word_count($string , 1);
-		$wordsArray = array_filter($wordsArray, create_function('$var', 'return (strlen($var) >= '.self::$min_word_char.');'));
-		$uniqueWordsArray = array_unique($wordsArray);
-		$rankedKeywordsArray = array();
-		foreach($uniqueWordsArray as $key => $word)	{
-			//should this be string or newstring
-			preg_match_all('/\b'.$word.'\b/i', $string, $out);
-			$count = count($out[0]);
-			$rankedKeywordsArray[$count.'_'.$word] = $word;
-		}
-		krsort($rankedKeywordsArray);
-		// sort array form higher to lower cmp
-		// glue keywords to string seperated by comma, maximum 15 words
-		$keystring = strtolower(implode(', ', array_slice($rankedKeywordsArray, 0, self::$number_of_keywords)));
-		// return the keywords
-		return $keystring;
+	function populateDefaults () {
+		$this->owner->AutomateMetatags = true;
 	}
 
+	/*
+	private function SiteConfigVar($fieldName) {
+		if($siteConfig = SiteConfig::current_site_config()) {
+			if(isset($siteConfig->$fieldName)) {
+				return $siteConfig->$fieldName;
+			}
+		}
+		return false;
+	}
+	*/
 }
 
 class MetaTagAutomation_controller extends Extension {
-
-	/* additional metatag information */
-	protected static $country = "New Zealand";
-		static function set_country($s) {self::$country = $s;}
-	protected static $copyright = 'owner';
-		static function set_copyright($s) {self::$copyright = $s;}
-	protected static $design = 'owner';
-		static function set_design($s) {self::$design = $s;}
-	protected static $coding = "owner";
-		static function set_coding($s) {self::$coding = $s;}
 
 	/* combined files */
 	protected static $folder_for_combined_files = "assets";
@@ -313,18 +249,19 @@ class MetaTagAutomation_controller extends Extension {
 	function ExtendedMetatags($includeTitle = true, $addExtraSearchEngineData = true) {
 		$tags = "";
 		$page = $this->owner;
+		$siteConfig = SiteConfig::current_site_config();
 		$title = Convert::raw2xml(($page->MetaTitle) ? $page->MetaTitle : $page->Title );
 		if(!MetaTagAutomation::get_hide_keywords_altogether()) {
 			$keywords = Convert::raw2xml(($page->MetaKeywords) ? $page->MetaKeywords : $page->Title );
 		}
 		if($page->MetaDescription) {
-		 $description = '
+			$description = '
 			<meta name="description" http-equiv="description" content="'.Convert::raw2att($page->MetaDescription).'" />';
-		 $noopd = '';
+			$noopd = '';
 		}
 		else {
-		 $noopd = "NOODP, ";
-		 $description = '';
+			$noopd = "NOODP, ";
+			$description = '';
 		}
 		if(class_exists("SSDatetime")) {
 			$lastEdited = new SSDatetime();
@@ -335,13 +272,13 @@ class MetaTagAutomation_controller extends Extension {
 		$lastEdited->value = $this->owner->LastEdited;
 
 		//use base url rather than / so that sites that aren't a run from the root directory can have a favicon
-    $faviconBase = Director::baseURL();
+		$faviconBase = Director::baseURL();
 		if(MetaTagAutomation::get_use_themed_favicon()) {
-    	$faviconBase .= $this->getThemeFolder()."/";
+			$faviconBase .= $this->getThemeFolder()."/";
 		}
 		$tags .= '
 			<meta http-equiv="Content-type" content="text/html; charset=utf-8" />'.
-			($includeTitle ? '<title>'.MetaTagAutomation::get_prepend_to_meta_title().$title.MetaTagAutomation::get_append_to_meta_title().'</title>' : '')
+			($includeTitle ? '<title>'.Convert::raw2att($page->PrependToMetaTitle.$title.$page->AppendToMetaTitle).'</title>' : '')
 			.'<link rel="icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />
 			<link rel="shortcut icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />';
 		if(!MetaTagAutomation::get_hide_keywords_altogether()) {
@@ -352,11 +289,11 @@ class MetaTagAutomation_controller extends Extension {
 			$tags .= '
 			<meta name="robots" content="'.$noopd.'all, index, follow" />
 			<meta name="googlebot" content="'.$noopd.'all, index, follow" />
-			<meta name="copyright" content="'.self::$copyright.'" />
-			<meta name="coding" content="'.self::$coding.'" />
-			<meta name="design" content="'.self::$design.'" />
+			<meta name="copyright" content="'.$siteConfig->MetaDataCopyright.'" />
+			<meta name="coding" content="'.$siteConfig->MetaDataCoding.'" />
+			<meta name="design" content="'.$siteConfig->MetaDataDesign.'" />
 			<meta name="date-modified-yyyymmdd" content="'.$lastEdited->Format("Ymd").'" />
-			<meta name="country" content="'.self::$country.'" />
+			<meta name="country" content="'.$siteConfig->MetaDataCountry.'" />
 			<meta http-equiv="imagetoolbar" content="no" />
 			'.$page->ExtraMeta;
 		}
@@ -400,15 +337,5 @@ class MetaTagAutomation_controller extends Extension {
 		return SSViewer::current_theme() ? THEMES_DIR . "/" . SSViewer::current_theme() : $this->owner->project();
 	}
 
-	/* admin only functions */
-	function updateallmetatitles() {
-		$bt = defined('DB::USE_ANSI_SQL') ? "\"" : "`";
-		if($m = Member::CurrentMember()) {
-			if($m->IsAdmin()) {
-				DB::query("UPDATE {$bt}SiteTree{$bt} SET {$bt}MetaTitle{$bt} = {$bt}Title{$bt}");
-				DB::query("UPDATE {$bt}SiteTree_Live{$bt} SET {$bt}MetaTitle{$bt} = {$bt}Title{$bt}");
-			}
-		}
-	}
 
 }
