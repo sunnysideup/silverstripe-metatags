@@ -22,7 +22,7 @@ class MetaTagAutomation extends SiteTreeDecorator {
 	/* meta keywords
 	*/
 	protected static $hide_keywords_altogether = true;
-		static function set_hide_keywords_altogether($b) {self::$hide_keywords_altogether = $b;  if($b) {self::$update_meta_keys = false;} }
+		static function set_hide_keywords_altogether($b) {self::$hide_keywords_altogether = $b; }
 		static function get_hide_keywords_altogether() {return self::$hide_keywords_altogether; }
 
 	protected static $google_font_collection = array();
