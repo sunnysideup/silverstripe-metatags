@@ -1,2 +1,45 @@
-.lowRes, .lowRes input {color: #ccc;}
-.highRes, .highRes input {color: #000;}
+body {font-size: 12px!important; background-color: #fff; color: #333; font-family: sans-serif}
+h1 {font-size: 20px; color: #450BCA; text-align: center;}
+
+input, textarea {border: 1px solid transparent; width: 100%; background-color: transparent}
+input:focus, textarea:focus {color:#450BCA!important }
+#MetaTagCMSControlForm tr:hover input, #MetaTagCMSControlForm tr:hover textarea  {border: 1px solid #CCC;}
+#MetaTagCMSControlForm tr:hover input[disabled='disabled'], #MetaTagCMSControlForm tr:hover textarea[disabled=disabled]   {border: 1px solid transparent!important; }
+
+input:hover, textarea:hover {background-color: #FFF; border: 1px solid green!important;}
+
+
+a{text-decoration: none; color: #0B9BCA;background-color: yellow}
+a:link{text-decoration: underline;}
+a:visited{text-decoration: none;}
+a:hover{background-color: orange;}
+a:active{background-color: red;}
+
+
+
+.lowRes input, .lowRes textarea {color: #CCC;}
+.highRes input, .highRes textarea {color: #333;}
+table {width: 100%;}
+td,th {vertical-align: top; border-top: 1px dotted #ccc; padding:5px;border-right: 1px dotted #ccc; border-bottom: 2px solid #fff; border-left: 2px solid #fff;}
+th img {float: left; display: block;}
+th img.right {float: right;}
+tr {}
+tr.even th, tr.even td {background-color: #eee;}
+th, tfoot td {background-color: #ADD8E6;}
+.url, .title, .auto, .menu {width: 15%;}
+.metaD, .metaT{width: 20%;}
+.expand, .auto {text-align: center;}
+
+table tfoot tr.actions th, table tfoot tr.actions td {text-align: left;} 
+table ul {padding: 0px; margin: 0px;}
+table ul li {margin-top: 10px}
+table ul li li {margin-top: 0px}
+table ul li {list-style: none;}
+table ul ul { }
+
+
+.response {background-color: green; color: #fff; padding: 5px; text-align: center; margin: 4px;}
+
+.goOneUpLink, .goOneDownLink {display: block; float: left; height: 32px; width: 32px;text-indent: -2000px;}
+.goOneUpLink {background-image: url(/metatags/images/up.png); float: left; }
+.goOneDownLink {background-image: url(/metatags/images/down.png);float: right; }

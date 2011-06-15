@@ -18,6 +18,7 @@ class MetaTagAutomation extends SiteTreeDecorator {
 	/* meta descriptions */
 	protected static $meta_desc_length = 12;
 		static function set_meta_desc_length($i) {self::$meta_desc_length = $i;}
+		static function get_meta_desc_length() {return self::$meta_desc_length;}
 
 	/* meta keywords
 	*/
@@ -53,15 +54,16 @@ class MetaTagAutomation extends SiteTreeDecorator {
 	}
 
 	public function updateCMSFields(FieldSet &$fields) {
-		$automatedFields =  $this->updatedFieldsArray();
+		
 		if(self::get_hide_keywords_altogether()) {
 			$fields->removeFieldFromTab("Root.Content.Metadata", "MetaKeywords");
 		}
+		$automatedFields =  $this->updatedFieldsArray();
 		if(count($automatedFields)) {
-			$updated_field_string = " (updated are: ".implode(", ", $automatedFields).") ";
-			$fields->addFieldToTab('Root.Content.Metadata', new CheckboxField('AutomateMetatags', _t('MetaManager.UPDATEMETA','Automatically Update Meta-data Fields '). $updated_field_string), "URL");
+			$updated_field_string = " (automatically updated are: ".implode(", ", $automatedFields).") ";
+			$fields->addFieldToTab('Root.Content.Metadata', new CheckboxField('AutomateMetatags', _t('MetaManager.UPDATEMETA','Allow Meta (Search Engine) Fields to be updated automatically? '). $updated_field_string), "URL");
 			foreach($fields as $field) {
-				if(in_array($field->Title, $automatedFields)) {
+				if(in_array($field->Name(), $automatedFields)) {
 					$fields->removeFieldsFromTab('Root.Content.Metadata', $field->Title);
 					$newField = $field->performDisabledTransformation();
 					$fields->addFieldToTab('Root.Content.Metadata', $newField);
@@ -92,31 +94,16 @@ class MetaTagAutomation extends SiteTreeDecorator {
 			}
 			if($siteConfig->UpdateMetaDescription && self::$meta_desc_length ){
 				// Empty MetaDescription
-				$this->owner->MetaDescription = '';
 				// Check for Content, to prevent errors
-				if($this->owner->Content){
-					$this->owner->MetaDescription = $this->cleanInput($this->owner->Content, self::$meta_desc_length);
+				if($this->owner->Content && !$this->owner->MetaDescription){
+					$this->owner->MetaDescription = DBField::create("HTMLText", $this->owner->Content)->Summary(MetaTagAutomation::get_meta_desc_length(), 15, "");
+
 				}
 			}
 		}
 		parent::onBeforeWrite();
  	}
 
-	private function cleanInput($string, $numberOfWords = 0) {
-		$newString = str_replace("&nbsp;", "", $string);
-		$newString = str_replace("&amp;", " and ", $newString);
-		$newString = str_replace("&ndash;", " - ", $newString);
-		$newString = strip_tags(str_replace('<', ' <', $newString));
-		if($numberOfWords) {
-			$textFieldObject = Text::create("Text", $newString);
-			if($textFieldObject) {
-				$newString = strip_tags($textFieldObject->LimitWordCountXML($numberOfWords));
-			}
-		}
-		$newString = html_entity_decode($newString, ENT_QUOTES);
-		$newString = html_entity_decode($newString, ENT_QUOTES);
-		return $newString;
-	}
 
 	public function onAfterWrite(){
 		// TODO : find a nicer way to reload the page and when exactly it needs reloading
@@ -143,8 +130,9 @@ class MetaTagAutomation extends SiteTreeDecorator {
 		$siteConfig = SiteConfig::current_site_config();
 		$updateDatedFieldArray = array();
 		if(self::$disable_update_popup) 					{ $updateDatedFieldArray["URLSegment"] = _t('SiteTree.URLSegment','URL Segment ');}
-		if($siteConfig->UpdateMetaTitle) 					{ $updateDatedFieldArray["Title"] = _t('SiteTree.METATITLE','Title '); }
-		if($siteConfig->AppendToMetaDescription) 	{ $updateDatedFieldArray["Description"] = _t('SiteTree.METADESC','Description '); }
+		if($siteConfig->UpdateMenuTitle) 	  			{ $updateDatedFieldArray["MenuTitle"] = _t('SiteTree.METADESC','Menu Title '); }
+		if($siteConfig->UpdateMetaTitle) 					{ $updateDatedFieldArray["MetaTitle"] = _t('SiteTree.METATITLE','Title '); }
+		if($siteConfig->UpdateMetaDescription) 	  { $updateDatedFieldArray["MetaDescription"] = _t('SiteTree.METADESC','Description '); }
 		return $updateDatedFieldArray;
 	}
 
@@ -276,10 +264,18 @@ class MetaTagAutomation_controller extends Extension {
 		if(MetaTagAutomation::get_use_themed_favicon()) {
 			$faviconBase .= $this->getThemeFolder()."/";
 		}
+		if($includeTitle) {
+			$titleTag = '
+			<title>'.Convert::raw2att($siteConfig->PrependToMetaTitle.' '.$title.' '.$siteConfig->AppendToMetaTitle).'</title>';
+		}
+		else {
+			$titleTag = '';
+		}
 		$tags .= '
 			<meta http-equiv="Content-type" content="text/html; charset=utf-8" />'.
-			($includeTitle ? '<title>'.Convert::raw2att($page->PrependToMetaTitle.$title.$page->AppendToMetaTitle).'</title>' : '')
-			.'<link rel="icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />
+			$titleTag
+			.'
+			<link rel="icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />
 			<link rel="shortcut icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />';
 		if(!MetaTagAutomation::get_hide_keywords_altogether()) {
 			$tags .= '

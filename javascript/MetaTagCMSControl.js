@@ -11,10 +11,10 @@ var MetaTagCMSControl = {
 
 	init: function(){
 		var options = { 
-			target:        '.response',   // target element(s) to be updated with server response 
-			beforeSubmit:  MetaTagCMSControl.showRequest,  // pre-submit callback 
-			success:       MetaTagCMSControl.showResponse,  // post-submit callback 
-			beforeSerialize: MetaTagCMSControl.fixSerialize
+			target:             '.response',   // target element(s) to be updated with server response 
+			beforeSubmit:       MetaTagCMSControl.showRequest,  // pre-submit callback 
+			success:            MetaTagCMSControl.showResponse,  // post-submit callback 
+			beforeSerialize:    MetaTagCMSControl.fixSerialize
 			// other available options: 
 			//url:       url         // override for form's 'action' attribute 
 			//type:      type        // 'get' or 'post', override for form's 'method' attribute 
@@ -28,17 +28,24 @@ var MetaTagCMSControl = {
 	 
 		// bind form using 'ajaxForm' 
 		jQuery('#MetaTagCMSControlForm').ajaxForm(options);
-		jQuery('#MetaTagCMSControlForm input').keyup(
-			function(){
-				jQuery(this).parent().removeClass("lowRes").addClass("highRes");
-			}
-		);
-		jQuery('#MetaTagCMSControlForm input').change(
+		//submit on change
+		jQuery('#MetaTagCMSControlForm input, #MetaTagCMSControlForm textarea').change(
 			function() {
-				MetaTagCMSControl.fieldName = jQuery('this').attr("id");
+				jQuery(this).parent().removeClass("lowRes").addClass("highRes");
+				MetaTagCMSControl.fieldName = jQuery(this).attr("id");
 				jQuery('#MetaTagCMSControlForm').submit();
 			}
 		);
+		jQuery(".newWindow").attr("target", "_blank");
+		jQuery(".actions ul").hide();
+		jQuery(".bactchactions a").click(
+			function(event) {
+				jQuery(".actions ul").slideToggle();
+				event.preventDefault();
+				return false;
+			}
+		);
+
 	},
 
 
@@ -53,7 +60,7 @@ var MetaTagCMSControl = {
 		// jqForm is a jQuery object encapsulating the form element.  To access the 
 		// DOM element for the form do this: 
 		// var formElement = jqForm[0]; 
-		alert('About to submit: \n\n' + queryString); 
+		//alert('About to submit: \n\n' + queryString); 
 		return true; 
 	},
  
@@ -70,11 +77,11 @@ var MetaTagCMSControl = {
 		// property set to 'json' then the first argument to the success callback 
 		// is the json data object returned by the server 
 	 
-		alert('status: ' + statusText + '\n\nresponseText: \n' + responseText + 
-			'\n\nThe output div should have already been updated with the responseText.'); 
+		//alert('status: ' + statusText + '\n\nresponseText: \n' + responseText + '\n\nThe output div should have already been updated with the responseText.'); 
 	}, 
 
 	fixSerialize: function ($form, options) {
-
+		//alert(MetaTagCMSControl.fieldName);
+		jQuery("#FieldName").attr("value",MetaTagCMSControl.fieldName);
 	}
 }
