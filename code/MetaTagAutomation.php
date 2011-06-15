@@ -92,6 +92,14 @@ class MetaTagAutomation extends SiteTreeDecorator {
 					$this->owner->MetaTitle = $this->cleanInput($this->owner->Title, 0);
 				}
 			}
+			if($siteConfig->UpdateMenuTitle){
+				// Empty MetaTitle
+				$this->owner->MenuTitle = '';
+				// Check for Content, to prevent errors
+				if($this->owner->Title){
+					$this->owner->MenuTitle = $this->cleanInput($this->owner->Title, 0);
+				}
+			}
 			if($siteConfig->UpdateMetaDescription && self::$meta_desc_length ){
 				// Empty MetaDescription
 				// Check for Content, to prevent errors
@@ -150,6 +158,23 @@ class MetaTagAutomation extends SiteTreeDecorator {
 		return false;
 	}
 	*/
+	private function cleanInput($string, $numberOfWords = 0) {
+		$newString = str_replace("&nbsp;", "", $string);
+		$newString = str_replace("&amp;", " and ", $newString);
+		$newString = str_replace("&ndash;", " - ", $newString);
+		$newString = strip_tags(str_replace('<', ' <', $newString));
+		if($numberOfWords) {
+			$textFieldObject = Text::create("Text", $newString);
+			if($textFieldObject) {
+				$newString = strip_tags($textFieldObject->LimitWordCountXML($numberOfWords));
+			}
+		}
+		$newString = html_entity_decode($newString, ENT_QUOTES);
+		$newString = html_entity_decode($newString, ENT_QUOTES);
+		return $newString;
+	}
+
+
 }
 
 class MetaTagAutomation_controller extends Extension {
