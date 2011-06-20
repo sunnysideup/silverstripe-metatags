@@ -29,7 +29,8 @@ var MetaTagCMSControl = {
 		// bind form using 'ajaxForm' 
 		jQuery('#MetaTagCMSControlForm').ajaxForm(options);
 		//submit on change
-		jQuery('#MetaTagCMSControlForm input, #MetaTagCMSControlForm textarea').change(
+		jQuery('#MetaTagCMSControlForm input, #MetaTagCMSControlForm textarea').live(
+			"change",
 			function() {
 				jQuery(this).parent().removeClass("lowRes").addClass("highRes");
 				MetaTagCMSControl.fieldName = jQuery(this).attr("id");
@@ -38,7 +39,8 @@ var MetaTagCMSControl = {
 		);
 		jQuery(".newWindow").attr("target", "_blank");
 		jQuery(".actions ul").hide();
-		jQuery(".bactchactions a").click(
+		jQuery(".bactchactions a").live(
+			"click",
 			function(event) {
 				jQuery(".actions ul").slideToggle();
 				event.preventDefault();

@@ -1,10 +1,10 @@
 		<tbody>
 			<% control MyPages %>
-			<tr class="$FirstLast $EvenOdd">
+			<tr class="$FirstLast $EvenOdd" id="TR-$ID">
 
 				<td class="url">
-					<% if Parent %><a href="$GoOneUpLink" class="goOneUpLink" title="go up one level to: $Parent.MenuTitle.ATT">-</a><% end_if %>
-					<% if ChildrenLink %><a href="$ChildrenLink" class="goOneDownLink" title="go down one level and view child pages of: $MenuTitle.ATT">+</a><% end_if %>
+					<% if Parent %><a href="$GoOneUpLink" class="goOneUpLink" title="go up one level to: $Parent.MenuTitle.ATT" rel="TR-$ID>-</a><% end_if %>
+					<% if ChildrenLink %><a href="$ChildrenLink" class="goOneDownLink" title="go down one level and view child pages of: $MenuTitle.ATT" rel="TR-$ID">+</a><% end_if %>
 					<a href="$Link" class="newWindow" title="Page Type: $ClassName - click to open page in new tab.">
 						<% control SegmentedLink %><span>$Segment/</span><% end_control %>
 					</a>
