@@ -34,9 +34,9 @@ class MetaTagSiteConfigExtension extends DataObjectDecorator {
 			new CheckboxField("UpdateMetaDescription", "Automatically update every meta description on every page (using the page content) - this only updates if there is no existing description?"),
 			new LiteralField("MetaOtherExplanation", "<h3>Other Meta Data</h3><p>You can add some other <i>hidden</i> information to your pages - which can be picked up by Search Engines and other automated readers decyphering your website.</p>"),
 			new TextField("MetaCountry", "Country"),
-			new TextField("MetaCopyright", "Content Copyright"),
-			new TextField("MetaDesign", "Design provided by ..."),
-			new TextField("MetaCoding", "Website Coding carried out by ..."),
+			new TextField("MetaDataCopyright", "Content Copyright"),
+			new TextField("MetaDataDesign", "Design provided by ..."),
+			new TextField("MetaDataCoding", "Website Coding carried out by ..."),
 			new LiteralField("LinkToManagerHeader", "<h3><a href=\"$linkToManager\" target=\"_blank\">Review and Edit Search Engine Data</a></h3>")
 		));
 		return $fields;
