@@ -33,7 +33,7 @@ class MetaTagSiteConfigExtension extends DataObjectDecorator {
 			new LiteralField("MetaDescriptionExplanation", "<h3>Meta Description</h3><p>The Meta Description is not visible on the website itself. However, it is picked up by search engines like google.  They display it as the short blurb underneath the link to your pages. It will not get you much higher in the rankings, but it will entice people to click on your link.</p>"),
 			new CheckboxField("UpdateMetaDescription", "Automatically update every meta description on every page (using the page content) - this only updates if there is no existing description?"),
 			new LiteralField("MetaOtherExplanation", "<h3>Other Meta Data</h3><p>You can add some other <i>hidden</i> information to your pages - which can be picked up by Search Engines and other automated readers decyphering your website.</p>"),
-			new TextField("MetaCountry", "Country"),
+			new TextField("MetaDataCountry", "Country"),
 			new TextField("MetaDataCopyright", "Content Copyright"),
 			new TextField("MetaDataDesign", "Design provided by ..."),
 			new TextField("MetaDataCoding", "Website Coding carried out by ..."),
