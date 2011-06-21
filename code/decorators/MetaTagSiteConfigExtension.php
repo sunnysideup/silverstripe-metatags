@@ -24,20 +24,20 @@ class MetaTagSiteConfigExtension extends DataObjectDecorator {
 
 	function updateCMSFields(FieldSet &$fields) {
 		$fields->addFieldsToTab("Root.SearchEngines", array( 
-			new LiteralField("MenuTitleExplanation", "<h3>Menu Title</h3><p>To improve consistency, you can set the menu title to automatically match the page title for any page on the site. </p>"),
+			new LiteralField("MenuTitleExplanation", "<h3 style=\"margin-top: 30px;\">Menu Title</h3><p>To improve consistency, you can set the menu title to automatically match the page title for any page on the site. </p>"),
 			new CheckboxField("UpdateMenuTitle", "Automatically update the Menu Title to match the Page Title?"),
-			new LiteralField("MetaTitleExplanation", "<h3>Meta Title</h3><p>The Meta Title is the name of your page shown in the top of the browser.  This is an important indication to search engine about the content of the page.  It should be around seven words long.  Below you can add something to the front / end of every meta title (e.g. the name of your business).  Often this is done with some characters, e.g. two colons (::) or a hyphen ( - ) so that the full title reads something like: 'My Business Site :: Contact Us Page'</p>"),
+			new LiteralField("MetaTitleExplanation", "<h3 style=\"margin-top: 70px;\">Meta Title</h3><p>The Meta Title is the name of your page shown in the top of the browser.  This is an important indication to search engine about the content of the page.  It should be around seven words long.  Below you can add something to the front / end of every meta title (e.g. the name of your business).  Often this is done with some characters, e.g. two colons (::) or a hyphen ( - ) so that the full title reads something like: 'My Business Site :: Contact Us Page'</p>"),
 			new CheckboxField("UpdateMetaTitle", "Automatically update every meta title to the same content as the page title?"),
 			new TextField("PrependToMetaTitle", "Prepend (add in front) of Meta Title"),
 			new TextField("AppendToMetaTitle", "Append (add at the end) of Meta Title"),
-			new LiteralField("MetaDescriptionExplanation", "<h3>Meta Description</h3><p>The Meta Description is not visible on the website itself. However, it is picked up by search engines like google.  They display it as the short blurb underneath the link to your pages. It will not get you much higher in the rankings, but it will entice people to click on your link.</p>"),
+			new LiteralField("MetaDescriptionExplanation", "<h3 style=\"margin-top: 70px;\">Meta Description</h3><p>The Meta Description is not visible on the website itself. However, it is picked up by search engines like google.  They display it as the short blurb underneath the link to your pages. It will not get you much higher in the rankings, but it will entice people to click on your link.</p>"),
 			new CheckboxField("UpdateMetaDescription", "Automatically update every meta description on every page (using the page content) - this only updates if there is no existing description?"),
-			new LiteralField("MetaOtherExplanation", "<h3>Other Meta Data</h3><p>You can add some other <i>hidden</i> information to your pages - which can be picked up by Search Engines and other automated readers decyphering your website.</p>"),
+			new LiteralField("MetaOtherExplanation", "<h3 style=\"margin-top: 70px;\">Other Meta Data</h3><p>You can add some other <i>hidden</i> information to your pages - which can be picked up by Search Engines and other automated readers decyphering your website.</p>"),
 			new TextField("MetaDataCountry", "Country"),
 			new TextField("MetaDataCopyright", "Content Copyright"),
 			new TextField("MetaDataDesign", "Design provided by ..."),
 			new TextField("MetaDataCoding", "Website Coding carried out by ..."),
-			new LiteralField("MetaTagsLinksExplanation", "<h3>Referencing Websites</h3><p>A big part of Search Engine Optimisation is getting other sites to link to your site.  Below you can keep a record of these back links.</p>"),
+			new LiteralField("MetaTagsLinksExplanation", "<h3 style=\"margin-top: 70px;\">Referencing Websites</h3><p>A big part of Search Engine Optimisation is getting other sites to link to your site.  Below you can keep a record of these back links.</p>"),
 			new ComplexTableField($controller = $this->owner, $name = "MetaTagsLinks", $sourceClass = "MetaTagsLinks")
 		));
 		return $fields;
