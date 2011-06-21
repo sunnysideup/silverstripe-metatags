@@ -23,9 +23,9 @@ class MetaTagSiteConfigExtension extends DataObjectDecorator {
 	}
 
 	function updateCMSFields(FieldSet &$fields) {
-		$linkToManager = "/" . MetaTagCMSControl::get_url_segment() ."/";
-		$fields->addFieldsToTab("Root.SearchEngines", array(
-			new CheckboxField("UpdateMenuTitle", "Automatically update every Menu Title to match the Page Title?"),
+		$fields->addFieldsToTab("Root.SearchEngines", array( 
+			new LiteralField("MenuTitleExplanation", "<h3>Menu Title</h3><p>To improve consistency, you can set the menu title to automatically match the page title for any page on the site. </p>"),
+			new CheckboxField("UpdateMenuTitle", "Automatically update the Menu Title to match the Page Title?"),
 			new LiteralField("MetaTitleExplanation", "<h3>Meta Title</h3><p>The Meta Title is the name of your page shown in the top of the browser.  This is an important indication to search engine about the content of the page.  It should be around seven words long.  Below you can add something to the front / end of every meta title (e.g. the name of your business).  Often this is done with some characters, e.g. two colons (::) or a hyphen ( - ) so that the full title reads something like: 'My Business Site :: Contact Us Page'</p>"),
 			new CheckboxField("UpdateMetaTitle", "Automatically update every meta title to the same content as the page title?"),
 			new TextField("PrependToMetaTitle", "Prepend (add in front) of Meta Title"),
@@ -37,7 +37,8 @@ class MetaTagSiteConfigExtension extends DataObjectDecorator {
 			new TextField("MetaDataCopyright", "Content Copyright"),
 			new TextField("MetaDataDesign", "Design provided by ..."),
 			new TextField("MetaDataCoding", "Website Coding carried out by ..."),
-			new LiteralField("LinkToManagerHeader", "<h3><a href=\"$linkToManager\" target=\"_blank\">Review and Edit Search Engine Data</a></h3>")
+			new LiteralField("MetaTagsLinksExplanation", "<h3>Referencing Websites</h3><p>A big part of Search Engine Optimisation is getting other sites to link to your site.  Below you can keep a record of these back links.</p>"),
+			new ComplexTableField($controller = $this->owner, $name = "MetaTagsLinks", $sourceClass = "MetaTagsLinks")
 		));
 		return $fields;
 	}

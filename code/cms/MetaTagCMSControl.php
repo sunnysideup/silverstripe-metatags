@@ -175,10 +175,13 @@ class MetaTagCMSControl extends Controller {
 
 	
 	function MyPages() {
-		$pages = DataObject::get("SiteTree", "ParentID = ".$this->ParentID);
-		$dos = array();
+		$pages = DataObject::get("SiteTree", "ParentID = ".$this->ParentID. " AND \"ShowInSearch\" = 1");
+		$dos = null;
 		if($pages) {
 			foreach($pages as $page) {
+				if($page instanceOf ErrorPage || !$page->canView(new Member())) {
+					$pages->remove($page);
+				}
 				$page->ChildrenLink = '';
 				$page->MetaTitleIdentical = $page->MenuTitleIdentical = false;
 				$page->MetaTitleAutoUpdate = $page->MenuTitleAutoUpdate = false;
@@ -198,7 +201,6 @@ class MetaTagCMSControl extends Controller {
 					$page->ChildrenLink = $this->createLevelLink($page->ID);
 				}
 				$linkArray = explode("/", $page->Link());
-				
 				$dos[$page->ID] = new DataObjectSet();
 				if(count($linkArray)) {
 					foreach($linkArray as $segment) {

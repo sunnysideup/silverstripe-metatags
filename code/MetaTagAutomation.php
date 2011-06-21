@@ -10,7 +10,6 @@
 
 class MetaTagAutomation extends SiteTreeDecorator {
 
-
 	/* pop-ups and form interaction */
 	protected static $disable_update_popup = false;
 		static function set_disable_update_popup($b) {self::$disable_update_popup = $b;}
@@ -54,7 +53,6 @@ class MetaTagAutomation extends SiteTreeDecorator {
 	}
 
 	public function updateCMSFields(FieldSet &$fields) {
-		
 		if(self::get_hide_keywords_altogether()) {
 			$fields->removeFieldFromTab("Root.Content.Metadata", "MetaKeywords");
 		}
@@ -74,6 +72,9 @@ class MetaTagAutomation extends SiteTreeDecorator {
 			Requirements::clear('sapphire/javascript/UpdateURL.js');
 			Requirements::javascript('metatags/javascript/UpdateURL.js');
 		}
+		$linkToManager = "/" . MetaTagCMSControl::get_url_segment() ."/";
+		$fields->addFieldToTab('Root.Content.Metadata', new LiteralField("LinkToManagerHeader", "<p>Open the Meta Tag Manager to <a href=\"$linkToManager\" target=\"_blank\">Review and Edit</a> the Meta Data for all pages on this site. Also make sure to review the general <a href=\"/admin/show/root/\">settings for Search Engines</a>.</p>"), "URL");
+		return $fields;
 	}
 
 	/**
