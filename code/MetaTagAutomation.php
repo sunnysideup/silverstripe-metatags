@@ -81,6 +81,7 @@ class MetaTagAutomation extends SiteTreeDecorator {
 	 * Update Metadata fields function
 	 */
 	public function onBeforeWrite () {
+		parent::onBeforeWrite();
 		$siteConfig = SiteConfig::current_site_config();
 		// if UpdateMeta checkbox is checked, update metadata based on content and title
 		// we only update this from the CMS to limit slow-downs in programatic updates
@@ -110,7 +111,7 @@ class MetaTagAutomation extends SiteTreeDecorator {
 				}
 			}
 		}
-		parent::onBeforeWrite();
+		
  	}
 
 
