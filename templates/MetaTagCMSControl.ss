@@ -14,7 +14,7 @@
 		<thead>
 			<tr>
 				<th scope="col" class="url" title="This is the web address used for the page - it is setup to automatically match the Title of the Page.">URL</th>
-				<th scope="col" class="title" title="This is the key field - start by getting the Page Titles right and the rest will follow.">Title</th>
+				<th scope="col" class="title" title="This is the key field - start by getting the Page Titles right and the rest will follow.">Page Title</th>
 				<th scope="col" class="auto" title="Update Meta and Menu Titles and Descriptions automatically?"><img src="/metatags/images/linked_horizontal_flip.png" alt="linked" title="This image identifies which fields are linked to the Page Title." class="right" />Apply Rules?</th>
 				<th scope="col" class="menu" title="A shorter version of the Page Title, used in menus with limited room."><% if AlwaysUpdateMenuTitle %><img src="/metatags/images/linked.png" alt="linked" title="Menu Title automatically updates to Page Title (linked)" /><% end_if %>Menu Title</th>
 				<th scope="col" class="metaT" title="The Page Title as it is 'seen' by search engines."><% if AlwaysUpdateMetaTitle %><img src="/metatags/images/linked.png" alt="linked" title="Meta  Title automatically updates to Page Title (linked)" /><% end_if %>Search Engine Title</th>
@@ -25,7 +25,7 @@
 			<tr class="actions">
 				
 				<th class="bactchactions"><a href="#" title="Make changes to all pages at once.">Rules and Quick Fixes</a></th>
-				<th scope="col" class="title" title="This is the key field - start by getting the Page Titles right and the rest will follow.">Title</th>
+				<th scope="col" class="title" title="This is the key field - start by getting the Page Titles right and the rest will follow.">Page Title</th>
 				<th scope="col" class="auto" title="Update Meta and Menu Titles and Descriptions automatically?"><img src="/metatags/images/linked_horizontal_flip.png" alt="linked" title="This image identifies which fields are linked to the Page Title." class="right" />Apply rules?</th>
 				<th scope="col" class="menu" title="A shorter version of the Page Title, used in menus with limited room."><% if AlwaysUpdateMenuDescription %><img src="/metatags/images/linked.png" alt="linked" title="Menu Title automatically updates to Page Title (linked)" /><% end_if %>Menu Title</th>
 				<th scope="col" class="metaT" title="The Page Title as it is 'seen' by search engines."><% if AlwaysUpdateMetaTitle %><img src="/metatags/images/linked.png" alt="linked" title="Meta  Title automatically updates to Page Title (linked)" /><% end_if %>Search Engine Title</th>
