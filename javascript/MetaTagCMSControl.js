@@ -38,11 +38,11 @@ var MetaTagCMSControl = {
 			}
 		);
 		jQuery(".newWindow").attr("target", "_blank");
-		jQuery(".actions ul").hide();
+		jQuery(".actions ul, tr.subsequentActions").hide();
 		jQuery(".bactchactions a").live(
 			"click",
 			function(event) {
-				jQuery(".actions ul").slideToggle();
+				jQuery(".actions ul, tr.subsequentActions").slideToggle();
 				event.preventDefault();
 				return false;
 			}
@@ -60,7 +60,7 @@ var MetaTagCMSControl = {
 		var queryString = jQuery.param(formData); 
 	 
 		// jqForm is a jQuery object encapsulating the form element.  To access the 
-		// DOM element for the form do this: 
+		// DOM element for the form do shiothis: 
 		// var formElement = jqForm[0]; 
 		//alert('About to submit: \n\n' + queryString); 
 		return true; 

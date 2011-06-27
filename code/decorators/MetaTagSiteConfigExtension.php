@@ -48,7 +48,8 @@ class MetaTagSiteConfigExtension extends DataObjectDecorator {
 					new TextField("MetaDataCoding", "Website Coding carried out by ...")
 				),
 				new Tab("Review and Update",
-					new LiteralField("LinkToManagerHeader", "<p>Open the Meta Tag Manager to <a href=\"$linkToManager\" target=\"_blank\">Review and Edit</a> the Meta Data for all pages on this site.</p>")
+					new LiteralField("ManageLinks", "<iframe src=\"$linkToManager\" name=\"manage links\" width=\"100%\" height=\"900\">you browser does not support i-frames</iframe>"),
+					new LiteralField("LinkToManagerHeader", "<p>Need more room? <a href=\"$linkToManager\" target=\"_blank\">Review and Edit</a> the Meta Data for all pages in a new window?</p>")
 				),
 				new Tab("Back Links",
 					new LiteralField("MetaTagsLinksExplanation", "<h3>Referencing Websites</h3><p>A big part of Search Engine Optimisation is getting other sites to link to your site.  Below you can keep a record of these back links.</p>"),

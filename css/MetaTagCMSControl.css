@@ -1,5 +1,5 @@
 body {font-size: 12px!important; background-color: #fff; color: #333; font-family: sans-serif}
-h1 {font-size: 20px; color: #450BCA; text-align: center;}
+h1 {font-size: 15px;text-align: center;}
 
 input, textarea {border: 1px solid transparent; width: 100%; background-color: transparent}
 input:focus, textarea:focus {color:#450BCA!important }
@@ -30,9 +30,10 @@ th, tfoot td {background-color: #ADD8E6;}
 .metaD, .metaT{width: 20%;}
 .expand, .auto {text-align: center;}
 
-table tfoot tr.actions th, table tfoot tr.actions td {text-align: left;} 
+table tfoot tr.actions td,table tfoot tr.actions th.bactchactions {text-align: left;} 
+
 table ul {padding: 0px; margin: 0px;}
-table ul li {margin-top: 10px}
+table ul li {}
 table ul li li {margin-top: 0px}
 table ul li {list-style: none;}
 table ul ul { }
@@ -44,4 +45,4 @@ table ul ul { }
 .goOneUpLink {background-image: url(/metatags/images/up.png); float: left; }
 .goOneDownLink {background-image: url(/metatags/images/down.png);float: right; }
 
-.bactchactions a {font-size: 20px;}
+.bactchactions a {font-size: 15px;}
