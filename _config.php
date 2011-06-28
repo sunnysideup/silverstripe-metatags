@@ -26,8 +26,8 @@ Director::addRules(8, array(
 //MetaTagAutomation::add_google_font("Inconsolata");
 /* combined files */
 //MetaTagAutomation_controller::set_folder_for_combined_files("cache");
-//MetaTagAutomation_controller::set_combine_css_files_into_one(false);
-//MetaTagAutomation_controller::set_combine_js_files_into_one(false);
+//MetaTagAutomation_controller::set_combine_css_files_into_one(true);
+//MetaTagAutomation_controller::set_combine_js_files_into_one(true);
 /* favicons */
 //MetaTagAutomation::set_use_themed_favicon(true);
 //===================---------------- END metatags MODULE ----------------===================
