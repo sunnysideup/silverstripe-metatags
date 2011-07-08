@@ -9,6 +9,8 @@
 Director::addRules(8, array(
 	'metatagmanagement//$Action/$ID/$OtherID' => 'MetatagCMSControl'
 ));
+define('SS_METATAG_DIR', 'metatags');
+
 
 //copy the lines between the START AND END line to your /mysite/_config.php file and choose the right settings
 //===================---------------- START metatags MODULE ----------------===================

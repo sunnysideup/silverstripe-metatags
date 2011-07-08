@@ -32,7 +32,7 @@ class MetaTagCMSControl extends Controller {
 		}
 		Requirements::javascript("sapphire/thirdparty/jquery/jquery.js");
 		Requirements::javascript("sapphire/thirdparty/jquery-form/jquery.form.js");
-		Requirements::javascript("metatags/javascript/MetaTagCMSControl.js");
+		Requirements::javascript(SS_METATAG_DIR."/javascript/MetaTagCMSControl.js");
 		Requirements::themedCSS("MetaTagCMSControl");
 	}
 
