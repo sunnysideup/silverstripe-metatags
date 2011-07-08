@@ -1,8 +1,93 @@
-html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{border:0pt none;font-family:inherit;font-size:100%;font-style:inherit;font-weight:inherit;margin:0pt;outline-color:invert;outline-style:none;outline-width:0pt;padding:0pt;vertical-align:baseline;}
-a:focus, img:focus{outline-color:invert;outline-style:none;outline-width:0pt;}
-body{background:white none repeat scroll 0%;color:black;line-height:1;}
-ol,ul{list-style-image:none;list-style-position:outside;list-style-type:none;}
-table{border-collapse:separate;border-spacing:0pt;}
-caption,th,td{font-weight:normal;text-align:left;}
-blockquote:before,blockquote:after,q:before,q:after{content:"";}
-blockquote,q{quotes:"" "";}
+/*
+  inspiration was taken from these projects:
+  yui.yahooapis.com/2.8.1/build/base/base.css
+  camendesign.com/design/
+  praegnanz.de/weblog/htmlcssjs-kickstart
+  html5doctor.com
+*/
+/* CSS RESET and DEFAULTS */
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, figure, footer, header,
+hgroup, menu, nav, section, menu,
+time, mark, audio, video {
+  margin:0;
+  padding:0;
+  border:0;
+  outline:0;
+  font-size:100%;
+  vertical-align:baseline;
+  background:transparent;
+}
+article, aside, figure, footer, header, hgroup, nav, section { display:block; }
+ul { list-style:none; }
+blockquote, q { quotes:none; }
+blockquote:before, blockquote:after,
+q:before, q:after { content:''; content:none; }
+a { margin:0; padding:0; font-size:100%; vertical-align:baseline; background:transparent;
+    cursor: pointer; text-decoration: underline}
+ins { background-color:#ff9; color:#000; text-decoration:none; }
+mark { background-color:#ff9; color:#000; font-style:italic; font-weight:bold; }
+del { text-decoration: line-through; }
+acronym[title], abbr[title], dfn[title] { border-bottom:1px dotted #000; cursor:help; }
+table { border-spacing:0; }
+hr { display:block; height:1px; border:0; border-top:1px solid #ccc; margin:1em 0; padding:0; }
+input, select { vertical-align:middle; }
+table { font-size:inherit; font:100%; }
+select, input, textarea { font:99% sans-serif; }
+h1,h2,h3,h4,h5,h6 { text-rendering: optimizeLegibility; font-weight: normal;}
+html { -webkit-font-smoothing: antialiased; }
+a:hover, a:active { outline: none; }
+td, td img { vertical-align:top; }
+sub { vertical-align: sub; font-size: smaller; }
+sup { vertical-align: super; font-size: smaller; }
+pre {
+  padding: 15px;
+  white-space: pre; /* CSS2 */
+  white-space: pre-wrap; /* CSS 2.1 */
+  white-space: pre-line; /* CSS 3 (and 2.1 as well, actually) */
+  word-wrap: break-word; /* IE */
+}
+input[type="radio"] { vertical-align: text-bottom; }
+input[type="checkbox"] { vertical-align: bottom; *vertical-align: baseline; }
+.ie6 input { vertical-align: text-bottom; }
+label, input[type=button], input[type=submit], button { cursor: pointer; }
+::-moz-selection{ background: #0051dc; color:#fff; text-shadow: none; }
+::selection { background: #0051dc; color:#fff; text-shadow: none; }
+a:link { -webkit-tap-highlight-color: #5ec1ff; }
+button {  width: auto; overflow: visible; }
+.ie7 img { -ms-interpolation-mode: bicubic; }
+input[type="text"], input[type="password"], textarea { border: 1px solid;
+  border-color: #888888 #bbbbbb #e0e0e0;background: white url("images/input_shadow.png") repeat-x;}
+
+/*
+ * print styles
+ * inlined to avoid required HTTP connection www.phpied.com/delay-loading-your-print-css/
+ */
+@media print {
+  * { background: transparent !important; color: #444 !important; text-shadow: none; }
+  a, a:visited { color: #444 !important; text-decoration: underline; }
+  pre, blockquote { border: 1px solid #999; page-break-inside: avoid; }
+  img { page-break-inside: avoid; }
+  @page { margin: 0.5cm; }
+  p, h2, h3 { orphans: 3; widows: 3; }
+  h2, h3{ page-break-after: avoid; }
+}
+
+/*
+ * Media queries for responsive design
+ */
+@media all and (orientation:portrait) {}
+@media all and (orientation:landscape) {}
+@media screen and (max-device-width: 480px) {
+  html { -webkit-text-size-adjust:none; -ms-text-size-adjust:none; }
+}
+/* /RESET /DEFAULTS */
+#Wrapper{font-size: 62.5%;}
