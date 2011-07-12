@@ -1,31 +1,43 @@
+/*
+ *E0E0E0 - light beige  - E0E0E0
+ *82837E - medium beige - 82837E
+ *BFFA37 - dark beige - BFFA37
+ *94B053 - red  - 94B053
+ *BDEB07 - blue - BDEB07
+ **/
+
 body {font-size: 12px!important; background-color: #fff; color: #333; font-family: sans-serif}
 h1 {font-size: 15px;text-align: center;}
 
-input, textarea {border: 1px solid transparent; width: 100%; background-color: transparent}
-input:focus, textarea:focus {color:#450BCA!important }
-#MetaTagCMSControlForm tr:hover input, #MetaTagCMSControlForm tr:hover textarea  {border: 1px solid #CCC;}
+input, textarea {border: 1px solid transparent; width: 100%; background-color: #E0E0E0; -moz-border-radius: 3px; border-radius: 3px;}
+
+#MetaTagCMSControlForm tr:hover input, #MetaTagCMSControlForm tr:hover textarea  {border: 1px solid #82837E;}
 #MetaTagCMSControlForm tr:hover input[disabled='disabled'], #MetaTagCMSControlForm tr:hover textarea[disabled=disabled]   {border: 1px solid transparent!important; }
 
-input:hover, textarea:hover {background-color: #FFF; border: 1px solid green!important;}
+input:hover, textarea:hover {background-color: #FFF; border: 1px solid #BDEB07!important;}
+input:focus, textarea:focus {color:#AD2424!important; background-color: #fff!important; }
 
-
-a{text-decoration: none; color: #0B9BCA;background-color: yellow}
+a{text-decoration: none; color: #82837E;}
 a:link{text-decoration: none;}
 a:visited{text-decoration: none;}
-a:hover{background-color: orange;}
-a:active{background-color: red;}
+a:hover{background-color: #BFFA37}
+a:active{color: #AD2424;}
 
 
 
-.lowRes input, .lowRes textarea {color: #CCC;}
+.lowRes input, .lowRes textarea {background-color: #E0E0E0; color: #82837E;}
 .highRes input, .highRes textarea {color: #333;}
 table {width: 100%;}
 td,th {vertical-align: top; border-top: 1px dotted #ccc; padding:5px;border-right: 1px dotted #ccc; border-bottom: 2px solid #fff; border-left: 2px solid #fff;}
 th img {float: left; display: block;}
 th img.right {float: right;}
 tr {}
-tr.even th, tr.even td {background-color: #eee;}
-th, tfoot td {background-color: #ADD8E6;}
+tr.even th, tr.even td {background-color: #E0E0E0; }
+tr.last th, tr.last td {border-bottom: 30px solid #fff; }
+tr.odd th input, tr.odd td input, tr.odd th textarea, tr.odd td textarea {background-color: #fff; }
+th, tfoot td {color: #fff; background: no-repeat 5px center url(/metatags/images/moreinfo.png) #82837E; }
+th {border-bottom: 5px solid #94B053;}
+tfoot th {border-top: 5px solid #94B053; border-bottom: none;}
 .url, .title, .auto, .menu {width: 15%;}
 .metaD, .metaT{width: 20%;}
 .expand, .auto {text-align: center;}
@@ -39,10 +51,24 @@ table ul li {list-style: none;}
 table ul ul { }
 
 
-.response {background-color: green; color: #fff; padding: 5px; text-align: center; margin: 4px;}
+.response {padding: 7px; margin: 4px auto 4px auto; text-align: center; background-color: #82837E; color: #BDEB07; width: 98%; -moz-border-radius: 3px; border-radius: 3px;}
 
-.goOneUpLink, .goOneDownLink {display: block; float: left; height: 32px; width: 32px;text-indent: -2000px;}
-.goOneUpLink {background-image: url(/metatags/images/up.png); float: left; }
-.goOneDownLink {background-image: url(/metatags/images/down.png);float: right; }
+.goOneDownLink {display: block; height: 16px; width:16px;text-indent: -2000px; float: right;}
+.goOneDownLink {background-image: url(/metatags/images/down.png); }
+.bold {font-weight: bold;}
+.goOneUpLink {display: inline-block; background: url(/metatags/images/up.png) no-repeat top left; padding-left: 19px; height: 16px; }
+.bactchactions  {background-image: none;}
+.bactchactions a {font-size: 15px; background-color: #BFFA37;}
+.subsequentActions td, .subsequentActions th {background-image: none; color: #82837E; background-color: #E0E0E0}
+.subsequentActions li {color: #AD2424;}
+.subsequentActions li i {color: #82837E;}
+.subsequentActions li li {font-weight: normal;}
 
-.bactchactions a {font-size: 15px;}
+/* FILES */
+strong {color: #82837E; fontweight:bold;}
+td.filename div.iconHolder {float: left; padding-left: 0px; padding-right: 10px; height: 100px; width: 100px;}
+.fileInfo {color: #82837E;}
+.fileInfo span {}
+.fileInfo span.label {font-weight: bold;}
+.fileInfo span.data {}
+
