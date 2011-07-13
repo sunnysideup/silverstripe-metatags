@@ -72,7 +72,7 @@ class MetaTagAutomation extends SiteTreeDecorator {
 			Requirements::clear('sapphire/javascript/UpdateURL.js');
 			Requirements::javascript(SS_METATAG_DIR.'/javascript/UpdateURL.js');
 		}
-		$linkToManager = "/" . MetaTagCMSControl::get_url_segment() ."/";
+		$linkToManager = "/" . MetaTagCMSControlPages::get_url_segment() ."/";
 		$fields->addFieldToTab('Root.Content.Metadata', new LiteralField("LinkToManagerHeader", "<p>Open the Meta Tag Manager to <a href=\"$linkToManager\" target=\"_blank\">Review and Edit</a> the Meta Data for all pages on this site. Also make sure to review the general <a href=\"/admin/show/root/\">settings for Search Engines</a>.</p>"), "URL");
 		return $fields;
 	}
