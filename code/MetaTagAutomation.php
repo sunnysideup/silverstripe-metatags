@@ -58,14 +58,11 @@ class MetaTagAutomation extends SiteTreeDecorator {
 		}
 		$automatedFields =  $this->updatedFieldsArray();
 		if(count($automatedFields)) {
-			$updated_field_string = " (automatically updated are: ".implode(", ", $automatedFields).") ";
+			$updated_field_string = " (automatically updated are: <i>".implode("<i>, </i>", $automatedFields)."</i>) ";
 			$fields->addFieldToTab('Root.Content.Metadata', new CheckboxField('AutomateMetatags', _t('MetaManager.UPDATEMETA','Allow Meta (Search Engine) Fields to be updated automatically? '). $updated_field_string), "URL");
-			foreach($fields as $field) {
-				if(in_array($field->Name(), $automatedFields)) {
-					$fields->removeFieldsFromTab('Root.Content.Metadata', $field->Title);
-					$newField = $field->performDisabledTransformation();
-					$fields->addFieldToTab('Root.Content.Metadata', $newField);
-				}
+			foreach($automatedFields as $fieldName => $fieldTitle) {
+				
+				$fields->replaceField($fieldName, $fields->dataFieldByName($fieldName)->performReadonlyTransformation());
 			}
 		}
 		if(1 == self::$disable_update_popup){
