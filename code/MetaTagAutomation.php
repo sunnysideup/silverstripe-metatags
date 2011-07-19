@@ -60,9 +60,10 @@ class MetaTagAutomation extends SiteTreeDecorator {
 		if(count($automatedFields)) {
 			$updated_field_string = " (automatically updated are: <i>".implode("<i>, </i>", $automatedFields)."</i>) ";
 			$fields->addFieldToTab('Root.Content.Metadata', new CheckboxField('AutomateMetatags', _t('MetaManager.UPDATEMETA','Allow Meta (Search Engine) Fields to be updated automatically? '). $updated_field_string), "URL");
-			foreach($automatedFields as $fieldName => $fieldTitle) {
-				
-				$fields->replaceField($fieldName, $fields->dataFieldByName($fieldName)->performReadonlyTransformation());
+			if($this->owner->AutomateMetatags) {
+				foreach($automatedFields as $fieldName => $fieldTitle) {
+					$fields->replaceField($fieldName, $fields->dataFieldByName($fieldName)->performReadonlyTransformation());
+				}
 			}
 		}
 		if(1 == self::$disable_update_popup){
