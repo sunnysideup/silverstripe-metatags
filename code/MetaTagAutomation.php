@@ -58,14 +58,17 @@ class MetaTagAutomation extends SiteTreeDecorator {
 		}
 		$automatedFields =  $this->updatedFieldsArray();
 		if(count($automatedFields)) {
-			$updated_field_string = " (automatically updated are: <i>".implode("<i>, </i>", $automatedFields)."</i>) ";
+			$updated_field_string = " (the following fields will be automatically updated: <i>".implode("</i>, <i>", $automatedFields)."</i>).";
 			$fields->addFieldToTab('Root.Content.Metadata', new CheckboxField('AutomateMetatags', _t('MetaManager.UPDATEMETA','Allow Meta (Search Engine) Fields to be updated automatically? '). $updated_field_string), "URL");
 			if($this->owner->AutomateMetatags) {
 				foreach($automatedFields as $fieldName => $fieldTitle) {
-					$fields->replaceField($fieldName, $fields->dataFieldByName($fieldName)->performReadonlyTransformation());
+					$newField = $fields->dataFieldByName($fieldName)->performReadonlyTransformation();
+					$newField->setTitle($newField->Title()." (automatically updated when you save this page)");
+					$fields->replaceField($fieldName, $newField);
 				}
 			}
 		}
+		$fields->dataFieldByName("ExtraMeta")->setTitle($fields->dataFieldByName("ExtraMeta")->Title()." (advanced users only)");
 		if(1 == self::$disable_update_popup){
 			Requirements::clear('sapphire/javascript/UpdateURL.js');
 			Requirements::javascript(SS_METATAG_DIR.'/javascript/UpdateURL.js');
