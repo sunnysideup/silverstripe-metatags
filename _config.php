@@ -22,7 +22,7 @@ define('SS_METATAG_DIR', 'metatags');
 /* pop-ups and form interaction */
 //MetaTagAutomation::set_disable_update_popup(false);
 /* meta descriptions */
-//MetaTagAutomation::set_meta_desc_length(12);
+//MetaTagAutomation::set_meta_desc_length(24);
 /* meta keywords */
 //MetaTagAutomation::set_hide_keywords_altogether(true);
 //FONTS - see google fonts for options, include within CSS file as: body {font-family: Inconsolata;}
