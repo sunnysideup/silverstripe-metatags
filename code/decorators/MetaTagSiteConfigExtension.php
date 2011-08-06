@@ -23,8 +23,8 @@ class MetaTagSiteConfigExtension extends DataObjectDecorator {
 	}
 
 	function updateCMSFields(FieldSet &$fields) {
-		$linkToManagerForPages = Director::baseURL() . MetaTagCMSControlPages::get_url_segment() ."/";
-		$linkToManagerForFiles = Director::baseURL() . MetaTagCMSControlFiles::get_url_segment() ."/";
+		$linkToManagerForPages = MetaTagCMSControlPages::get_url_segment() ."/";
+		$linkToManagerForFiles = MetaTagCMSControlFiles::get_url_segment() ."/";
 		$fields->addFieldsToTab("Root.SearchEngines",
 			new TabSet("Options",
 				new Tab("Help",
