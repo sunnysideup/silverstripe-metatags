@@ -8,7 +8,7 @@
 
 Director::addRules(8, array(
 	MetaTagCMSControlPages::get_url_segment().'//$Action/$ID/$OtherID' => 'MetatagCMSControlPages',
-	MetaTagCMSControlPages::get_url_segment().'//$Action/$ID/$OtherID' => 'MetatagCMSControlFiles'
+	MetaTagCMSControlFiles::get_url_segment().'//$Action/$ID/$OtherID' => 'MetatagCMSControlFiles'
 ));
 define('SS_METATAG_DIR', 'metatags');
 
