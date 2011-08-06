@@ -104,12 +104,14 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 					$value = Convert::raw2sql($_GET[$fieldNameString]);
 				}
 				$recordID = intval($fieldNameArray[1]);
-				foreach($this->tableArray as $table) {
-					$record = DataObject::get_by_id($table, $recordID);
-					if($record) {
-						if(method_exists($record, "canPublish") && !$record->canPublish()) {
-							return Security::permissionFailure($this);
-						}
+				$record = DataObject::get_by_id($this->tableArray[0], $recordID);
+				if($record) {
+					if(method_exists($record, "canPublish") && !$record->canPublish()) {
+						return Security::permissionFailure($this);
+					}
+					foreach($this->tableArray as $table) {
+						$table = str_replace("_Live", "", $table);
+						
 						DB::query("UPDATE \"$table\" SET \"$fieldName\" = '".$value."' WHERE \"$table\".\"ID\" = ".$recordID);
 						$urlSegmentValue = '';
 						if($fieldName == "Title") {
@@ -119,8 +121,8 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 							DB::query("UPDATE \"$table\" SET \"URLSegment\" = '".$urlSegmentValue."' WHERE \"$table\".\"ID\" = ".$recordID);
 						}
 					}
+					return  _t("MetaTagCMSControl.UPDATE", "Updated <i>".$record->Title."</i>");
 				}
-				return  _t("MetaTagCMSControl.UPDATE", "Updated <i>".$record->Title."</i>");
 			}
 		}
 		return _t("MetaTagCMSControl.NOTUPDATE", "Record could not be updated.");
