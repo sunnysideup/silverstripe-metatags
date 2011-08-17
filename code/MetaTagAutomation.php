@@ -67,8 +67,7 @@ class MetaTagAutomation extends SiteTreeDecorator {
 					$fields->replaceField($fieldName, $newField);
 				}
 			}
-		}
-		$fields->dataFieldByName("ExtraMeta")->setTitle($fields->dataFieldByName("ExtraMeta")->Title()." (advanced users only)");
+		$fields->removeFieldFromTab("Root.Content.Metadata", "ExtraMeta");
 		if(1 == self::$disable_update_popup){
 			Requirements::clear('sapphire/javascript/UpdateURL.js');
 			Requirements::javascript(SS_METATAG_DIR.'/javascript/UpdateURL.js');

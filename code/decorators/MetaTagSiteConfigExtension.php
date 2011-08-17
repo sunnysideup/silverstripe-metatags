@@ -17,7 +17,9 @@ class MetaTagSiteConfigExtension extends DataObjectDecorator {
 				// flags
 				'UpdateMetaTitle' => 'Boolean',
 				'UpdateMenuTitle' => 'Boolean',
-				'UpdateMetaDescription' => 'Boolean'
+				'UpdateMetaDescription' => 'Boolean',
+				// extra meta
+				'ExtraMeta' => 'HTMLText'
 			)
 		);
 	}
@@ -69,7 +71,8 @@ class MetaTagSiteConfigExtension extends DataObjectDecorator {
 					new TextField("MetaDataCountry", "Country"),
 					new TextField("MetaDataCopyright", "Content Copyright"),
 					new TextField("MetaDataDesign", "Design provided by ..."),
-					new TextField("MetaDataCoding", "Website Coding carried out by ...")
+					new TextField("MetaDataCoding", "Website Coding carried out by ..."),
+					new TextareaField("ExtraMeta","Custom Meta Tags (advanced users only)")
 				),
 				new Tab("Pages",
 					new LiteralField("ManageLinksForPages", "<iframe src=\"$linkToManagerForPages\" name=\"manage links for pages\" width=\"100%\" height=\"90%\">you browser does not support i-frames</iframe>"),
@@ -87,4 +90,20 @@ class MetaTagSiteConfigExtension extends DataObjectDecorator {
 		);
 		return $fields;
 	}
+
+	protected $oldExtraMetaValue = '';
+
+
+
+	function onBeforeWrite(){
+		$this->oldExtraMetaValue = $this->owner->dataRecord->ExtraMeta;
+	}
+
+	function onAfterWrite(){
+		if($this->owner->ExtraMeta) {
+			DB::query("Update \"SiteTree\" SET \"ExtraMeta\" = '".$this->owner->ExtraMeta."' WHERE \"ExtraMeta\" = '' OR \"ExtraMeta\" IS NULL OR \"ExtraMeta\" = '".$this->oldExtraMetaValue."'; ");
+			DB::query("Update \"SiteTree_Live\" SET \"ExtraMeta\" = '".$this->owner->ExtraMeta."' WHERE \"ExtraMeta\" = '' OR \"ExtraMeta\" IS NULL OR \"ExtraMeta\" = '".$this->oldExtraMetaValue."'; ");
+		}
+	}
+	
 }
