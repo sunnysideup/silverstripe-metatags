@@ -66,7 +66,7 @@ table ul ul { }
 
 /* FILES */
 strong {color: #82837E; fontweight:bold;}
-td.filename div.iconHolder {float: left; padding-left: 0px; padding-right: 10px; height: 100px; width: 100px;}
+td.filename div.iconHolder {float: left; padding-left: 0px; padding-right: 10px; }
 .fileInfo {color: #82837E;}
 .fileInfo span {}
 .fileInfo span.label {font-weight: bold;}

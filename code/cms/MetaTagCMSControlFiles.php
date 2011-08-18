@@ -160,6 +160,7 @@ class MetaTagCMSControlFiles extends Controller {
 				}
 				elseif($file instanceOf Folder) {
 					$file->Type == "Folder";
+					$file->Icon == "metatags/images/Folder.png";
 				}
 				else {
 					$files->remove($file);

@@ -12,7 +12,7 @@
 			<% end_control %>
 			<% if ClassName = Folder %>
 				<% if ChildrenLink %><a href="$ChildrenLink" class="goOneDownLink" title="go down one level and view child pages of: $Name.ATT" rel="TR-$ID">+</a><% end_if %>
-				<div id="iconHolder"><img src="/$Icon" alt="$ClassName" class="defaultIcon" /></div>
+				<div class="iconHolder"><img src="/metatags/images/Folder.png" alt="$ClassName" class="defaultIcon" /></div>
 			<% else %>
 				<% if CMSThumbnail %>
 					<div class="iconHolder"><a href="$Link">$CMSThumbnail</a></div>
