@@ -31,8 +31,7 @@ ul { list-style:none; }
 blockquote, q { quotes:none; }
 blockquote:before, blockquote:after,
 q:before, q:after { content:''; content:none; }
-a { margin:0; padding:0; font-size:100%; vertical-align:baseline; background:transparent;
-    cursor: pointer; text-decoration: underline}
+a { margin:0; padding:0; font-size:100%; vertical-align:baseline; background:transparent; cursor: pointer; text-decoration: underline}
 ins { background-color:#ff9; color:#000; text-decoration:none; }
 mark { background-color:#ff9; color:#000; font-style:italic; font-weight:bold; }
 del { text-decoration: line-through; }
@@ -64,8 +63,8 @@ label, input[type=button], input[type=submit], button { cursor: pointer; }
 a:link { -webkit-tap-highlight-color: #5ec1ff; }
 button {  width: auto; overflow: visible; }
 .ie7 img { -ms-interpolation-mode: bicubic; }
-input[type="text"], input[type="password"], textarea { border: 1px solid;
-  border-color: #888888 #bbbbbb #e0e0e0;background: white url("images/input_shadow.png") repeat-x;}
+input[type="text"], input[type="password"], textarea { border: 1px solid;  border-color: #888888 #bbbbbb #e0e0e0;background: white url("images/input_shadow.png") repeat-x;}
+input::-moz-focus-inner { border: 0; }
 
 /*
  * print styles
@@ -91,3 +90,4 @@ input[type="text"], input[type="password"], textarea { border: 1px solid;
 }
 /* /RESET /DEFAULTS */
 #Wrapper{font-size: 62.5%;}
+a {outline: 0!important;}
