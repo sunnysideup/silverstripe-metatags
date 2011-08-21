@@ -20,7 +20,7 @@ input:focus, textarea:focus {color:#AD2424!important; background-color: #fff!imp
 a{text-decoration: none; color: #82837E;}
 a:link{text-decoration: none;}
 a:visited{text-decoration: none;}
-a:hover{background-color: #BFFA37}
+a:hover{background-color: #BFFA37!important;}
 a:active{color: #AD2424;}
 
 
@@ -55,8 +55,10 @@ table ul ul { }
 
 .goOneDownLink {display: block; height: 16px; width:16px;text-indent: -2000px; float: right;}
 .goOneDownLink {background-image: url(/metatags/images/down.png); }
+.goOneUpLink {display: none }
+	tr:hover .goOneUpLink {display: inline-block; background: url(/metatags/images/up.png) no-repeat top left; padding-left: 19px; height: 16px; }
+
 .bold {font-weight: bold;}
-.goOneUpLink {display: inline-block; background: url(/metatags/images/up.png) no-repeat top left; padding-left: 19px; height: 16px; }
 .bactchactions  {background-image: none;}
 .bactchactions a {font-size: 15px; background-color: #BFFA37;}
 .subsequentActions td, .subsequentActions th {background-image: none; color: #82837E; background-color: #E0E0E0}
