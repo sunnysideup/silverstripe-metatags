@@ -97,7 +97,11 @@ class MetaTagSiteConfigExtension extends DataObjectDecorator {
 
 	function onBeforeWrite(){
 		$oldDataObject = DataObject::get_by_id("SiteConfig", $this->owner->ID);
-		$this->oldExtraMetaValue = $oldDataObject->ExtraMeta;
+		if($oldDataObject) {
+			if(isset($oldDataObject->ExtraMeta)) {
+				$this->oldExtraMetaValue = $oldDataObject->ExtraMeta;
+			}
+		}
 	}
 
 	function onAfterWrite(){
