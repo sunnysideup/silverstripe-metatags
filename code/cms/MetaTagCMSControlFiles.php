@@ -189,7 +189,7 @@ class MetaTagCMSControlFiles extends Controller {
 
 
 	function FormAction() {
-		return Director::baseURL().$this->Link("update");
+		return Director::absoluteBaseURL().$this->Link("update");
 	}
 
 	function Link($action = '') {
