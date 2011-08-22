@@ -38,9 +38,9 @@
 					<ul>
 						<li>
 							<% if AlwaysUpdateMenuTitle %>
-								<a href="{$Link}togglecopyfromtitle/UpdateMenuTitle/" class="togglecopyfromtitle" rel="MenuTitle"><input type="checkbox" value="1" checked="checked" /></a>
+								<a href="{$Link}togglecopyfromtitle/UpdateMenuTitle/" class="togglecopyfromtitle ajaxify" rel="MenuTitle"><input type="checkbox" value="1" checked="checked" /></a>
 							<% else %>
-								<a href="{$Link}togglecopyfromtitle/UpdateMenuTitle/" class="togglecopyfromtitle" rel="MenuTitle"><input type="checkbox" value="0" /></a>
+								<a href="{$Link}togglecopyfromtitle/UpdateMenuTitle/" class="togglecopyfromtitle ajaxify" rel="MenuTitle"><input type="checkbox" value="0" /></a>
 							<% end_if %>
 							Always copy from page title? <br />
 							<% if AlwaysUpdateMenuTitle %>
@@ -56,9 +56,9 @@
 					<ul>
 						<li>
 							<% if AlwaysUpdateMetaTitle %>
-								<a href="{$Link}togglecopyfromtitle/UpdateMetaTitle/" class="togglecopyfromtitle" rel="MetaTitle"><input type="checkbox" value="1" checked="checked" /></a>
+								<a href="{$Link}togglecopyfromtitle/UpdateMetaTitle/" class="togglecopyfromtitle ajaxify" rel="MetaTitle"><input type="checkbox" value="1" checked="checked" /></a>
 							<% else %>
-								<a href="{$Link}togglecopyfromtitle/UpdateMetaTitle/" class="togglecopyfromtitle" rel="MetaTitle"><input type="checkbox" value="1" /></a>
+								<a href="{$Link}togglecopyfromtitle/UpdateMetaTitle/" class="togglecopyfromtitle ajaxify" rel="MetaTitle"><input type="checkbox" value="1" /></a>
 							<% end_if %>
 							Always copy from page title? <br />
 							<% if AlwaysUpdateMetaTitle %>
@@ -74,9 +74,9 @@
 					<ul>
 						<li>
 							<% if AlwaysUpdateMetaDescription %>
-									<a href="{$Link}togglecopyfromtitle/UpdateMetaDescription/" class="togglecopyfromtitle" rel="MetaDescription"><input type="checkbox" value="1" checked="checked" /></a>
+									<a href="{$Link}togglecopyfromtitle/UpdateMetaDescription/" class="togglecopyfromtitle ajaxify" rel="MetaDescription"><input type="checkbox" value="1" checked="checked" /></a>
 								<% else %>
-									<a href="{$Link}togglecopyfromtitle/UpdateMetaDescription/" class="togglecopyfromtitle" rel="MetaDescription"><input type="checkbox" value="1" /></a>
+									<a href="{$Link}togglecopyfromtitle/UpdateMetaDescription/" class="togglecopyfromtitle ajaxify" rel="MetaDescription"><input type="checkbox" value="1" /></a>
 								<% end_if %>
 							Always copy from Page Content? <br />
 							<% if AlwaysUpdateMetaDescription %>
@@ -99,8 +99,8 @@
 					<ul>
 						<li>page titles to...
 							<ul>
-								<li><a href="{$Link}lowercase/Title/" class="lowercase" rel="Title">lowercase</a></li>
-								<li><a href="{$Link}titlecase/Title/" class="titlecase" rel="Title">Title Case</a></li>
+								<li><a href="{$Link}lowercase/Title/" class="lowercase ajaxify" rel="Title">lowercase</a></li>
+								<li><a href="{$Link}titlecase/Title/" class="titlecase ajaxify" rel="Title">Title Case</a></li>
 							</ul>
 						</li>
 					</ul>
@@ -110,8 +110,8 @@
 					<ul>
 						<li>follow rules?
 							<ul>
-								<li><a href="{$Link}setpageflag/AutomateMetatags/1/" class="setpageflag" rel="AutomateMetatags">all pages</a></li>
-								<li><a href="{$Link}setpageflag/AutomateMetatags/0/" class="setpageflag" rel="AutomateMetatags">none of the pages</a></li>
+								<li><a href="{$Link}setpageflag/AutomateMetatags/1/" class="setpageflag ajaxify" rel="AutomateMetatags">all pages</a></li>
+								<li><a href="{$Link}setpageflag/AutomateMetatags/0/" class="setpageflag ajaxify" rel="AutomateMetatags">none of the pages</a></li>
 							</ul>
 						</li>
 					</ul>
@@ -121,9 +121,9 @@
 					<ul>
 						<li>menu titles to ...
 							<ul>
-								<li><a href="{$Link}lowercase/MenuTitle/" class="lowercase" rel="MenuTitle">lowercase</a></li>
-								<li><a href="{$Link}titlecase/MenuTitle/" class="titlecase" rel="MenuTitle">Title Case</a></li>
-								<li><a href="{$Link}copyfromtitle/MenuTitle/" class="copyfromtitle" rel="MenuTitle">match the page title</a></li>
+								<li><a href="{$Link}lowercase/MenuTitle/" class="lowercase ajaxify" rel="MenuTitle">lowercase</a></li>
+								<li><a href="{$Link}titlecase/MenuTitle/" class="titlecase ajaxify" rel="MenuTitle">Title Case</a></li>
+								<li><a href="{$Link}copyfromtitle/MenuTitle/" class="copyfromtitle ajaxify" rel="MenuTitle">match the page title</a></li>
 							</ul>
 						</li>
 					</ul>
@@ -133,9 +133,9 @@
 					<ul>
 						<li>meta titles to...
 							<ul>
-								<li><a href="{$Link}lowercase/MetaTitle/" class="lowercase" rel="MetaTitle">lowercase</a></li>
-								<li><a href="{$Link}titlecase/MetaTitle/" class="titlecase" rel="MetaTitle">Title Case</a></li>
-								<li><a href="{$Link}copyfromtitle/MetaTitle/" class="copyfromtitle" rel="MetaTitle">match the page title</a></li>
+								<li><a href="{$Link}lowercase/MetaTitle/" class="lowercase ajaxify" rel="MetaTitle">lowercase</a></li>
+								<li><a href="{$Link}titlecase/MetaTitle/" class="titlecase ajaxify" rel="MetaTitle">Title Case</a></li>
+								<li><a href="{$Link}copyfromtitle/MetaTitle/" class="copyfromtitle ajaxify" rel="MetaTitle">match the page title</a></li>
 							</ul>
 						</li>
 					</ul>
@@ -145,7 +145,7 @@
 					<ul>
 						<li>meta description to ...
 							<ul>
-								<li><a href="{$Link}copyfromcontent/MetaDescription/" class="copyfromcontent" rel="MetaDescription">match the page content</a></li>
+								<li><a href="{$Link}copyfromcontent/MetaDescription/" class="copyfromcontent ajaxify" rel="MetaDescription">match the page content</a></li>
 							</ul>
 						</li>
 					</ul>
@@ -153,9 +153,9 @@
 			</tr>
 			
 		</tfoot>
-		
+		<tbody>
 <% include MetaTagCMSControlPagesBody %>
-
+		</tbody>
 	</table>
 	<div class="response">$Message</div>
 <% else %>

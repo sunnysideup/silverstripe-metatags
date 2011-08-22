@@ -55,13 +55,14 @@ class MetaTagCMSControlFiles extends Controller {
 			if(in_array($fieldName, $this->updatableFields)) {
 				foreach($this->tableArray as $table) {
 					DB::query("UPDATE \"$table\" SET \"$fieldName\" = LOWER(\"$fieldName\")");
+					echo "UPDATE \"$table\" SET \"$fieldName\" = LOWER(\"$fieldName\")";
 				}
 				Session::set("MetaTagCMSControlMessage",  _t("MetaTagCMSControl.UPDATEDTOLOWERCASE", "Records updated to <i>lower case</i>"));
-				Director::redirect($this->Link());return array();
+				return $this->returnAjaxOrRedirectBack();
 			}
 		}
 		Session::set("MetaTagCMSControlMessage", _t("MetaTagCMSControl.NOTUPDATEDTOLOWERCASE", "Records could not be updated <i>to lower case</i>."));
-		Director::redirect($this->Link());return array();
+		return $this->returnAjaxOrRedirectBack();
 	}
 
 	function titlecase($request){
@@ -75,11 +76,11 @@ class MetaTagCMSControlFiles extends Controller {
 					}
 				}
 				Session::set("MetaTagCMSControlMessage", _t("MetaTagCMSControl.UPDATEDTOTITLECASE", "Records updated to <i>title case</i>"));
-				Director::redirect($this->Link());return array();
+				return $this->returnAjaxOrRedirectBack();
 			}
 		}
 		Session::set("MetaTagCMSControlMessage", _t("MetaTagCMSControl.NOTUPDATEDTOTITLECASE", "Records could not be updated to <i>title case</i>."));
-		Director::redirect($this->Link());return array();
+		return $this->returnAjaxOrRedirectBack();
 	}
 
 	function copyfromtitle($request){
@@ -89,11 +90,11 @@ class MetaTagCMSControlFiles extends Controller {
 					DB::query("UPDATE \"$table\" SET \"$fieldName\" = \"Title\"");
 				}
 				Session::set("MetaTagCMSControlMessage",  _t("MetaTagCMSControl.COPIEDFROMTITLE", "Copied from title."));
-				Director::redirect($this->Link());return array();
+				return $this->returnAjaxOrRedirectBack();
 			}
 		}
 		Session::set("MetaTagCMSControlMessage",  _t("MetaTagCMSControl.NOTCOPIEDFROMTITLE", "Copy not successful"));
-		Director::redirect($this->Link());return array();
+		return $this->returnAjaxOrRedirectBack();
 	}	
 
 	function update(){
@@ -134,6 +135,35 @@ class MetaTagCMSControlFiles extends Controller {
 			}
 		}
 		return _t("MetaTagCMSControl.NOTUPDATE", "Record could not be updated.");
+	}
+
+	function recycle($request) {
+		$id = intval($request->param("ID"));
+		if($id) {
+			$folder = Folder::findOrMake("ZzzeRecyclingBin");
+			if($folder) {
+				$file = DataObject::get_by_id("File", $id);
+				if($file) {
+					$file->ParentID = $folder->ID;
+					$file->write();
+					Session::set("MetaTagCMSControlMessage",  _t("MetaTagCMSControl.FILERECYCLED", "File &quot;".$file->Title."&quot; has been recycled."));
+					return $this->returnAjaxOrRedirectBack();
+				}
+			}
+		}
+		Session::set("MetaTagCMSControlMessage",  _t("MetaTagCMSControl.FILENOTRECYCLED", "ERROR: File &quot;".$file->Title."&quot; could NOT be recycled."));
+		return $this->returnAjaxOrRedirectBack();
+	}
+
+
+	protected function returnAjaxOrRedirectBack(){
+		if(Director::is_ajax()) {
+			return $this->renderWith("MetaTagCMSControlFilesAjax");
+		}
+		else {
+			Director::redirect($this->Link());
+			return array();
+		}
 	}
 
 	/***************************************************
@@ -181,6 +211,7 @@ class MetaTagCMSControlFiles extends Controller {
 				}
 				$file->ParentSegments = $dos[$file->ID] ;
 				$file->GoOneUpLink = $this->GoOneUpLink();
+				$file->RecycleLink = $this->makeRecycleLink($file->ID);
 				$dos = null;
 			}
 		}
@@ -206,6 +237,10 @@ class MetaTagCMSControlFiles extends Controller {
 				return $this->createLevelLink($oneUpPage->ParentID);
 			}
 		}
+	}
+
+	protected function makeRecycleLink($id) {
+		return $this->Link("recycle").$id."/";
 	}
 
 	function Message() {

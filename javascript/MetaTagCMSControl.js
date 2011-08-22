@@ -47,6 +47,23 @@ var MetaTagCMSControl = {
 				return false;
 			}
 		);
+		jQuery("a.ajaxify").click(
+			function(event) {
+				event.preventDefault();
+				jQuery('tbody').fadeTo("fast", "0.5");
+				var url = jQuery(this).attr("href");
+				jQuery.get(
+					url,
+					function(data) {
+						jQuery('tbody').html(data);
+						jQuery('.response').text("records updated ....");
+						jQuery('tbody').fadeTo("fast", "1");
+					},
+					"html"
+				);
+				
+			}
+		)
 
 	},
 

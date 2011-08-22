@@ -6,16 +6,16 @@
 	<table summary="update metatag overview" id="root">
 		<thead>
 			<tr>
-				<th scope="col" class="filename">URL</th>
-				<th scope="col" class="title">Title</th>
-				<th scope="col" class="content" >Description</th>
+				<th scope="col" class="filename" title="Review all the basic information about this image / file / folder. Click on the plus to go down one level and click on the min to go up one level.">Basic Info</th>
+				<th scope="col" class="title" title="The title of this image, any title edit will also update the filename of the image / file / folder">Title</th>
+				<th scope="col" class="content" title="If you want to add a bit more information about this image / file / folder" >Description</th>
 			</tr>
 		</thead>
 		<tfoot>
 			<tr class="actions">
 				<th class="bactchactions"><a href="#" title="Make changes to all pages at once.">Rules and Quick Fixes</a></th>
-				<th scope="col" class="title">Title</th>
-				<th scope="col" class="content" >Description</th>
+				<th scope="col" class="title" title="The title of this image, any title edit will also update the filename of the image / file / folder">Title</th>
+				<th scope="col" class="content" title="If you want to add a bit more information about this image / file / folder" >Description</th>
 			</tr>
 
 
@@ -27,8 +27,8 @@
 					<ul>
 						<li>file titles to...
 							<ul>
-								<li><a href="{$Link}lowercase/Title/" class="lowercase" rel="Title">lowercase</a></li>
-								<li><a href="{$Link}titlecase/Title/" class="titlecase" rel="Title">Title Case</a></li>
+								<li><a href="{$Link}lowercase/Title/" class="lowercase ajaxify" rel="Title">lowercase</a></li>
+								<li><a href="{$Link}titlecase/Title/" class="titlecase ajaxify" rel="Title">Title Case</a></li>
 							</ul>
 						</li>
 					</ul>
@@ -39,9 +39,9 @@
 			</tr>
 			
 		</tfoot>
-		
+		<tbody>
 <% include MetaTagCMSControlFilesBody %>
-
+		</tbody>
 	</table>
 	<div class="response">$Message</div>
 <% else %>

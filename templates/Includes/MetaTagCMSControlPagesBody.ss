@@ -1,4 +1,3 @@
-<tbody>
 	<% control MyRecords %>
 	<tr class="$FirstLast $EvenOdd" id="TR-$ID">
 
@@ -7,10 +6,10 @@
 				<% if Last %>
 				<a href="/admin/show/$ID" title="Page Type: $ClassName - click to open in CMS" class="newWindow bold">$URLSegment/</a>
 				<% else %>
-				<a href="$Link" title="Page Type: $ClassName, Title: $Title  - click to open pages on this level" class="goOneUpLink" rel="TR-$ID">$URLSegment/</a>
+				<a href="$Link" title="Page Type: $ClassName, Title: $Title  - click to open pages on this level" class="goOneUpLink ajaxify" rel="TR-$ID">$URLSegment/</a>
 				<% end_if %>
 			<% end_control %>
-			<% if ChildrenLink %><a href="$ChildrenLink" class="goOneDownLink" title="go down one level and view child pages of: $MenuTitle.ATT" rel="TR-$ID">+</a><% end_if %>
+			<% if ChildrenLink %><a href="$ChildrenLink" class="goOneDownLink ajaxify" title="go down one level and view child pages of: $MenuTitle.ATT" rel="TR-$ID">+</a><% end_if %>
 		</td>
 
 		<td class="title">
@@ -43,4 +42,3 @@
 
 	</tr>
 	<% end_control %>
-</tbody>

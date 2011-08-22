@@ -56,11 +56,11 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 					}
 				}
 				Session::set("MetaTagCMSControlMessage", _t("MetaTagCMSControl.UPDATEDTOTITLECASE", "Updated empty records with first "));
-				Director::redirect($this->Link());return array();
+				return $this->returnAjaxOrRedirectBack();
 			}
 		}
 		Session::set("MetaTagCMSControlMessage", _t("MetaTagCMSControl.NOTUPDATEDTOTITLECASE", "Records could not be updated to <i>title case</i>."));
-		Director::redirect($this->Link());return array();
+		return $this->returnAjaxOrRedirectBack();
 	}
 
 	function togglecopyfromtitle($request) {
@@ -68,11 +68,11 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 			if(in_array($fieldName, $this->updatableFields)) {		
 				DB::query("UPDATE \"SiteConfig\" SET \"$fieldName\" = IF(\"$fieldName\" = 1, 0, 1)");
 				Session::set("MetaTagCMSControlMessage",  _t("MetaTagCMSControl.UPDATEDCONFIG", "Updated configuration."));
-				Director::redirect($this->Link());return array();
+				return $this->returnAjaxOrRedirectBack();
 			}
 		}
 		Session::set("MetaTagCMSControlMessage",  _t("MetaTagCMSControl.NOTUPDATEDCONFIG", "Could not update configuration."));
-		Director::redirect($this->Link());return array();
+		return $this->returnAjaxOrRedirectBack();
 	} 
 
 	function setpageflag($request){
@@ -83,11 +83,11 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 					DB::query("UPDATE \"$table\" SET \"$fieldName\" = $value");
 				}
 				Session::set("MetaTagCMSControlMessage",  _t("MetaTagCMSControl.UPDATEDALLPAGES", "Updated all pages."));
-				Director::redirect($this->Link());return array();
+				return $this->returnAjaxOrRedirectBack();
 			}
 		}
 		Session::set("MetaTagCMSControlMessage",  _t("MetaTagCMSControl.NOTUPDATEDALLPAGES", "Could not update pages."));
-		Director::redirect($this->Link());return array();
+		return $this->returnAjaxOrRedirectBack();
 	}
 
 
@@ -129,6 +129,15 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 	}
 
 
+	protected function returnAjaxOrRedirectBack(){
+		if(Director::is_ajax()) {
+			return $this->renderWith("MetaTagCMSControlPagesAjax");
+		}
+		else {
+			Director::redirect($this->Link());
+			return array();
+		}
+	}	
 
 	/***************************************************
 	 * CONTROLS                                        *
