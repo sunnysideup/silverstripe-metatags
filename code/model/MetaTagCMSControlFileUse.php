@@ -12,7 +12,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 		"FileClassName" => "Varchar(255)"
 	);
 
-	public static function file_usage_count($fileID) {
+	public static function file_usage_count($fileID, $checkChildren = true, $quickBooleanCheck = false) {
 		if(!isset(self::$file_usage_array[$fileID])) {
 			self::$file_usage_array[$fileID] = 0;
 			$checks = DataObject::get("MetaTagCMSControlFileUse");
@@ -33,7 +33,12 @@ class MetaTagCMSControlFileUse extends DataObject {
 					if($result) {
 						$count = $result->value();
 						if($count) {
-							self::$file_usage_array[$fileID] += $count;
+							if($quickBooleanCheck) {
+								return true;
+							}
+							else {
+								self::$file_usage_array[$fileID] += $count;
+							}
 						}
 					}
 				}
@@ -41,9 +46,31 @@ class MetaTagCMSControlFileUse extends DataObject {
 			$additionalUse = DB::query("
 				SELECT COUNT(*)
 				FROM \"SiteTree_ImageTracking\"
-				WHERE FileID = $fileID
+				WHERE \"FileID\" = $fileID
 			")->value();
-			self::$file_usage_array[$fileID] = self::$file_usage_array[$fileID] + $additionalUse;
+			if($quickBooleanCheck) {
+				if($additionalUse) {
+					return true;
+				}
+			}
+			else {
+				self::$file_usage_array[$fileID] = self::$file_usage_array[$fileID] + $additionalUse;
+			}
+		}
+		if($checkChildren) {
+			$children = DataObject::get("File", "ParentID =".$fileID);
+			if($children) {
+				foreach($children as $child) {
+					if($quickBooleanCheck) {
+						if(self::file_usage_count($child->ID, $quickBooleanCheck, $checkChildren)) {
+							return true;
+						}
+					}
+					else {
+						self::$file_usage_array[$fileID] = self::$file_usage_array[$fileID] + self::file_usage_count($child->ID, $quickCheck, $checkChildren);
+					}
+				}
+			}
 		}
 		return self::$file_usage_array[$fileID];
 	}
