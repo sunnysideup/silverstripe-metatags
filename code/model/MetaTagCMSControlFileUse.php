@@ -56,11 +56,10 @@ class MetaTagCMSControlFileUse extends DataObject {
 		 **/ 
 		parent::requireDefaultRecords();
 		DB::query("DELETE FROM \"MetaTagCMSControlFileUse\";");
-		$arrayOfAllClasses =  Array();
 		$allClasses = ClassInfo::subclassesFor("DataObject");
 		$fileClasses = ClassInfo::subclassesFor("File");
-		$allClassesExceptFiles = array_diff($allClasses, $fileClasses);
-		foreach($allClassesExceptFiles as $class) {
+		//$allClassesExceptFiles = array_diff($allClasses, $fileClasses);
+		foreach($allClasses as $class) {
 			$hasOneArray = null;
 			$newItems = (array) Object::uninherited_static($class, 'has_one');
 			// Validate the data
@@ -90,7 +89,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 				}
 			}
 		}
-		foreach($allClassesExceptFiles as $class) {
+		foreach($allClasses as $class) {
 			$hasManyArray = null;
 			$newItems = (array) Object::uninherited_static($class, 'has_many');
 			// Validate the data
@@ -112,7 +111,34 @@ class MetaTagCMSControlFileUse extends DataObject {
 					}
 				}
 			}
-		}		
+		}
+		/*
+		foreach($allClasses as $class) {
+			$manyManyArray = null;
+			$newItems = (array) Object::uninherited_static($class, 'many_many');
+			$manyManyArray = isset($manyManyArray) ? array_merge($newItems, $manyManyArray) : $newItems;
+			
+			$newItems = (array) Object::uninherited_static($class, 'belongs_many_many');
+			$manyManyArray = isset($manyManyArray) ? array_merge($newItems, $manyManyArray) : $newItems;
+			if($manyManyArray && count($manyManyArray)) {
+				foreach($manyManyArray as $table1 => $table2) {
+					if(in_array($table1, $fileClasses)) {
+						if(!DB::query("
+							SELECT COUNT(*)
+							FROM \"MetaTagCMSControlFileUse\"
+							WHERE \"DataObjectClassName\" = '$hasManyClass' AND  \"DataObjectFieldName\" = '$class' AND \"FileClassName\" = '$hasManyClass'
+						")->value()) {
+							$obj = new MetaTagCMSControlFileUse();
+							$obj->DataObjectClassName = $hasManyClass;
+							$obj->DataObjectFieldName = $class;
+							$obj->FileClassName = $hasManyClass;
+							$obj->write();
+						}
+					}
+				}
+			}
+		}
+		*/ 
 	}
 }
 
