@@ -47,6 +47,8 @@ var MetaTagCMSControl = {
 				return false;
 			}
 		);
+		/*
+		 * NEEDS A QUICK REVIEW... 
 		jQuery("a.ajaxify").click(
 			function(event) {
 				event.preventDefault();
@@ -64,6 +66,7 @@ var MetaTagCMSControl = {
 				
 			}
 		)
+		* */
 
 	},
 

@@ -6,7 +6,7 @@ class MetaTagCMSControlFiles extends Controller {
 		static function set_url_segment($s){self::$url_segment = $s;}
 		static function get_url_segment(){return self::$url_segment;}
 
-	protected static $records_per_page = 30; 
+	protected static $records_per_page = 10; 
 		static function set_records_per_page($i){self::$records_per_page = $i;}
 		static function get_records_per_page(){return self::$records_per_page;}
 
@@ -155,7 +155,6 @@ class MetaTagCMSControlFiles extends Controller {
 		return $this->returnAjaxOrRedirectBack();
 	}
 
-
 	protected function returnAjaxOrRedirectBack(){
 		if(Director::is_ajax()) {
 			return $this->renderWith("MetaTagCMSControlFilesAjax");
@@ -195,6 +194,9 @@ class MetaTagCMSControlFiles extends Controller {
 				else {
 					$files->remove($file);
 				}
+				$file->GoOneUpLink = $this->GoOneUpLink();
+				$file->RecycleLink = $this->makeRecycleLink($file->ID);
+				$file->UsageCount = MetaTagCMSControlFileUse::file_usage_count($file->ID);
 				$dos[$file->ID] = new DataObjectSet();
 				$segmentArray = array();
 				$item = $file;
@@ -210,8 +212,6 @@ class MetaTagCMSControlFiles extends Controller {
 					$dos[$file->ID]->push(new ArrayData($segment));
 				}
 				$file->ParentSegments = $dos[$file->ID] ;
-				$file->GoOneUpLink = $this->GoOneUpLink();
-				$file->RecycleLink = $this->makeRecycleLink($file->ID);
 				$dos = null;
 			}
 		}

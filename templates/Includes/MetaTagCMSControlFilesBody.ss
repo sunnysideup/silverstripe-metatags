@@ -13,8 +13,6 @@
 				<% if ChildrenLink %><a href="$ChildrenLink" class="goOneDownLink ajaxify" title="go down one level and view child pages of: $Name.ATT" rel="TR-$ID">+</a><% end_if %>
 				<div class="iconHolder"><img src="/metatags/images/Folder.png" alt="$ClassName" class="defaultIcon" /></div>
 				<div class="fileInfo">
-					<a href="$RecycleLink" class="ajaxify"><br /><img src="metatags/images/recycle.png" alt="Recycle" title="Recycle" /></a>
-				</div>
 			<% else %>
 				<% if CMSThumbnail %>
 					<div class="iconHolder"><a href="$Link" class="newWindow bold">$CMSThumbnail</a></div>
@@ -23,10 +21,13 @@
 					<% if getFileType %><br /><span class="label">Type:</span> <span class="data">$getFileType</span><% end_if %>
 					<% if getSize %><br /><span class="label">Size:</span> <span class="data">$getSize</span><% end_if %>
 					<% if getDimensions %><br /><span class="label">Dimensions:</span> <span class="data">$getDimensions</span><% end_if %>
-					<a href="$RecycleLink" class=" ajaxify"><br /><img src="metatags/images/recycle.png" alt="Recycle" title="Recycle" /></a>
-				</div>
 			<% end_if %>
-			
+			<% if UsageCount %>
+					<br /><span class="label">Used:</span> <span class="data">$UsageCount time(s)</span>
+			<% else %>
+					<a href="$RecycleLink" class=" ajaxify"><br /><img src="metatags/images/recycle.png" alt="Recycle" title="Recycle" /></a>
+			<% end_if %>
+				</div>
 		</td>
 
 		<td class="title">
