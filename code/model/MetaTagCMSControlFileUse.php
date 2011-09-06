@@ -18,35 +18,36 @@ class MetaTagCMSControlFileUse extends DataObject {
 			$checks = DataObject::get("MetaTagCMSControlFileUse");
 			if($checks) {
 				foreach($checks as $check) {
+					/*
 					$sql = "
 						SHOW COLUMNS
 						FROM \"{$check->DataObjectClassName}\"
 						LIKE '{$check->DataObjectFieldName}ID'
 					";
 					$fieldExists = DB::query($sql);
-					print_r($fieldExists);
-					if($fieldExists && count($fieldExists) && mysql_num_rows($fieldExists) == 1) {
-						if($check->DataObjectClassName == $check->FileClassName) {
-							$where = " \"{$check->DataObjectFieldName}ID\" <> 0 AND ID = $fileID";
-						}
-						else {
-							$where = "\"{$check->DataObjectFieldName}ID\" = $fileID";
-						}
-						$sql = "
-							SELECT COUNT(*)
-							FROM \"$check->DataObjectClassName\"
-							WHERE $where
-						";
-						$result = DB::query($sql);
-						if($result) {
-							$count = $result->value();
-							if($count) {
-								if($quickBooleanCheck) {
-									return true;
-								}
-								else {
-									self::$file_usage_array[$fileID] += $count;
-								}
+					if($fieldExists && $fieldExists instanceOf ) {
+						if(mysql_num_rows($fieldExists) == 1) {
+					*/
+					if($check->DataObjectClassName == $check->FileClassName) {
+						$where = " \"{$check->DataObjectFieldName}ID\" <> 0 AND ID = $fileID";
+					}
+					else {
+						$where = "\"{$check->DataObjectFieldName}ID\" = $fileID";
+					}
+					$sql = "
+						SELECT COUNT(*)
+						FROM \"$check->DataObjectClassName\"
+						WHERE $where
+					";
+					$result = DB::query($sql, false);
+					if($result) {
+						$count = $result->value();
+						if($count) {
+							if($quickBooleanCheck) {
+								return true;
+							}
+							else {
+								self::$file_usage_array[$fileID] += $count;
 							}
 						}
 					}
