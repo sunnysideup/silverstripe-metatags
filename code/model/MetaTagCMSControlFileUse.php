@@ -16,6 +16,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 		if(!isset(self::$file_usage_array[$fileID])) {
 			self::$file_usage_array[$fileID] = 0;
 			$checks = DataObject::get("MetaTagCMSControlFileUse");
+			$fieldExists
 			if($checks) {
 				foreach($checks as $check) {
 					$sql = "
@@ -24,7 +25,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 						LIKE '{$check->DataObjectFieldName}ID'
 					";
 					$fieldExists = DB::query($sql);
-					if($fieldExists && count($fieldExists) && $fieldExists->value()) {
+					if($fieldExists && count($fieldExists) && mysql_num_rows($fieldExists) == 1) {
 						if($check->DataObjectClassName == $check->FileClassName) {
 							$where = " \"{$check->DataObjectFieldName}ID\" <> 0 AND ID = $fileID";
 						}
@@ -75,7 +76,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 						}
 					}
 					else {
-						self::$file_usage_array[$fileID] = self::$file_usage_array[$fileID] + self::file_usage_count($child->ID, $quickCheck, $checkChildren);
+						self::$file_usage_array[$fileID] = self::$file_usage_array[$fileID] + self::file_usage_count($child->ID, $checkChildren, $quickBooleanCheck);
 					}
 				}
 			}
