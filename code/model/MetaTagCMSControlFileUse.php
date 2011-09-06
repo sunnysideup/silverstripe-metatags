@@ -18,31 +18,33 @@ class MetaTagCMSControlFileUse extends DataObject {
 			$checks = DataObject::get("MetaTagCMSControlFileUse");
 			if($checks) {
 				foreach($checks as $check) {
-					if($check->DataObjectClassName == $check->FileClassName) {
-						$where = " \"{$check->DataObjectFieldName}ID\" <> 0 AND ID = $fileID";
-					}
-					else {
-						$where = "\"{$check->DataObjectFieldName}ID\" = $fileID";
-					}
 					$sql = "
-						SELECT COUNT(*)
-						FROM \"$check->DataObjectClassName\"
-						WHERE $where
+						SHOW COLUMNS
+						FROM \"{$check->DataObjectClassName}\"
+						LIKE '{$check->DataObjectFieldName}ID'
 					";
-					try {
-						$result = @DB::query($sql) or $result = null;
-					}
-					catch (Exception $e) {
-						$result = null;
-					}
-					if($result) {
-						$count = $result->value();
-						if($count) {
-							if($quickBooleanCheck) {
-								return true;
-							}
-							else {
-								self::$file_usage_array[$fileID] += $count;
+					if(DB::query($sql)) {
+						if($check->DataObjectClassName == $check->FileClassName) {
+							$where = " \"{$check->DataObjectFieldName}ID\" <> 0 AND ID = $fileID";
+						}
+						else {
+							$where = "\"{$check->DataObjectFieldName}ID\" = $fileID";
+						}
+						$sql = "
+							SELECT COUNT(*)
+							FROM \"$check->DataObjectClassName\"
+							WHERE $where
+						";
+						$result = DB::query($sql);
+						if($result) {
+							$count = $result->value();
+							if($count) {
+								if($quickBooleanCheck) {
+									return true;
+								}
+								else {
+									self::$file_usage_array[$fileID] += $count;
+								}
 							}
 						}
 					}
