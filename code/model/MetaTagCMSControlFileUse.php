@@ -4,7 +4,7 @@
 class MetaTagCMSControlFileUse extends DataObject {
 
 	protected static $file_usage_array = array();
-	
+
 	//database
 	public static $db = array(
 		"DataObjectClassName" => "Varchar(255)",
@@ -29,7 +29,12 @@ class MetaTagCMSControlFileUse extends DataObject {
 						FROM \"$check->DataObjectClassName\"
 						WHERE $where
 					";
-					$result = @DB::query($sql);
+					try {
+						$result = @DB::query($sql);
+					}
+					catch (Exception $e) {
+						$result = null
+					}
 					if($result) {
 						$count = $result->value();
 						if($count) {
@@ -80,7 +85,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 		 *
 		 * TO DO: ADD MANY MANY RELATIONSHIPS
 		 *
-		 **/ 
+		 **/
 		parent::requireDefaultRecords();
 		DB::query("DELETE FROM \"MetaTagCMSControlFileUse\";");
 		$allClasses = ClassInfo::subclassesFor("DataObject");
@@ -144,7 +149,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 			$manyManyArray = null;
 			$newItems = (array) Object::uninherited_static($class, 'many_many');
 			$manyManyArray = isset($manyManyArray) ? array_merge($newItems, $manyManyArray) : $newItems;
-			
+
 			$newItems = (array) Object::uninherited_static($class, 'belongs_many_many');
 			$manyManyArray = isset($manyManyArray) ? array_merge($newItems, $manyManyArray) : $newItems;
 			if($manyManyArray && count($manyManyArray)) {
@@ -165,7 +170,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 				}
 			}
 		}
-		*/ 
+		*/
 	}
 }
 
