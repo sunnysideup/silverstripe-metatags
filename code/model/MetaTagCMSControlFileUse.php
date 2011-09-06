@@ -33,7 +33,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 						$result = @DB::query($sql);
 					}
 					catch (Exception $e) {
-						$result = null
+						$result = null;
 					}
 					if($result) {
 						$count = $result->value();
