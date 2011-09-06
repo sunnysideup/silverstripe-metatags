@@ -24,7 +24,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 						LIKE '{$check->DataObjectFieldName}ID'
 					";
 					$fieldExists = DB::query($sql);
-					if($fieldExists && count($fieldExists)) {
+					if($fieldExists && count($fieldExists) && $fieldExists->value()) {
 						if($check->DataObjectClassName == $check->FileClassName) {
 							$where = " \"{$check->DataObjectFieldName}ID\" <> 0 AND ID = $fileID";
 						}
