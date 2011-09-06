@@ -16,7 +16,6 @@ class MetaTagCMSControlFileUse extends DataObject {
 		if(!isset(self::$file_usage_array[$fileID])) {
 			self::$file_usage_array[$fileID] = 0;
 			$checks = DataObject::get("MetaTagCMSControlFileUse");
-			$fieldExists
 			if($checks) {
 				foreach($checks as $check) {
 					$sql = "
