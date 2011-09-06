@@ -30,7 +30,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 						WHERE $where
 					";
 					try {
-						$result = @DB::query($sql);
+						$result = @DB::query($sql) or $result = null;
 					}
 					catch (Exception $e) {
 						$result = null;
