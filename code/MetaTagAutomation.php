@@ -112,7 +112,7 @@ class MetaTagAutomation extends SiteTreeDecorator {
 				}
 			}
 		}
-		
+
  	}
 
 
@@ -266,7 +266,7 @@ class MetaTagAutomation_controller extends Extension {
 		$tags = "";
 		$page = $this->owner;
 		$siteConfig = SiteConfig::current_site_config();
-		$title = Convert::raw2xml(($page->MetaTitle) ? $page->MetaTitle : $page->Title );
+		$title = $page->MetaTitle ? $page->MetaTitle : $page->Title;
 		if(!MetaTagAutomation::get_hide_keywords_altogether()) {
 			$keywords = Convert::raw2xml(($page->MetaKeywords) ? $page->MetaKeywords : $page->Title );
 		}
