@@ -64,14 +64,7 @@ a:link { -webkit-tap-highlight-color: #5ec1ff; }
 button {  width: auto; overflow: visible; }
 .ie7 img { -ms-interpolation-mode: bicubic; }
 input[type="text"], input[type="password"], textarea, select {
-border: 1px solid;  border-color: #888888 #bbbbbb #e0e0e0;background: white;
--moz-box-shadow: 3px 3px 4px #ccc;
--webkit-box-shadow: 3px 3px 4px #ccc;
-box-shadow: 3px 3px 4px #ccc;
-/* For IE 8 */
--ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#cccccc')";
-/* For IE 5.5 - 7 */
-filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#cccccc');
+	border: 1px solid;  border-color: #888888 #bbbbbb #e0e0e0;background: white;
 }
 input::-moz-focus-inner { border: 0; }
 
