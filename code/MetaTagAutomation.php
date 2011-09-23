@@ -201,7 +201,7 @@ class MetaTagAutomation_controller extends Extension {
 	static $allowed_actions = array(
 		"starttestforie",
 		"stoptestforie",
-		"resetextrameta",
+		"resetextrameta"
 	);
 
 	/**
@@ -360,10 +360,12 @@ class MetaTagAutomation_controller extends Extension {
 	}
 
 	function resetextrameta(){
-		if($m = Member::currentMember() && $m->IsAdmin()) {
-			DB::query("UPDATE SiteTree SET ExtraMeta = '';");
-			DB::query("UPDATE SiteTree_Live SET ExtraMeta = '';");
-			die("Extra Meta reset");
+		if($m = Member::currentMember()) {
+			if($m->IsAdmin()) {
+				DB::query("UPDATE SiteTree SET ExtraMeta = '';");
+				DB::query("UPDATE SiteTree_Live SET ExtraMeta = '';");
+				die("Extra Meta reset");
+			}
 		}
 	}
 
