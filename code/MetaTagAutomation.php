@@ -201,7 +201,7 @@ class MetaTagAutomation_controller extends Extension {
 	static $allowed_actions = array(
 		"starttestforie",
 		"stoptestforie",
-		"updateallmetatitles"
+		"resetextrameta",
 	);
 
 	/**
