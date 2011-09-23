@@ -91,24 +91,5 @@ class MetaTagSiteConfigExtension extends DataObjectDecorator {
 		return $fields;
 	}
 
-	protected $oldExtraMetaValue = '';
 
-
-
-	function onBeforeWrite(){
-		$oldDataObject = DataObject::get_by_id("SiteConfig", $this->owner->ID);
-		if($oldDataObject) {
-			if(isset($oldDataObject->ExtraMeta)) {
-				$this->oldExtraMetaValue = $oldDataObject->ExtraMeta;
-			}
-		}
-	}
-
-	function onAfterWrite(){
-		if($this->owner->ExtraMeta) {
-			DB::query("Update \"SiteTree\" SET \"ExtraMeta\" = '".$this->owner->ExtraMeta."' WHERE \"ExtraMeta\" = '' OR \"ExtraMeta\" IS NULL OR \"ExtraMeta\" = '".$this->oldExtraMetaValue."'; ");
-			DB::query("Update \"SiteTree_Live\" SET \"ExtraMeta\" = '".$this->owner->ExtraMeta."' WHERE \"ExtraMeta\" = '' OR \"ExtraMeta\" IS NULL OR \"ExtraMeta\" = '".$this->oldExtraMetaValue."'; ");
-		}
-	}
-	
 }

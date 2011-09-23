@@ -309,6 +309,9 @@ class MetaTagAutomation_controller extends Extension {
 			$tags .= '
 			<meta name="keywords" http-equiv="keywords" content="'.Convert::raw2att($keywords).'" />'.$description;
 		}
+		if(!$page->ExtraMeta && $siteConfig->ExtraMeta) {
+			$page->ExtraMeta = $siteConfig->ExtraMeta;
+		}
 		if(!$siteConfig->MetaDataCoding) {$siteConfig->MetaDataCoding = "www.sunnysideup.co.nz";}
 		if(!$siteConfig->MetaDataCountry) {$siteConfig->MetaDataCountry = "New Zealand";}
 		if(!$siteConfig->MetaDataCopyright) {$siteConfig->MetaDataCopyright = "Site Owner";}
