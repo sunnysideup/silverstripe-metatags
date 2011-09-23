@@ -10,6 +10,14 @@
 
 class MetaTagAutomation extends SiteTreeDecorator {
 
+		/*
+		protected static $meta_data_coding = "www.sunnysideup.co.nz";}
+		protected static $meta_data_country = "www.sunnysideup.co.nz";}
+		protected static $meta_data_country = "www.sunnysideup.co.nz";}
+		if(!$siteConfig->MetaDataCountry) {$siteConfig->MetaDataCountry = "New Zealand";}
+		if(!$siteConfig->MetaDataCopyright) {$siteConfig->MetaDataCopyright = "Site Owner";}
+		*/
+
 	/* pop-ups and form interaction */
 	protected static $disable_update_popup = false;
 		static function set_disable_update_popup($b) {self::$disable_update_popup = $b;}
@@ -351,15 +359,12 @@ class MetaTagAutomation_controller extends Extension {
 		return array();
 	}
 
-	/**
-	 * need to work out how this action can be called without adding an action to the URL and without interfering with potential other actions
-	 */
-
-	function handleAction(HTTPRequest $request) {
-		if(7 == Session::get("testforie")) {
-			$request->addHeader('X-UA-Compatible', 'IE=EmulateIE7');
+	function resetextrameta(){
+		if($m = Member::currentMember() && $m->IsAdmin()) {
+			DB::query("UPDATE SiteTree SET ExtraMeta = '';");
+			DB::query("UPDATE SiteTree_Live SET ExtraMeta = '';");
+			die("Extra Meta reset");
 		}
-		return parent::handleAction($request);
 	}
 
 	//maybe replaced with something more universal (e.g. SSViewer::get_theme_folder())
