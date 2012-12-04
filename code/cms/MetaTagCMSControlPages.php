@@ -8,30 +8,28 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 	 *                                                 *
 	 ***************************************************/
 
-	protected static $url_segment = 'metatagmanagementpages';
-		static function set_url_segment($s){self::$url_segment = $s;}
-		static function get_url_segment(){return self::$url_segment;}
+	static $url_segment = 'metatagmanagementpages';
 
 	protected static $small_words_array = array('of','a','the','and','an','or','nor','but','is','if','then','else','when','at','from','by','on','off','for','in','out','over','to','into','with');
 		static function set_small_words_array($a){self::$small_words_array = $a;}
 		static function get_small_words_array(){return self::$small_words_array;}
 
 	protected $updatableFields = array(
-		"Title",
-		"MetaTitle",
-		"MenuTitle",
-		"MetaDescription",
-		"UpdateMenuTitle",
-		"UpdateMetaTitle",
-		"UpdateMetaDescription",
-		"AutomateMetatags"
+		'Title',
+		'MetaTitle',
+		'MenuTitle',
+		'MetaDescription',
+		'UpdateMenuTitle',
+		'UpdateMetaTitle',
+		'UpdateMetaDescription',
+		'AutomateMetatags'
 	);
 
 	/**
 	 * First table is main table - e.g. $this->tableArray[0] should work
 	 *
 	 **/
-	protected $tableArray = array("SiteTree", "SiteTree_Live");
+	protected $tableArray = array('SiteTree', 'SiteTree_Live');
 
 
 	/***************************************************
@@ -41,7 +39,7 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 
 
 	function index() {
-		return $this->renderWith("MetaTagCMSControlPages");
+		return $this->renderWith('MetaTagCMSControlPages');
 	}
 
 
@@ -51,7 +49,7 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 				foreach($this->tableArray as $table) {
 					$rows = DB::query("SELECT \"$table\".\"ID\", \"$table\".\"Content\" FROM \"$table\" WHERE \"$table\".\"$fieldName\" = '' OR \"$table\".\"$fieldName\" IS NULL;");
 					foreach($rows as $row) {
-						$newValue = Convert::raw2sql(DBField::create("HTMLText", $row["Content"])->Summary(MetaTagAutomation::get_meta_desc_length(), 15, ""));
+						$newValue = Convert::raw2sql(DBField::create("HTMLText", $row["Content"])->Summary(MetaTagsSTE::$meta_desc_length, 15, ""));
 						DB::query("UPDATE \"$table\" SET \"$fieldName\" = '$newValue' WHERE ID = ".$row["ID"]);
 					}
 				}

@@ -2,26 +2,19 @@
 
 class MetaTagCMSControlFiles extends Controller {
 
-	protected static $url_segment = 'metatagmanagementfiles';
-		static function set_url_segment($s){self::$url_segment = $s;}
-		static function get_url_segment(){return self::$url_segment;}
+	static $url_segment = 'metatagmanagementfiles';
 
-	protected static $records_per_page = 10;
-		static function set_records_per_page($i){self::$records_per_page = $i;}
-		static function get_records_per_page(){return self::$records_per_page;}
+	static $records_per_page = 10;
 
 	protected $ParentID = 0;
 
-	protected $updatableFields = array(
-		"Title",
-		"Content"
-	);
+	protected $updatableFields = array('Title', 'Content');
 
 	/**
 	 * First table is main table - e.g. $this->tableArray[0] should work
 	 *
 	 **/
-	protected $tableArray = array("File");
+	protected $tableArray = array('File');
 
 	function init(){
 		parent::init();
@@ -270,7 +263,7 @@ class MetaTagCMSControlFiles extends Controller {
 		if(isset($_GET["start"])) {
 			$start = intval($_GET["start"]);
 		}
-		return "$start, ".self::get_records_per_page();
+		return "$start, " . self::$records_per_page;
 	}
 
 
