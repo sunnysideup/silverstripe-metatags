@@ -1,0 +1,3 @@
+<% include MetaTagCMSControlPagination %>
+</body>
+</html>

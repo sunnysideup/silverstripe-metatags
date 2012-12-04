@@ -1,0 +1,62 @@
+###############################################
+MetaTagsSunnySideUp
+Pre 0.2 proof of concept
+###############################################
+
+Developer
+-----------------------------------------------
+Martijn van Nieuwenhoven [at] Mediavacature.nl
+Nicolaas Francken [at] sunnysideup.co.nz
+
+Requirements
+-----------------------------------------------
+SilverStripe 2.3.0 or greater.
+
+Documentation
+-----------------------------------------------
+This Module allows you to add metatags and
+basic requirements without too much hassle.
+
+
+Installation Instructions
+-----------------------------------------------
+1. Find out how to add modules to SS and add module as per usual.
+
+2. Copy configurations from this module's _config.php file
+into mysite/_config.php file and edit settings as required.
+NB. the idea is not to edit the module at all, but instead customise
+it from your mysite folder, so that you can upgrade the module without redoing the settings.
+
+3. add the following to your Page.ss file:
+ <head>
+ <% base_tag %>
+  $ExtendedMetatags
+ </head>
+
+Note, you can add two variables:
+includeMetaTitle (default = true),
+addExtraSearchEngineData (default = true)
+
+4. in page_controller::init() add:
+
+$this->addBasicMetatagRequirements();
+
+This adds all the basic JS and CSS. you can also add additional css and JS:
+$this->addBasicMetatagRequirements($additionalJS = array(), $additionalCSS = array());
+
+Doing so adds the following files if they exist:
+
+ themes/mytheme/css/layout.css
+ themes/mytheme/css/typography.css
+ themes/mytheme/css/ie6.css
+ themes/mytheme/css/ie7.css
+ themes/mytheme/css/ie8.css
+ themes/mytheme/css/menu.css
+ themes/mytheme/css/reset.css
+ themes/mytheme/css/editor.css
+ themes/mytheme/css/print.css
+
+ mysite/javascript/j.js
+
+
+###############################################
