@@ -62,7 +62,7 @@ class MetaTagsSTE extends SiteTreeExtension {
 	 * standard SS method
 	 * @var Array
 	 **/
-	public function updateCMSFields(FieldList &$fields) {
+	public function updateCMSFields(FieldList $fields) {
 		if(self::$hide_keywords_altogether) {
 			$fields->removeByName('MetaKeywords');
 		}

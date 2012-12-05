@@ -20,7 +20,7 @@ class MetaTagsSiteConfigDE extends DataExtension {
 		'ExtraMeta' => 'HTMLText'
 	);
 
-	function updateCMSFields(FieldSet &$fields) {
+	function updateCMSFields(FieldList $fields) {
 		$linkToManagerForPages = $linkToManagerForFiles = MetaTagCMSControlPages::$url_segment . '/';
 		$fields->addFieldToTab('Root.SearchEngines',
 			new TabSet('Options',
