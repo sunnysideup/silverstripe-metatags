@@ -181,17 +181,18 @@ class MetaTagCMSControlFiles extends Controller {
 				}
 				if($file instanceOf Image) {
 					$file->Type == "Image";
+					//$file->UsageCount = MetaTagCMSControlFileUse::file_usage_count($file->ID);
 				}
 				elseif($file instanceOf Folder) {
 					$file->Type == "Folder";
 					$file->Icon == "metatags/images/Folder.png";
+					$file->UsageCount = 0;
 				}
 				else {
 					$files->remove($file);
 				}
 				$file->GoOneUpLink = $this->GoOneUpLink();
 				$file->RecycleLink = $this->makeRecycleLink($file->ID);
-				$file->UsageCount = MetaTagCMSControlFileUse::file_usage_count($file->ID);
 				$dos[$file->ID] = new DataObjectSet();
 				$segmentArray = array();
 				$item = $file;
