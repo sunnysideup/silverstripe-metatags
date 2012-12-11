@@ -177,6 +177,63 @@ class MetaTagCMSControlFileUse extends DataObject {
 		}
 		*/
 	}
+
+
+	public static function file_usage_count($fileID, $quickBooleanCheck = false) {
+		if(!isset(self::$file_usage_array[$fileID])) {
+			self::$file_usage_array[$fileID] = 0;
+			$sql = "SELECT COUNT(ID) FROM \"File\" WHERE \"ParentID\" = {$fileID};";
+			$result = DB::query($sql, false);
+			$childCount = $result->value();
+			if($childCount) {
+				self::$file_usage_array[$fileID] = $childCount;
+				return self::$file_usage_array[$fileID];
+			}
+			$checks = DataObject::get("MetaTagCMSControlFileUse");
+			if($checks) {
+				foreach($checks as $check) {
+					$sql = "";
+					switch ($check->ConnectionType) {
+						case "HAS_ONE":
+							$sql = "
+								SELECT COUNT(\"{$check->DataObjectClassName}\".\"ID\")
+								FROM \"{$check->DataObjectClassName}\"
+								WHERE \"{$check->DataObjectFieldName}ID\" = {$fileID};
+							";
+							break;
+						case "HAS_MANY":
+							$sql = "
+								SELECT COUNT(\"{$check->DataObjectClassName}\".\"ID\")
+								FROM \"{$check->DataObjectClassName}\"
+									INNER JOIN  {$check->FileClassName}
+										ON \"{$check->DataObjectClassName}\".\"{$check->FileClassName}ID\" = \"{$check->FileClassName}\".\"ID\"
+								WHERE \"{$check->DataObjectClassName}\".\"ID\" = {$fileID};
+							";
+							break;
+						case "MANY_MANY":
+							$sql = "
+								SELECT COUNT(\"{$check->DataObjectClassName}_{$check->DataObjectFieldName}\".\"ID\")
+								FROM \"{$check->DataObjectClassName}_{$check->DataObjectFieldName}\"
+								WHERE \"{$check->FileClassName}ID\" = $fileID;
+							";
+							break;
+					}
+					$result = DB::query($sql, false);
+					$count = $result->value();
+					if($count) {
+						if($quickBooleanCheck) {
+							return true;
+						}
+						else {
+							self::$file_usage_array[$fileID] += $count;
+						}
+					}
+				}
+			}
+		}
+		return self::$file_usage_array[$fileID];
+	}
+
 }
 
 

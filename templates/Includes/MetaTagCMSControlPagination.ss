@@ -9,7 +9,7 @@
 	<% if CurrentBool %>
 	<strong>$PageNum</strong>
 	<% else %>
-	<a href="/$Link" title="Go to page $PageNum" class=" ajaxify">$PageNum</a>
+	<a href="/$Link" title="Go to page $PageNum" class="">$PageNum</a>
 	<% end_if %>
 	<% end_control %>
 
@@ -19,3 +19,5 @@
 	</p>
 	<% end_if %>
 <% end_if %>
+
+

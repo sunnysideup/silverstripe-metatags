@@ -139,10 +139,15 @@ class MetaTagCMSControlFiles extends Controller {
 			if($folder) {
 				$file = DataObject::get_by_id("File", $id);
 				if($file) {
-					$file->ParentID = $folder->ID;
-					$file->write();
-					Session::set("MetaTagCMSControlMessage",  _t("MetaTagCMSControl.FILERECYCLED", "File &quot;".$file->Title."&quot; has been recycled."));
-					return $this->returnAjaxOrRedirectBack();
+					if(file_exists($file->getFullPath())) {
+						$file->ParentID = $folder->ID;
+						$file->write();
+						Session::set("MetaTagCMSControlMessage",  _t("MetaTagCMSControl.FILERECYCLED", "File &quot;".$file->Title."&quot; has been recycled."));
+						return $this->returnAjaxOrRedirectBack();
+					}
+					else {
+						$file->delete();
+					}
 				}
 			}
 		}
@@ -176,20 +181,10 @@ class MetaTagCMSControlFiles extends Controller {
 				if(DataObject::get_one($this->tableArray[0], "ParentID = ".$file->ID)) {
 					$file->ChildrenLink = $this->createLevelLink($file->ID);
 				}
-				if(!$file->canView(new Member()) || !file_exists($file->getFullPath())) {
-					$files->remove($file);
-				}
-				if($file instanceOf Image) {
-					$file->Type == "Image";
-					//$file->UsageCount = MetaTagCMSControlFileUse::file_usage_count($file->ID);
-				}
-				elseif($file instanceOf Folder) {
+				$file->UsageCount = MetaTagCMSControlFileUse::file_usage_count($file->ID, false);
+				if($file instanceOf Folder) {
 					$file->Type == "Folder";
 					$file->Icon == "metatags/images/Folder.png";
-					$file->UsageCount = 0;
-				}
-				else {
-					$files->remove($file);
 				}
 				$file->GoOneUpLink = $this->GoOneUpLink();
 				$file->RecycleLink = $this->makeRecycleLink($file->ID);

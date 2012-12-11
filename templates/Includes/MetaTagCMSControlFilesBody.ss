@@ -6,11 +6,11 @@
 				<% if Last %>
 				<strong>$URLSegment</strong>
 				<% else %>
-				<a href="$Link" title="File Type: $ClassName, Title: $Title  - click to open pages on this level" class="goOneUpLink ajaxify" rel="TR-$ID">$FilenameSegment/</a>
+				<a href="$Link" title="File Type: $ClassName, Title: $Title  - click to open pages on this level" class="goOneUpLink" rel="TR-$ID">$FilenameSegment/</a>
 				<% end_if %>
 			<% end_control %>
 			<% if ClassName = Folder %>
-				<% if ChildrenLink %><a href="$ChildrenLink" class="goOneDownLink ajaxify" title="go down one level and view child pages of: $Name.ATT" rel="TR-$ID">+</a><% end_if %>
+				<% if ChildrenLink %><a href="$ChildrenLink" class="goOneDownLink" title="go down one level and view child pages of: $Name.ATT" rel="TR-$ID">+</a><% end_if %>
 				<div class="iconHolder"><img src="/metatags/images/Folder.png" alt="$ClassName" class="defaultIcon" /></div>
 				<div class="fileInfo">
 			<% else %>
