@@ -1,0 +1,7 @@
+---
+Name: metatagroutes
+---
+Director:
+  rules:
+    'metatagmanagementfiles//$Action/$ID/$OtherID': 'MetaTagCMSControlFiles'
+    'metatagmanagementpages//$Action/$ID/$OtherID': 'MetaTagCMSControlPages'
