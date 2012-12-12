@@ -2,19 +2,26 @@
 
 class MetaTagCMSControlFiles extends Controller {
 
-	static $url_segment = 'metatagmanagementfiles';
+	protected static $url_segment = 'metatagmanagementfiles';
+		static function set_url_segment($s){self::$url_segment = $s;}
+		static function get_url_segment(){return self::$url_segment;}
 
-	static $records_per_page = 10;
+	protected static $records_per_page = 10;
+		static function set_records_per_page($i){self::$records_per_page = $i;}
+		static function get_records_per_page(){return self::$records_per_page;}
 
 	protected $ParentID = 0;
 
-	protected $updatableFields = array('Title', 'Content');
+	protected $updatableFields = array(
+		"Title",
+		"Content"
+	);
 
 	/**
 	 * First table is main table - e.g. $this->tableArray[0] should work
 	 *
 	 **/
-	protected $tableArray = array('File');
+	protected $tableArray = array("File");
 
 	function init(){
 		parent::init();
@@ -29,6 +36,9 @@ class MetaTagCMSControlFiles extends Controller {
 		Requirements::javascript("sapphire/thirdparty/jquery-form/jquery.form.js");
 		Requirements::javascript("metatags/javascript/MetaTagCMSControl.js");
 		Requirements::themedCSS("MetaTagCMSControl");
+		if($parentID = intval($this->request->getVar("childrenof"))) {
+			$this->ParentID = $parentID;
+		}
 	}
 
 	/***************************************************
@@ -41,7 +51,10 @@ class MetaTagCMSControlFiles extends Controller {
 	}
 
 	function childrenof($request) {
-		$this->ParentID = intval($request->param("ID"));
+		$id = intval($request->param("ID"));
+		if($id) {
+			$this->ParentID = $id;
+		}
 		return array();
 	}
 
@@ -173,11 +186,17 @@ class MetaTagCMSControlFiles extends Controller {
 
 	function MyRecords() {
 		//Filesystem::sync($this->ParentID);
-		$files = DataObject::get($this->tableArray[0], "ParentID = ".$this->ParentID, '', '', $this->myRecordsLimit());
+		$files = DataObject::get($this->tableArray[0], "\"ParentID\" = ".$this->ParentID, '', '', $this->myRecordsLimit());
 		$dos = null;
 		if($files) {
 			foreach($files as $file) {
 				$file->ChildrenLink = '';
+				if(!$file->canView() ) {
+					$file->Error = "YOU DO NOT HAVE PERMISSION TO VIEW THIS FILE.";
+				}
+				if(!file_exists($file->getFullPath())) {
+					$file->Error = "FILE CAN NOT BE FOUND.";
+				}
 				if(DataObject::get_one($this->tableArray[0], "ParentID = ".$file->ID)) {
 					$file->ChildrenLink = $this->createLevelLink($file->ID);
 				}
@@ -192,7 +211,9 @@ class MetaTagCMSControlFiles extends Controller {
 				$segmentArray = array();
 				$item = $file;
 				$segmentArray[] = array("URLSegment" => $item->Name, "ID" => $item->ID, "ClassName" => $item->ClassName, "Title" => $item->Title, "Link" => "/".$item->Filename);
-				while($item && $item->ParentID) {
+				$x = 0;
+				while($item && $item->ParentID && $x < 10) {
+					$x++;
 					$item = DataObject::get_by_id($this->tableArray[0], $item->ParentID);
 					if($item) {
 						$segmentArray[] = array("URLSegment" => $item->Name, "ID" => $item->ID, "ClassName" => $item->ClassName, "Title" => $item->Title, "Link" => $this->createLevelLink(intval($item->ParentID)-0));
@@ -231,7 +252,13 @@ class MetaTagCMSControlFiles extends Controller {
 	}
 
 	protected function makeRecycleLink($id) {
-		return $this->Link("recycle").$id."/";
+		if(!isset($_GET["start"])) {
+			$start = 0;
+		}
+		else {
+			$start = intval($_GET["start"]);
+		}
+		return $this->Link("recycle").$id."/?childrenof=".$this->ParentID."&amp;start=".$start;
 	}
 
 	function Message() {
@@ -259,7 +286,7 @@ class MetaTagCMSControlFiles extends Controller {
 		if(isset($_GET["start"])) {
 			$start = intval($_GET["start"]);
 		}
-		return "$start, " . self::$records_per_page;
+		return "$start, ".self::get_records_per_page();
 	}
 
 
