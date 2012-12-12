@@ -42,7 +42,7 @@ tfoot th {border-top: 5px solid #94B053; border-bottom: none;}
 .metaD, .metaT{width: 20%;}
 .expand, .auto {text-align: center;}
 
-table tfoot tr.actions td,table tfoot tr.actions th.bactchactions {text-align: left;} 
+table tfoot tr.actions td,table tfoot tr.actions th.bactchactions {text-align: left;}
 
 table ul {padding: 0px; margin: 0px;}
 table ul li {}
@@ -53,10 +53,22 @@ table ul ul { }
 
 .response {padding: 7px; margin: 4px auto 4px auto; text-align: center; background-color: #82837E; color: #BDEB07; width: 98%; -moz-border-radius: 3px; border-radius: 3px;}
 
-.goOneDownLink {display: block; height: 16px; width:16px;text-indent: -2000px; float: right;}
 .goOneDownLink {background-image: url(/metatags/images/down.png); }
-.goOneUpLink {display: none }
-	tr:hover .goOneUpLink {display: inline-block; background: url(/metatags/images/up.png) no-repeat top left; padding-left: 19px; height: 16px; }
+.goOneUpLink {background: url(/metatags/images/up.png) no-repeat top left;   }
+.goOneDownLink , .goOneUpLink{
+	display: inline-block;
+	height: 16px; width:16px;
+	text-indent: -2000px;
+	opacity: 0.3;
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+	filter: alpha(opacity=30);
+}
+tr:hover .goOneUpLink, tr:hover .goOneDownLink {
+	opacity: 1;
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+	filter: alpha(opacity=100);
+}
+tr:hover strong {color: #000;}
 
 .bold {font-weight: bold;}
 .bactchactions  {background-image: none;}
@@ -69,6 +81,7 @@ table ul ul { }
 /* FILES */
 strong {color: #82837E; fontweight:bold;}
 td.filename div.iconHolder {float: left; padding-left: 0px; padding-right: 10px; }
+td.filename .errorHolder {height: 100px; width:100px; color: red!important;margin-right: 10px; border: 1px solid red; float: left;}
 .fileInfo {color: #82837E;}
 .fileInfo span {}
 .fileInfo span.label {font-weight: bold;}
