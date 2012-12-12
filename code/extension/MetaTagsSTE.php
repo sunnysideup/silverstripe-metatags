@@ -15,19 +15,19 @@ class MetaTagsSTE extends SiteTreeExtension {
 	 * @var Boolean
 	 */
 	static $disable_update_popup = false;
-	
+
 	/**
 	 * length of auto-generated meta descriptions in header
 	 * @var Int
 	 */
 	static $meta_desc_length = 24;
-	
+
 	/**
 	 * exclude meta keywords from header altogether
 	 * @var Boolean
 	 **/
 	static $hide_keywords_altogether = true;
-	
+
 	/**
 	 * google fonts to be used
 	 * @var Array
@@ -41,7 +41,7 @@ class MetaTagsSTE extends SiteTreeExtension {
 	 * @var Boolean
 	 **/
 	static $use_themed_favicon = false;
-	
+
 	/**
 	 * standard SS method
 	 * @var Array
@@ -83,7 +83,7 @@ class MetaTagsSTE extends SiteTreeExtension {
 			Requirements::clear('sapphire/javascript/UpdateURL.js');
 			Requirements::javascript(SS_METATAGS_DIR.'/javascript/UpdateURL.js');
 		}
-		$linkToManager = '/' . MetaTagCMSControlPages::$url_segment . '/';
+		$linkToManager = '/' . MetaTagCMSControlPages::get_url_segment() . '/';
 		$fields->addFieldToTab('Root.Metadata', new LiteralField("LinkToManagerHeader", "<p>Open the Meta Tag Manager to <a href=\"$linkToManager\" target=\"_blank\">Review and Edit</a> the Meta Data for all pages on this site. Also make sure to review the general <a href=\"/admin/show/root/\">settings for Search Engines</a>.</p>"));
 		if($this->owner->URLSegment == RootURLController::get_default_homepage_link()) {
 			$newField = $fields->dataFieldByName('URLSegment');

@@ -2,6 +2,9 @@
 
 class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 
+	protected static $url_segment = "metatagmanagementpages";
+		static function get_url_segment(){return self::$url_segment;}
+		static function set_url_segment($s){self::$url_segment = $s;}
 
 	/***************************************************
 	 * CONFIG                                          *
@@ -167,7 +170,7 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 					$page->ChildrenLink = $this->createLevelLink($page->ID);
 				}
 
-				$dos[$page->ID] = new DataObjectSet();
+				$dos[$page->ID] = new ArrayList();
 				$segmentArray = array();
 				$item = $page;
 				$segmentArray[] = array("URLSegment" => $item->URLSegment, "ID" => $item->ID, "ClassName" => $item->ClassName, "Title" => $item->Title);

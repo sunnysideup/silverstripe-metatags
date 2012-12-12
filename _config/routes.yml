@@ -1,5 +1,6 @@
 ---
 Name: metatagroutes
+After: '*'
 ---
 Director:
   rules:

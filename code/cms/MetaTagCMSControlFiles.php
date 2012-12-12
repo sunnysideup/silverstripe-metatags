@@ -2,6 +2,10 @@
 
 class MetaTagCMSControlFiles extends Controller {
 
+	protected static $url_segment = "metatagmanagementfiles";
+		static function get_url_segment(){return self::$url_segment;}
+		static function set_url_segment($s){self::$url_segment = $s;}
+
 	protected static $records_per_page = 10;
 		static function set_records_per_page($i){self::$records_per_page = $i;}
 		static function get_records_per_page(){return self::$records_per_page;}
@@ -21,7 +25,7 @@ class MetaTagCMSControlFiles extends Controller {
 
 	function init(){
 		parent::init();
-		$member = Member::currentMember();
+		$member = Member::currentUser();
 			// Default security check for LeftAndMain sub-class permissions
 		if(!Permission::checkMember($member, "CMS_ACCESS_LeftAndMain")) {
 			return Security::permissionFailure($this);
