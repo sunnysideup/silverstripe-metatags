@@ -47,14 +47,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 							$obj->FileClassName = $hasOneClass;
 							$obj->ConnectionType = "HAS_ONE";
 							$obj->write();
-							if(ClassInfo::is_subclass_of($class, "SiteTree")) {
-								$obj = new MetaTagCMSControlFileUse();
-								$obj->DataObjectClassName = $class."_Live";
-								$obj->DataObjectFieldName = $fieldName;
-								$obj->FileClassName = $hasOneClass;
-								$obj->ConnectionType = "HAS_ONE";
-								$obj->write();
-							}
+							//do something for _LIVE versions
 						}
 					}
 				}
@@ -77,6 +70,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 							$obj->FileClassName = $class;
 							$obj->ConnectionType = "HAS_MANY";
 							$obj->write();
+							//do something for _LIVE versions
 						}
 					}
 				}
@@ -101,6 +95,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 							$obj->FileClassName = $manyManyClass;
 							$obj->ConnectionType = "MANY_MANY";
 							$obj->write();
+							//do something for _LIVE versions
 						}
 						if(!DB::query("
 							SELECT COUNT(*)
