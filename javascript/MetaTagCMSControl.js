@@ -51,8 +51,6 @@ var MetaTagCMSControl = {
 				return false;
 			}
 		);
-		/*
-		 * NEEDS A QUICK REVIEW...
 		jQuery("a.ajaxify").click(
 			function(event) {
 				event.preventDefault();
@@ -63,21 +61,23 @@ var MetaTagCMSControl = {
 					function(data) {
 						jQuery('tbody').html(data);
 						jQuery('.response').text("records updated ....");
-						jQuery('tbody').fadeTo("fast", "1");
+						jQuery('tbody').fadeTo(
+							"fast",
+							"1",
+							function() {MetaTagCMSControl.init();}
+						);
 					},
 					"html"
 				);
 
 			}
 		)
-		* */
-
 	},
 
 
 
 
-// pre-submit callback
+	// pre-submit callback
 	showRequest: function(formData, jqForm, options) {
 		// formData is an array; here we use jQuery.param to convert it to a string to display it
 		// but the form plugin does this for you automatically when it submits the data

@@ -2,10 +2,6 @@
 
 class MetaTagCMSControlFiles extends Controller {
 
-	protected static $url_segment = 'metatagmanagementfiles';
-		static function set_url_segment($s){self::$url_segment = $s;}
-		static function get_url_segment(){return self::$url_segment;}
-
 	protected static $records_per_page = 10;
 		static function set_records_per_page($i){self::$records_per_page = $i;}
 		static function get_records_per_page(){return self::$records_per_page;}

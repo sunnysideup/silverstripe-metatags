@@ -17,16 +17,21 @@
 				<% if CMSThumbnail %>
 					<div class="iconHolder"><a href="$Link" class="newWindow bold">$CMSThumbnail</a></div>
 				<% end_if %>
+				<% if Error %>
+					<div class="errorHolder">ERROR: $Error</div>
+				<% end_if %>
 				<div class="fileInfo">
 					<% if getFileType %><br /><span class="label">Type:</span> <span class="data">$getFileType</span><% end_if %>
 					<% if getSize %><br /><span class="label">Size:</span> <span class="data">$getSize</span><% end_if %>
 					<% if getDimensions %><br /><span class="label">Dimensions:</span> <span class="data">$getDimensions</span><% end_if %>
 			<% end_if %>
+					<div class="usage">
 			<% if UsageCount %>
-					<br /><span class="label">Used:</span> <span class="data">$UsageCount time(s)</span>
+						<span class="label">Used:</span> <span class="data">$UsageCount time(s)</span>
 			<% else %>
-					<a href="$RecycleLink" class=" ajaxify"><br /><img src="metatags/images/recycle.png" alt="Recycle" title="Recycle" /></a>
+					<a href="$RecycleLink" class=" ajaxify">not used on the site: <img src="metatags/images/recycle.png" alt="Recycle" title="Recycle" /></a>
 			<% end_if %>
+					</div>
 				</div>
 		</td>
 

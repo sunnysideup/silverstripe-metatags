@@ -8,8 +8,6 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 	 *                                                 *
 	 ***************************************************/
 
-	static $url_segment = 'metatagmanagementpages';
-
 	protected static $small_words_array = array('of','a','the','and','an','or','nor','but','is','if','then','else','when','at','from','by','on','off','for','in','out','over','to','into','with');
 		static function set_small_words_array($a){self::$small_words_array = $a;}
 		static function get_small_words_array(){return self::$small_words_array;}
