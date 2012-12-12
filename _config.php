@@ -9,8 +9,8 @@
 define('SS_METATAGS_DIR', 'metatags');
 
 Director::addRules(8, array(
-	MetaTagCMSControlPages::$url_segment . '//$Action/$ID/$OtherID' => 'MetatagCMSControlPages',
-	MetaTagCMSControlFiles::$url_segment . '//$Action/$ID/$OtherID' => 'MetatagCMSControlFiles'
+	MetaTagCMSControlPages::get_url_segment() . '//$Action/$ID/$OtherID' => 'MetatagCMSControlPages',
+	MetaTagCMSControlFiles::get_url_segment() . '//$Action/$ID/$OtherID' => 'MetatagCMSControlFiles'
 ));
 
 //copy the lines between the START AND END line to your /mysite/_config.php file and choose the right settings
