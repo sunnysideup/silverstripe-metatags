@@ -47,7 +47,8 @@ class MetaTagsSTE extends SiteTreeExtension {
 	 * @var Array
 	 **/
 	static $db = array(
-		'AutomateMetatags' => 'Boolean'
+		'AutomateMetatags' => 'Boolean',
+		'MetatagCache' => 'HTMLText'
 	);
 
 	/**
@@ -98,6 +99,7 @@ class MetaTagsSTE extends SiteTreeExtension {
 	 */
 	public function onBeforeWrite() {
 		$siteConfig = SiteConfig::current_site_config();
+		$this->owner->MetatagCache = "";
 		// if UpdateMeta checkbox is checked, update metadata based on content and title
 		// we only update this from the CMS to limit slow-downs in programatic updates
 		if(isset($_REQUEST['AutomateMetatags']) && $_REQUEST['AutomateMetatags']){
@@ -147,7 +149,7 @@ class MetaTagsSTE extends SiteTreeExtension {
 		}
 		if($siteConfig->AppendToMetaTitle) {
 			if(strpos($this->owner->MetaTitle, $siteConfig->AppendToMetaTitle) === (strlen($this->owner->MetaTitle) - strlen($siteConfig->AppendToMetaTitle))) {
-				$this->owner->MetaTitle = str_replace($siteConfig->AppendToMetaTitle, "", $this->owner->MetaTile);
+				$this->owner->MetaTitle = str_replace($siteConfig->AppendToMetaTitle, "", $this->owner->MetaTitle);
 			}
 		}
 		if($this->owner->MetaTitle != $oldMetaTitle) {
