@@ -2,12 +2,10 @@
 /**
  * developed by www.sunnysideup.co.nz
  * authors:
- * martijn: marvanni [at] hotmail.com
  * Nicolaas modules [at] sunnysideup.co.nz
  **/
 
 define('SS_METATAGS_DIR', 'metatags');
-
 
 //copy the lines between the START AND END line to your /mysite/_config.php file and choose the right settings
 //===================---------------- START metatags MODULE ----------------===================
@@ -18,8 +16,6 @@ define('SS_METATAGS_DIR', 'metatags');
 //Object::add_extension('SiteTree', 'MetaTagsSTE');
 //Object::add_extension('ContentController', 'MetaTagsContentControllerEXT');
 //MAY SET ...
-/* adding formatting to the CMS */
-//LeftAndMain::require_themed_css("metatags/css/cmsfixes.css");
 /* pop-ups and form interaction */
 //MetaTagsSTE::$disable_update_popup = false;
 /* meta descriptions */
