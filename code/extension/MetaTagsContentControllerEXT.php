@@ -19,7 +19,10 @@ class MetaTagsContentControllerEXT extends Extension {
 	private static $metatags_building_completed = false;
 
 	function addBasicMetatagRequirements($additionalJS = array(), $additionalCSS = array(), $force = false) {
-		if(! self::$metatags_building_completed || $force) {
+		if($force) {
+			self::$metatags_building_completed = false;
+		}
+		if(!self::$metatags_building_completed) {
 			$themeFolder = SSViewer::get_theme_folder() . '/';
 			$cssArrayLocationOnly = array();
 			$jsArray =
@@ -59,6 +62,7 @@ class MetaTagsContentControllerEXT extends Extension {
 					Requirements::insertHeadTags('<link href="' . $protocol . 'fonts.googleapis.com/css?family=' . urlencode($font) . '" rel="stylesheet" type="text/css" />');
 				}
 			}
+			Requirements::insertHeadTags('<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1" />', 'use-ie-edge');
 			self::$metatags_building_completed = true;
 		}
 	}
@@ -67,8 +71,8 @@ class MetaTagsContentControllerEXT extends Extension {
 	 * this function will add more metatags to your template - make sure to add it at the start of your metatags
 	 */
 	function ExtendedMetatags($includeTitle = true, $addExtraSearchEngineData = true) {
+		$this->addBasicMetatagRequirements();
 		if(!$this->owner->MetatagCache || isset($_GET["flush"])) {
-			$this->addBasicMetatagRequirements();
 			$themeFolder = SSViewer::get_theme_folder() . '/';
 			$tags = "";
 			$page = $this->owner;
@@ -132,15 +136,13 @@ class MetaTagsContentControllerEXT extends Extension {
 				'.$page->ExtraMeta.
 				$description;
 			}
-			Requirements::insertHeadTags('<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1" />', 'use-ie-edge');
 			$this->owner->dataRecord->MetatagCache = $tags;
 			$this->owner->dataRecord->writeToStage('Stage');
 			if($stage = Versioned::current_stage()) {
 				if($stage != "Stage") {
-					$this->owner->dataRecord->publish('Stage', Versioned::current_stage());
+					$this->owner->dataRecord->publish('Stage', $stage);
 				}
 			}
-			return $tags;
 		}
 		return $this->owner->dataRecord->MetatagCache;
 	}
