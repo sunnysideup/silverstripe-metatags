@@ -1,5 +1,5 @@
+<% include MetaTagCMSControlHeader %>
 <div id="MetatagOuterHolder">
-	<% include MetaTagCMSControlHeader %>
 	<form method="get" action="$FormAction" id="MetaTagCMSControlForm">
 		<div class="response"><% if Message %>$Message<% else %>Improve Search Engine visibility: review and update File titles and related data. Careful! Any edits below will update your website immediately.<% end_if %></div>
 		<div><input id="FieldName" name="fieldName" type="hidden"/></div>
@@ -49,6 +49,5 @@
 		<p>No pages found</p>
 	<% end_if %>
 	</form>
-
 	<% include MetaTagCMSControlFooter %>
 </div>

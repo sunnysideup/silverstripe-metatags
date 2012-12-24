@@ -35,7 +35,8 @@ class MetaTagCMSControlFiles extends Controller {
 		//Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
 		Requirements::javascript("sapphire/thirdparty/jquery-form/jquery.form.js");
 		Requirements::javascript("metatags/javascript/MetaTagCMSControl.js");
-		Requirements::themedCSS("MetaTagCMSControl");
+		Requirements::themedCSS("MetaTagCMSControl", "metatags");
+
 		if($parentID = intval($this->request->getVar("childrenof"))) {
 			$this->ParentID = $parentID;
 		}
