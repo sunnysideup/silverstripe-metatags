@@ -72,78 +72,69 @@ class MetaTagsContentControllerEXT extends Extension {
 	 */
 	function ExtendedMetatags($includeTitle = true, $addExtraSearchEngineData = true) {
 		$this->addBasicMetatagRequirements();
-		if(!$this->owner->MetatagCache || isset($_GET["flush"])) {
-			$themeFolder = SSViewer::get_theme_folder() . '/';
-			$tags = "";
-			$page = $this->owner;
-			$siteConfig = SiteConfig::current_site_config();
-			$title = $page->MetaTitle ? $page->MetaTitle : $page->Title;
-			if(! MetaTagsSTE::$hide_keywords_altogether) {
-				$keywords = Convert::raw2xml(($page->MetaKeywords) ? $page->MetaKeywords : $page->Title );
-			}
-			if($page->MetaDescription) {
-				$description = '
-				<meta name="description" http-equiv="description" content="'.Convert::raw2att($page->MetaDescription).'" />';
-				$noopd = '';
-			}
-			else {
-				$noopd = "NOODP, ";
-				$description = '';
-			}
-			$lastEdited = new SS_Datetime();
-			$lastEdited->value = $page->LastEdited;
-
-			//use base url rather than / so that sites that aren't a run from the root directory can have a favicon
-			$faviconBase = Director::baseURL();
-			if(MetaTagsSTE::$use_themed_favicon) {
-				$faviconBase .= $themeFolder;
-			}
-			if($includeTitle) {
-				$titleTag = '
-				<title>'.trim(Convert::raw2att($siteConfig->PrependToMetaTitle.' '.$title.' '.$siteConfig->AppendToMetaTitle)).'</title>';
-			}
-			else {
-				$titleTag = '';
-			}
-			$tags .= '
-				<meta charset="utf-8" />
-				<meta http-equiv="Content-type" content="text/html; charset=utf-8" />'.
-				$titleTag
-				.'
-				<link rel="icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />
-				<link rel="apple-touch-icon" href="'.$faviconBase.'apple-touch-icon.png" type="image/x-icon" />
-				<link rel="shortcut icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />';
-			if(! MetaTagsSTE::$hide_keywords_altogether) {
-				$tags .= '<meta name="keywords" http-equiv="keywords" content="'.Convert::raw2att($keywords).'" />';
-			}
-			if(!$page->ExtraMeta && $siteConfig->ExtraMeta) {
-				$page->ExtraMeta = $siteConfig->ExtraMeta;
-			}
-			//if(!$siteConfig->MetaDataCountry) {$siteConfig->MetaDataCountry = Geoip::countryCode2name(Geoip::$default_country_code);}
-			if(!$siteConfig->MetaDataCopyright) {$siteConfig->MetaDataCopyright = $siteConfig->Title;}
-			if($addExtraSearchEngineData) {
-				$tags .= '
-				<meta name="robots" content="'.$noopd.'all, index, follow" />
-				<meta name="googlebot" content="'.$noopd.'all, index, follow" />
-				<meta name="copyright" content="'.$siteConfig->MetaDataCopyright.'" />
-				<meta name="coding" content="'.$siteConfig->MetaDataCoding.'" />
-				<meta name="design" content="'.$siteConfig->MetaDataDesign.'" />
-				<meta name="date-modified-yyyymmdd" content="'.$lastEdited->Format("Ymd").'" />
-				<meta name="country" content="'.$siteConfig->MetaDataCountry.'" />
-				<meta http-equiv="imagetoolbar" content="no" />
-				<meta name="viewport" content="width=device-width,initial-scale=1" />
-				<meta http-equiv="Content-Language" content="'.i18n::get_locale().'" />
-				'.$page->ExtraMeta.
-				$description;
-			}
-			$this->owner->dataRecord->MetatagCache = $tags;
-			$this->owner->dataRecord->writeToStage('Stage');
-			if($stage = Versioned::current_stage()) {
-				if($stage != "Stage") {
-					$this->owner->dataRecord->publish('Stage', $stage);
-				}
-			}
+		$themeFolder = SSViewer::get_theme_folder() . '/';
+		$tags = "";
+		$page = $this->owner;
+		$siteConfig = SiteConfig::current_site_config();
+		$title = $page->MetaTitle ? $page->MetaTitle : $page->Title;
+		if(! MetaTagsSTE::$hide_keywords_altogether) {
+			$keywords = Convert::raw2xml(($page->MetaKeywords) ? $page->MetaKeywords : $page->Title );
 		}
-		return $this->owner->dataRecord->MetatagCache;
+		if($page->MetaDescription) {
+			$description = '
+			<meta name="description" http-equiv="description" content="'.Convert::raw2att($page->MetaDescription).'" />';
+			$noopd = '';
+		}
+		else {
+			$noopd = "NOODP, ";
+			$description = '';
+		}
+		$lastEdited = new SS_Datetime();
+		$lastEdited->value = $page->LastEdited;
+
+		//use base url rather than / so that sites that aren't a run from the root directory can have a favicon
+		$faviconBase = Director::baseURL();
+		if(MetaTagsSTE::$use_themed_favicon) {
+			$faviconBase .= $themeFolder;
+		}
+		if($includeTitle) {
+			$titleTag = '
+			<title>'.trim(Convert::raw2att($siteConfig->PrependToMetaTitle.' '.$title.' '.$siteConfig->AppendToMetaTitle)).'</title>';
+		}
+		else {
+			$titleTag = '';
+		}
+		$tags .= '
+			<meta charset="utf-8" />
+			<meta http-equiv="Content-type" content="text/html; charset=utf-8" />'.
+			$titleTag
+			.'
+			<link rel="icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />
+			<link rel="apple-touch-icon" href="'.$faviconBase.'apple-touch-icon.png" type="image/x-icon" />
+			<link rel="shortcut icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />';
+		if(! MetaTagsSTE::$hide_keywords_altogether) {
+			$tags .= '<meta name="keywords" http-equiv="keywords" content="'.Convert::raw2att($keywords).'" />';
+		}
+		if(!$page->ExtraMeta && $siteConfig->ExtraMeta) {
+			$page->ExtraMeta = $siteConfig->ExtraMeta;
+		}
+		//if(!$siteConfig->MetaDataCountry) {$siteConfig->MetaDataCountry = Geoip::countryCode2name(Geoip::$default_country_code);}
+		if(!$siteConfig->MetaDataCopyright) {$siteConfig->MetaDataCopyright = $siteConfig->Title;}
+		if($addExtraSearchEngineData) {
+			$tags .= '
+			<meta name="robots" content="'.$noopd.'all, index, follow" />
+			<meta name="googlebot" content="'.$noopd.'all, index, follow" />
+			<meta name="copyright" content="'.$siteConfig->MetaDataCopyright.'" />
+			<meta name="coding" content="'.$siteConfig->MetaDataCoding.'" />
+			<meta name="design" content="'.$siteConfig->MetaDataDesign.'" />
+			<meta name="date-modified-yyyymmdd" content="'.$lastEdited->Format("Ymd").'" />
+			<meta name="country" content="'.$siteConfig->MetaDataCountry.'" />
+			<meta http-equiv="imagetoolbar" content="no" />
+			<meta name="viewport" content="width=device-width,initial-scale=1" />
+			<meta http-equiv="Content-Language" content="'.i18n::get_locale().'" />
+			'.$page->ExtraMeta.
+			$description;
+		}
+		return $tags;
 	}
 }
