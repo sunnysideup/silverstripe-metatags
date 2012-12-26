@@ -25,9 +25,9 @@ define('SS_METATAGS_DIR', 'metatags');
 //FONTS - see google fonts for options, include within CSS file as: body {font-family: Inconsolata;}
 //MetaTagsSTE::add_google_font('Inconsolata');
 /* combined files */
-//MetaTagsContentControllerEXT::$folder_for_combined_files = 'cache';
-//MetaTagsContentControllerEXT::$combine_css_files_into_one = true;
-//MetaTagsContentControllerEXT::$combine_js_files_into_one = true;
+//MetaTagsContentControllerEXT::set_folder_for_combined_files('cache');
+//MetaTagsContentControllerEXT::set_combine_css_files_into_one(true);
+//MetaTagsContentControllerEXT::set_combine_js_files_into_one(true);
 /* favicons */
 //MetaTagsSTE::$use_themed_favicon = true;
 //===================---------------- END metatags MODULE ----------------===================

@@ -1,8 +1,8 @@
-	<% control MyRecords %>
+	<% loop MyRecords %>
 	<tr class="$FirstLast $EvenOdd" id="TR-$ID">
 
 		<td class="filename">
-			<% control ParentSegments %>
+			<% loop ParentSegments %>
 				<% if Last %>
 				<strong>$URLSegment</strong>
 				<% else %>
@@ -48,4 +48,4 @@
 		</td>
 
 	</tr>
-	<% end_control %>
+	<% end_loop %>

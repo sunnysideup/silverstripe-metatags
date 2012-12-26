@@ -7,11 +7,14 @@ class MetaTagsContentControllerEXT extends Extension {
 
 	/* combined files */
 
-	static $folder_for_combined_files = 'assets';
+	protected static $folder_for_combined_files = 'assets';
+		static function set_folder_for_combined_files($s) {self::$folder_for_combined_files = $s;}
 
-	static $combine_css_files_into_one = false;
+	protected static $combine_css_files_into_one = false;
+		static function set_combine_css_files_into_one($b) {self::$combine_css_files_into_one = $b;}
 
-	static $combine_js_files_into_one = false;
+	protected static $combine_js_files_into_one = false;
+		static function set_combine_js_files_into_one($b) {self::$combine_js_files_into_one = $b;}
 
 	/**
 	 * add all the basic js and css files - call from Page::init()

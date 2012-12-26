@@ -5,13 +5,13 @@
 	<a href="/$MyRecords.PrevLink"><< Prev</a> |
 	<% end_if %>
 
-	<% control MyRecords.Pages %>
+	<% loop MyRecords.Pages %>
 	<% if CurrentBool %>
 	<strong>$PageNum</strong>
 	<% else %>
 	<a href="/$Link" title="Go to page $PageNum" class="">$PageNum</a>
 	<% end_if %>
-	<% end_control %>
+	<% end_loop %>
 
 	<% if MyRecords.NextLink %>
 	| <a href="/$MyRecords.NextLink">Next >></a>
