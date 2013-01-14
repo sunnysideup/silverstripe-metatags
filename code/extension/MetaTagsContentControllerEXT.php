@@ -70,8 +70,13 @@ class MetaTagsContentControllerEXT extends Extension {
 		}
 	}
 
+
 	/**
-	 * this function will add more metatags to your template - make sure to add it at the start of your metatags
+	 * this function will add more metatags to your template -
+	 * make sure to add it at the start of your metatags
+	 * @param Boolean $includeTitle - include the title tag
+	 * @param Boolean $addExtraSearchEngineData - add extra tags describing the page
+	 * @return String (HTML)
 	 */
 	function ExtendedMetatags($includeTitle = true, $addExtraSearchEngineData = true) {
 		$this->addBasicMetatagRequirements();

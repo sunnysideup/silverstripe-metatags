@@ -27,10 +27,10 @@ NB. the idea is not to edit the module at all, but instead customise
 it from your mysite folder, so that you can upgrade the module without redoing the settings.
 
 3. add the following to your Page.ss file:
- <head>
- <% base_tag %>
-  $ExtendedMetatags
- </head>
+<head>
+	<% base_tag %>
+	$ExtendedMetatags
+</head>
 
 Note, you can add two variables:
 includeMetaTitle (default = true),
