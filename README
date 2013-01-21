@@ -28,12 +28,10 @@ it from your mysite folder, so that you can upgrade the module without redoing t
 
 3. add the following to your Page.ss file:
 <head>
-	<% base_tag %>
 	$ExtendedMetatags
 </head>
 
 Note, you can add two variables:
-includeMetaTitle (default = true),
-addExtraSearchEngineData (default = true)
+ExtendedMetatags($includeTitle = true, $addExtraSearchEngineData = true)
 
 ###############################################

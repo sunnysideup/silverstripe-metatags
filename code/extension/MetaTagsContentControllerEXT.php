@@ -74,6 +74,8 @@ class MetaTagsContentControllerEXT extends Extension {
 	/**
 	 * this function will add more metatags to your template -
 	 * make sure to add it at the start of your metatags
+	 * We leave the / closing tags here, but they are not needed
+	 * yet not invalid in html5
 	 * @param Boolean $includeTitle - include the title tag
 	 * @param Boolean $addExtraSearchEngineData - add extra tags describing the page
 	 * @return String (HTML)
@@ -85,6 +87,9 @@ class MetaTagsContentControllerEXT extends Extension {
 		$page = $this->owner;
 		$siteConfig = SiteConfig::current_site_config();
 		$title = $page->MetaTitle ? $page->MetaTitle : $page->Title;
+		//base tag
+		$base = Director::absoluteBaseURL();
+		$tags .= "<base href=\"$base\" />";
 		if(! MetaTagsSTE::$hide_keywords_altogether) {
 			$keywords = Convert::raw2xml(($page->MetaKeywords) ? $page->MetaKeywords : $page->Title );
 		}
@@ -101,7 +106,7 @@ class MetaTagsContentControllerEXT extends Extension {
 		$lastEdited->value = $page->LastEdited;
 
 		//use base url rather than / so that sites that aren't a run from the root directory can have a favicon
-		$faviconBase = Director::baseURL();
+		$faviconBase = $base;
 		if(MetaTagsSTE::$use_themed_favicon) {
 			$faviconBase .= $themeFolder;
 		}
