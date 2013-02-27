@@ -1,5 +1,5 @@
 {
-	"name": "silverstripe/metatags",
+	"name": "sunnysideup/metatags",
 	"type": "silverstripe-module",
 	"description": "manage metatags in Silverstripe",
 	"homepage": "http://www.silverstripe-webdevelopment.com",
