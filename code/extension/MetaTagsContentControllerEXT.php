@@ -148,6 +148,7 @@ class MetaTagsContentControllerEXT extends Extension {
 			'.$page->ExtraMeta.
 			$description;
 		}
+		$tags .= $this->OGPBasic();
 		return $tags;
 	}
 
@@ -155,7 +156,7 @@ class MetaTagsContentControllerEXT extends Extension {
 	 * open graph protocol
 	 *
 	 */
-	function OGP(){
+	protected function OGPBasic(){
 		$array = array(
 			"title" => $this->Title,
 			"type" => "website",
@@ -166,7 +167,8 @@ class MetaTagsContentControllerEXT extends Extension {
 		);
 		$html = "";
 		foreach($array as $key => $value){
-			$html .= "<meta property=\"og:$key\" content=\"$value\" />";
+			$html .= "
+			<meta property=\"og:$key\" content=\"$value\" />";
 		}
 		return $html;
 	}
