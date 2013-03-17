@@ -150,4 +150,24 @@ class MetaTagsContentControllerEXT extends Extension {
 		}
 		return $tags;
 	}
+
+	/**
+	 * open graph protocol
+	 *
+	 */
+	function OGP(){
+		$array = array(
+			"title" => $this->Title,
+			"type" => "website",
+			"image" => $this->owner->BaseHref()."themes/main/img/h/apple-touch-icon-144x144-precomposed.png",
+			"url" => $this->owner->AbsoluteLink(),
+			"site_name" => $this->owner->SiteConfig()->Title,
+			"description" => $this->owner->Title
+		);
+		$html = "";
+		foreach($array as $key => $value){
+			$html .= "<meta property=\"og:$key\" content=\"$value\" />";
+		}
+		return $html;
+	}
 }
