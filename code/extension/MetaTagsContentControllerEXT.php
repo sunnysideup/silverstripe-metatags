@@ -148,17 +148,18 @@ class MetaTagsContentControllerEXT extends Extension {
 			'.$page->ExtraMeta.
 			$description;
 		}
-		$tags .= $this->OGPBasic();
+		$tags .= $this->owner->OGTags();
 		return $tags;
 	}
 
 	/**
 	 * open graph protocol
-	 *
+	 * @see: http://ogp.me/
+	 * @return String (HTML)
 	 */
-	protected function OGPBasic(){
+	public function OGTags(){
 		$array = array(
-			"title" => $this->Title,
+			"title" => $this->owner->Title,
 			"type" => "website",
 			//"image" => $this->owner->BaseHref()."themes/main/img/h/apple-touch-icon-144x144-precomposed.png",
 			"url" => $this->owner->AbsoluteLink(),
