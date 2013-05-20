@@ -49,5 +49,6 @@
 		<p>No pages found</p>
 	<% end_if %>
 	</form>
-	<% include MetaTagCMSControlFooter %>
 </div>
+	<% include MetaTagCMSControlFooter %>
+

@@ -40,6 +40,9 @@ class MetaTagCMSControlFiles extends Controller {
 		if($parentID = intval($this->request->getVar("childrenof"))) {
 			$this->ParentID = $parentID;
 		}
+		if($parentID = intval($this->request->getVar("childrenof"))) {
+			$this->ParentID = $parentID;
+		}
 	}
 
 	/***************************************************
@@ -205,6 +208,10 @@ class MetaTagCMSControlFiles extends Controller {
 				if($file instanceOf Folder) {
 					$file->Type == "Folder";
 					$file->Icon == "metatags/images/Folder.png";
+					$file->UsageCount = 0;
+				}
+				else {
+					$file->UsageCount = MetaTagCMSControlFileUse::file_usage_count($file->ID, false);
 				}
 				$file->GoOneUpLink = $this->GoOneUpLink();
 				$file->RecycleLink = $this->makeRecycleLink($file->ID);

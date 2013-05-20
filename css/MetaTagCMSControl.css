@@ -86,7 +86,7 @@ td.filename .errorHolder {height: 100px; width:100px; color: red!important;margi
 .fileInfo span {}
 .fileInfo span.label {font-weight: bold;}
 .fileInfo span.data {}
-.fileInfo .usage {margin-top: 10px; text-align: right;}
 
 
 .pageNumbers strong{background-color: #BFFA37!important;}
+.fileInfo .usage {margin-top: 10px; text-align: right;}
