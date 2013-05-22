@@ -48,7 +48,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 							$obj->ConnectionType = "HAS_ONE";
 							$obj->write(); 
 							//do something for _LIVE versions
-							if(ClassInfo::is_subclass_of($class, "SiteTree")) {
+							if(is_subclass_of(singleton($class), 'SiteTree')) {
 								$obj = new MetaTagCMSControlFileUse();
 								$obj->DataObjectClassName = $class."_Live";
 								$obj->DataObjectFieldName = $fieldName;
