@@ -111,6 +111,12 @@ class MetaTagsContentControllerEXT extends Extension {
 			$faviconBase .= $themeFolder;
 		}
 		if($includeTitle) {
+			if(!$page->MetaTitle) {
+				$page->MetaTitle = $page->Title;
+			}
+			if(!$page->MetaTitle) {
+				$page->MetaTitle = $page->MenuTitle;
+			}
 			$titleTag = '
 			<title>'.trim(Convert::raw2att($siteConfig->PrependToMetaTitle.' '.$title.' '.$siteConfig->AppendToMetaTitle)).'</title>';
 		}
