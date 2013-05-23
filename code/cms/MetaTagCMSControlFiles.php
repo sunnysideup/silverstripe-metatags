@@ -152,7 +152,7 @@ class MetaTagCMSControlFiles extends Controller {
 	function recycle($request) {
 		$id = intval($request->param("ID"));
 		if($id) {
-			$folder = Folder::findOrMake("ZzzeRecyclingBin");
+			$folder = Folder::find_or_make("ZzzeRecyclingBin");
 			if($folder) {
 				$file = DataObject::get_by_id("File", $id);
 				if($file) {
