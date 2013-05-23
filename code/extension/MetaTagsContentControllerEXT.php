@@ -86,7 +86,13 @@ class MetaTagsContentControllerEXT extends Extension {
 		$tags = "";
 		$page = $this->owner;
 		$siteConfig = SiteConfig::current_site_config();
-		$title = $page->MetaTitle ? $page->MetaTitle : $page->Title;
+		$title = $page->MetaTitle;
+		if(!$title) {
+			$title = $page->Title;
+		}
+		if(!$title) {
+			$title = $page->MenuTitle;
+		}
 		//base tag
 		$base = Director::absoluteBaseURL();
 		$tags .= "<base href=\"$base\" />";
@@ -111,12 +117,6 @@ class MetaTagsContentControllerEXT extends Extension {
 			$faviconBase .= $themeFolder;
 		}
 		if($includeTitle) {
-			if(!$page->MetaTitle) {
-				$page->MetaTitle = $page->Title;
-			}
-			if(!$page->MetaTitle) {
-				$page->MetaTitle = $page->MenuTitle;
-			}
 			$titleTag = '
 			<title>'.trim(Convert::raw2att($siteConfig->PrependToMetaTitle.' '.$title.' '.$siteConfig->AppendToMetaTitle)).'</title>';
 		}
