@@ -177,7 +177,7 @@ class MetaTagCMSControlFiles extends Controller {
 			return $this->renderWith("MetaTagCMSControlFilesAjax");
 		}
 		else {
-			Director::redirect($this->Link());
+			$this->redirect($this->Link());
 			return array();
 		}
 	}
@@ -215,7 +215,7 @@ class MetaTagCMSControlFiles extends Controller {
 				}
 				$file->GoOneUpLink = $this->GoOneUpLink();
 				$file->RecycleLink = $this->makeRecycleLink($file->ID);
-				$dos[$file->ID] = new DataObjectSet();
+				$dos[$file->ID] = new ArrayList();
 				$segmentArray = array();
 				$item = $file;
 				$segmentArray[] = array("URLSegment" => $item->Name, "ID" => $item->ID, "ClassName" => $item->ClassName, "Title" => $item->Title, "Link" => "/".$item->Filename);

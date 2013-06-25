@@ -50,7 +50,7 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 				foreach($this->tableArray as $table) {
 					$rows = DB::query("SELECT \"$table\".\"ID\", \"$table\".\"Content\" FROM \"$table\" WHERE \"$table\".\"$fieldName\" = '' OR \"$table\".\"$fieldName\" IS NULL;");
 					foreach($rows as $row) {
-						$newValue = Convert::raw2sql(DBField::create("HTMLText", $row["Content"])->Summary(MetaTagsSTE::$meta_desc_length, 15, ""));
+						$newValue = Convert::raw2sql(DBField::create_field("HTMLText", $row["Content"])->Summary(MetaTagsSTE::$meta_desc_length, 15, ""));
 						DB::query("UPDATE \"$table\" SET \"$fieldName\" = '$newValue' WHERE ID = ".$row["ID"]);
 					}
 				}
@@ -131,7 +131,7 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 			return $this->renderWith("MetaTagCMSControlPagesAjax");
 		}
 		else {
-			Director::redirect($this->Link());
+			$this->redirect($this->Link());
 			return array();
 		}
 	}
