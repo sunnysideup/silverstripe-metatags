@@ -33,7 +33,7 @@ class MetaTagCMSControlFiles extends Controller {
 		Requirements::javascript(THIRDPARTY_DIR."/jquery/jquery.js");
 		//Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
 		//Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
-		Requirements::javascript("sapphire/thirdparty/jquery-form/jquery.form.js");
+		Requirements::javascript("framework/thirdparty/jquery-form/jquery.form.js");
 		Requirements::javascript("metatags/javascript/MetaTagCMSControl.js");
 		Requirements::themedCSS("MetaTagCMSControl", "metatags");
 
@@ -123,7 +123,7 @@ class MetaTagCMSControlFiles extends Controller {
 				}
 				$recordID = intval($fieldNameArray[1]);
 				foreach($this->tableArray as $table) {
-					$record = DataObject::get_by_id($table, $recordID);
+					$record = $table::get()->byID($recordID);
 					$extension = '';
 					if(!($record instanceOf Folder)) {
 						$extension = ".".$record->getExtension();
@@ -154,7 +154,7 @@ class MetaTagCMSControlFiles extends Controller {
 		if($id) {
 			$folder = Folder::find_or_make("ZzzeRecyclingBin");
 			if($folder) {
-				$file = DataObject::get_by_id("File", $id);
+				$file = File::get()->byID($id);
 				if($file) {
 					if(file_exists($file->getFullPath())) {
 						$file->ParentID = $folder->ID;
@@ -190,9 +190,9 @@ class MetaTagCMSControlFiles extends Controller {
 
 	function MyRecords() {
 		//Filesystem::sync($this->ParentID);
-		$files = DataObject::get($this->tableArray[0], "\"ParentID\" = ".$this->ParentID, '', '', $this->myRecordsLimit());
+		$files = $this->tableArray[0]::get()->filter(array("ParentID" => $this->ParentID))->limit($this->myRecordsLimit);
 		$dos = null;
-		if($files) {
+		if($files->count()) {
 			foreach($files as $file) {
 				$file->ChildrenLink = '';
 				if(!$file->canView() ) {
@@ -201,7 +201,7 @@ class MetaTagCMSControlFiles extends Controller {
 				if(!file_exists($file->getFullPath())) {
 					$file->Error = "FILE CAN NOT BE FOUND.";
 				}
-				if(DataObject::get_one($this->tableArray[0], "ParentID = ".$file->ID)) {
+				if( $this->tableArray[0]::get()->filter(array("ParentID" => $file->ID))->count()) {
 					$file->ChildrenLink = $this->createLevelLink($file->ID);
 				}
 				$file->UsageCount = MetaTagCMSControlFileUse::file_usage_count($file->ID, false);
@@ -222,7 +222,7 @@ class MetaTagCMSControlFiles extends Controller {
 				$x = 0;
 				while($item && $item->ParentID && $x < 10) {
 					$x++;
-					$item = DataObject::get_by_id($this->tableArray[0], $item->ParentID);
+					$item = $this->tableArray[0]::get()->byID($this->ParentID);
 					if($item) {
 						$segmentArray[] = array("URLSegment" => $item->Name, "ID" => $item->ID, "ClassName" => $item->ClassName, "Title" => $item->Title, "Link" => $this->createLevelLink(intval($item->ParentID)-0));
 					}
@@ -252,7 +252,7 @@ class MetaTagCMSControlFiles extends Controller {
 
 	function GoOneUpLink() {
 		if( $this->ParentID ) {
-			$oneUpPage = DataObject::get_by_id($this->tableArray[0], $this->ParentID);
+			$oneUpPage = $this->tableArray[0]::get()->byID($this->ParentID);
 			if($oneUpPage) {
 				return $this->createLevelLink($oneUpPage->ParentID);
 			}

@@ -103,7 +103,7 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 					$value = Convert::raw2sql($_GET[$fieldNameString]);
 				}
 				$recordID = intval($fieldNameArray[1]);
-				$record = DataObject::get_by_id($this->tableArray[0], $recordID);
+				$record = $this->tableArray[0]::get()->byID($recordID);
 				if($record) {
 					if(method_exists($record, "canPublish") && !$record->canPublish()) {
 						return Security::permissionFailure($this);
@@ -144,9 +144,14 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 
 	function MyRecords() {
 		$excludeWhere = "AND \"ShowInSearch\" = 1 AND \"ClassName\" <> 'ErrorPage'";
-		$pages = DataObject::get($this->tableArray[0], "ParentID = ".$this->ParentID. " ".$excludeWhere, '', '', $this->myRecordsLimit());
+		$pages = $this->tableArray[0]::get()->filter(array(
+			"ParentID" => $this->ParentID,
+			"ShowInSearch" => 1
+		))->exclude(array(
+			"ClassName" => 'ErrorPage'
+		))->limit($this->myRecordsLimit);
 		$dos = null;
-		if($pages) {
+		if($pages->count()) {
 			foreach($pages as $page) {
 				if($page instanceOf ErrorPage || !$page->canView(new Member())) {
 					$pages->remove($page);
@@ -166,7 +171,12 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 				if($this->mySiteConfig()->UpdateMenuTitle && $page->AutomateMetatags) {
 					$page->MenuTitleAutoUpdate = true;
 				}
-				if(DataObject::get_one($this->tableArray[0], "ParentID = ".$page->ID. " ".$excludeWhere)) {
+				if($this->tableArray[0]::get()->filter(array(
+					"ParentID" => $this->ParentID,
+					"ShowInSearch" => 1
+				))->exclude(array(
+					"ClassName" => 'ErrorPage'
+				))->First()) {
 					$page->ChildrenLink = $this->createLevelLink($page->ID);
 				}
 
@@ -175,7 +185,7 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 				$item = $page;
 				$segmentArray[] = array("URLSegment" => $item->URLSegment, "ID" => $item->ID, "ClassName" => $item->ClassName, "Title" => $item->Title);
 				while($item && $item->ParentID) {
-					$item = DataObject::get_by_id($this->tableArray[0], $item->ParentID);
+					$item = $this->tableArray[0]::get()->byID($item->ParentID);
 					if($item) {
 						$segmentArray[] = array("URLSegment" => $item->URLSegment, "ID" => $item->ID, "ClassName" => $item->ClassName, "Title" => $item->Title, "Link" => $this->createLevelLink(intval($item->ParentID)-0));
 					}

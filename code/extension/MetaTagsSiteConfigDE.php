@@ -81,7 +81,7 @@ class MetaTagsSiteConfigDE extends DataExtension {
 				),
 				new Tab('Back Links',
 					new LiteralField('MetaTagsLinksExplanation', '<h3>Referencing Websites</h3><p>A big part of Search Engine Optimisation is getting other sites to link to your site. Below you can keep a record of these back links.</p>'),
-					new ComplexTableField($this->owner, 'MetaTagsLinks', 'MetaTagsLinks')
+					new GridField('MetaTagsLinks', 'MetaTagsLinks', MetaTagsLinks::get())
 				)
 			)
 		);

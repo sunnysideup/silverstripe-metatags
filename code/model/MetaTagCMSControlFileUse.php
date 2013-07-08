@@ -28,7 +28,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 			//HAS_ONE
 			$hasOneArray = null;
 			//get the has_one fields
-			$newItems = (array) Object::uninherited_static($class, 'has_one');
+			$newItems = (array)Config::inst()->get($class, 'has_one', Config::UNINHERITED);
 			// Validate the data
 			//do we need this?
 			$hasOneArray = $newItems; //isset($hasOneArray) ? array_merge($newItems, (array)$hasOneArray) : $newItems;
@@ -61,7 +61,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 				}
 			}
 			$hasManyArray = null;
-			$newItems = (array) Object::uninherited_static($class, 'has_many');
+			$newItems = (array)Config::inst()->get($class, 'has_many', Config::UNINHERITED);
 			// Validate the data
 			$hasManyArray = $newItems; //isset($hasManyArray) ? array_merge($newItems, (array)$hasManyArray) : $newItems;
 			if($hasManyArray && count($hasManyArray)) {
@@ -84,10 +84,10 @@ class MetaTagCMSControlFileUse extends DataObject {
 				}
 			}
 			$manyManyArray = null;
-			$newItems = (array) Object::uninherited_static($class, 'many_many');
+			$newItems = (array)Config::inst()->get($class, 'many_many', Config::UNINHERITED);
 			$manyManyArray = $newItems;
 
-			$newItems = (array) Object::uninherited_static($class, 'belongs_many_many');
+			$newItems = (array)Config::inst()->get($class, 'belongs_many_many', Config::UNINHERITED);
 			$manyManyArray = isset($manyManyArray) ? array_merge($newItems, $manyManyArray) : $newItems;
 			if($manyManyArray && count($manyManyArray)) {
 				foreach($manyManyArray as $fieldName => $manyManyClass) {
@@ -134,8 +134,8 @@ class MetaTagCMSControlFileUse extends DataObject {
 				self::$file_usage_array[$fileID] = $childCount;
 				return self::$file_usage_array[$fileID];
 			}
-			$checks = DataObject::get("MetaTagCMSControlFileUse");
-			if($checks) {
+			$checks = MetaTagCMSControlFileUse::get();
+			if($checks->count()) {
 				foreach($checks as $check) {
 					$sql = "";
 					switch ($check->ConnectionType) {

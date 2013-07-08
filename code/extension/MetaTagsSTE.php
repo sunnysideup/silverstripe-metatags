@@ -81,7 +81,7 @@ class MetaTagsSTE extends SiteTreeExtension {
 		}
 		$fields->removeByName('ExtraMeta');
 		if(self::$disable_update_popup) {
-			Requirements::clear('sapphire/javascript/UpdateURL.js');
+			Requirements::clear('framework/javascript/UpdateURL.js');
 			Requirements::javascript(SS_METATAGS_DIR.'/javascript/UpdateURL.js');
 		}
 		$linkToManager = '/' . MetaTagCMSControlPages::get_url_segment() . '/';
