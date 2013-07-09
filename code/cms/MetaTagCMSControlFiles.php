@@ -190,7 +190,8 @@ class MetaTagCMSControlFiles extends Controller {
 
 	function MyRecords() {
 		//Filesystem::sync($this->ParentID);
-		$files = $this->tableArray[0]::get()->filter(array("ParentID" => $this->ParentID))->limit($this->myRecordsLimit);
+		$className = $this->tableArray[0];
+		$files = $className::get()->filter(array("ParentID" => $this->ParentID))->limit($this->myRecordsLimit);
 		$dos = null;
 		if($files->count()) {
 			foreach($files as $file) {
@@ -201,7 +202,8 @@ class MetaTagCMSControlFiles extends Controller {
 				if(!file_exists($file->getFullPath())) {
 					$file->Error = "FILE CAN NOT BE FOUND.";
 				}
-				if( $this->tableArray[0]::get()->filter(array("ParentID" => $file->ID))->count()) {
+				$className = $this->tableArray[0];
+				if( $className::get()->filter(array("ParentID" => $file->ID))->count()) {
 					$file->ChildrenLink = $this->createLevelLink($file->ID);
 				}
 				$file->UsageCount = MetaTagCMSControlFileUse::file_usage_count($file->ID, false);
@@ -222,7 +224,8 @@ class MetaTagCMSControlFiles extends Controller {
 				$x = 0;
 				while($item && $item->ParentID && $x < 10) {
 					$x++;
-					$item = $this->tableArray[0]::get()->byID($this->ParentID);
+					$className = $this->tableArray[0];
+					$item = $className::get()->byID($this->ParentID);
 					if($item) {
 						$segmentArray[] = array("URLSegment" => $item->Name, "ID" => $item->ID, "ClassName" => $item->ClassName, "Title" => $item->Title, "Link" => $this->createLevelLink(intval($item->ParentID)-0));
 					}
@@ -252,7 +255,8 @@ class MetaTagCMSControlFiles extends Controller {
 
 	function GoOneUpLink() {
 		if( $this->ParentID ) {
-			$oneUpPage = $this->tableArray[0]::get()->byID($this->ParentID);
+			$className = $this->tableArray[0];
+			$oneUpPage = $className::get()->byID($this->ParentID);
 			if($oneUpPage) {
 				return $this->createLevelLink($oneUpPage->ParentID);
 			}

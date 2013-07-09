@@ -103,7 +103,8 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 					$value = Convert::raw2sql($_GET[$fieldNameString]);
 				}
 				$recordID = intval($fieldNameArray[1]);
-				$record = $this->tableArray[0]::get()->byID($recordID);
+				$className = $this->tableArray[0];
+				$record = $className::get()->byID($recordID);
 				if($record) {
 					if(method_exists($record, "canPublish") && !$record->canPublish()) {
 						return Security::permissionFailure($this);
@@ -144,7 +145,8 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 
 	function MyRecords() {
 		$excludeWhere = "AND \"ShowInSearch\" = 1 AND \"ClassName\" <> 'ErrorPage'";
-		$pages = $this->tableArray[0]::get()->filter(array(
+		$className = $this->tableArray[0];
+		$pages = $className::get()->filter(array(
 			"ParentID" => $this->ParentID,
 			"ShowInSearch" => 1
 		))->exclude(array(
@@ -171,7 +173,8 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 				if($this->mySiteConfig()->UpdateMenuTitle && $page->AutomateMetatags) {
 					$page->MenuTitleAutoUpdate = true;
 				}
-				if($this->tableArray[0]::get()->filter(array(
+				$className = $this->tableArray[0];
+				if($className::get()->filter(array(
 					"ParentID" => $this->ParentID,
 					"ShowInSearch" => 1
 				))->exclude(array(
@@ -185,7 +188,8 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 				$item = $page;
 				$segmentArray[] = array("URLSegment" => $item->URLSegment, "ID" => $item->ID, "ClassName" => $item->ClassName, "Title" => $item->Title);
 				while($item && $item->ParentID) {
-					$item = $this->tableArray[0]::get()->byID($item->ParentID);
+					$className = $this->tableArray[0];
+					$item = $className::get()->byID($item->ParentID);
 					if($item) {
 						$segmentArray[] = array("URLSegment" => $item->URLSegment, "ID" => $item->ID, "ClassName" => $item->ClassName, "Title" => $item->Title, "Link" => $this->createLevelLink(intval($item->ParentID)-0));
 					}
