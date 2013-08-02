@@ -16,6 +16,12 @@ class MetaTagCMSControlFileUse extends DataObject {
 	private static $file_usage_array = array();
 
 	/**
+	 * keep data stored to reduce overhead
+	 * @var Array
+	 */
+	private static $list_of_places_dos = array();
+
+	/**
 	 * classes to exclude
 	 * @var Array
 	 */
@@ -32,6 +38,8 @@ class MetaTagCMSControlFileUse extends DataObject {
 		"IsLiveVersion" => "Boolean",
 		"ConnectionType" => "Enum('DB,HAS_ONE,HAS_MANY,MANY_MANY,BELONGS_MANY_MANY')"
 	);
+
+
 
 	/**
 	 * create a list of tables and fields that need to be checked
@@ -89,7 +97,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 			$hasManyArray = $newItems; //isset($hasManyArray) ? array_merge($newItems, (array)$hasManyArray) : $newItems;
 			if($hasManyArray && count($hasManyArray)) {
 				foreach($hasManyArray as $fieldName => $hasManyClass) {
-					$this->createNewRecord($hasManyClass, $fieldName, $class, "HAS_MANY");
+					$this->createNewRecord($class, $fieldName, $hasManyClass, "HAS_MANY");
 				}
 			}
 			//many many
@@ -146,7 +154,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 		}
 	}
 
-	public static function file_usage_count($file, $quickBooleanCheck = false) {
+	public static function file_usage_count($file, $quickBooleanCheck = false, $saveListOfPlaces = false) {
 		$fileID = $file->ID;
 		if(!isset(self::$file_usage_array[$fileID])) {
 			self::$file_usage_array[$fileID] = 0;
@@ -165,7 +173,13 @@ class MetaTagCMSControlFileUse extends DataObject {
 			$result = DB::query($sql, false);
 			$childCount = $result->value();
 			if($childCount) {
+				if($quickBooleanCheck) {
+					return true;
+				}
 				self::$file_usage_array[$fileID] = $childCount;
+				if($saveListOfPlaces) {
+					self::list_of_places_adder($fileID, "SELECT SiteTreeID as MyID FROM \"SiteTree_ImageTracking\" WHERE \"FileID\" = {$fileID};", "SiteTree");
+				}
 			}
 			$checks = DataObject::get("MetaTagCMSControlFileUse");
 			if($checks) {
@@ -175,34 +189,70 @@ class MetaTagCMSControlFileUse extends DataObject {
 						case "DB":
 							$fileName = $file->Name;
 							$sql = "
-								SELECT IF(LOCATE('$fileName', \"{$check->DataObjectClassName}\".\"{$check->DataObjectFieldName}\") > 0, 1, 0) AS C
+								SELECT COUNT(\"{$check->DataObjectClassName}\".\"ID\")
 								FROM \"{$check->DataObjectClassName}\"
-								ORDER BY C DESC
-								LIMIT 1;
+								WHERE LOCATE('$fileName', \"{$check->DataObjectClassName}\".\"{$check->DataObjectFieldName}\") > 0
 							";
+							if($saveListOfPlaces) {
+								$sqlListOfPlaces = "
+									SELECT \"{$check->DataObjectClassName}\".\"ID\" AS MyID
+									FROM \"{$check->DataObjectClassName}\"
+									WHERE LOCATE('$fileName', \"{$check->DataObjectClassName}\".\"{$check->DataObjectFieldName}\") > 0
+								";
+								$objectNameListOfPlaces = $check->DataObjectClassName;
+							}
 							break;
+
 						case "HAS_ONE":
 							$sql = "
 								SELECT COUNT(\"{$check->DataObjectClassName}\".\"ID\")
 								FROM \"{$check->DataObjectClassName}\"
 								WHERE \"{$check->DataObjectFieldName}ID\" = {$fileID};
 							";
+							if($saveListOfPlaces) {
+								$sqlListOfPlaces = "
+									SELECT \"{$check->DataObjectClassName}\".\"ID\" AS MyID
+									FROM \"{$check->DataObjectClassName}\"
+									WHERE \"{$check->DataObjectFieldName}ID\" = {$fileID};
+								";
+								$objectNameListOfPlaces = $check->DataObjectClassName;
+							}
 							break;
+
 						case "HAS_MANY":
 							$sql = "
 								SELECT COUNT(\"{$check->DataObjectClassName}\".\"ID\")
 								FROM \"{$check->DataObjectClassName}\"
 									INNER JOIN  {$check->FileClassName}
 										ON \"{$check->DataObjectClassName}\".\"{$check->FileClassName}ID\" = \"{$check->FileClassName}\".\"ID\"
-								WHERE \"{$check->DataObjectClassName}\".\"ID\" = {$fileID};
+								WHERE \"{$check->FileClassName}\".\"ID\" = {$fileID};
 							";
+							if($saveListOfPlaces) {
+								$sqlListOfPlaces = "
+									SELECT \"{$check->DataObjectClassName}\".\"ID\"  AS MyID
+									FROM \"{$check->DataObjectClassName}\"
+										INNER JOIN  {$check->FileClassName}
+											ON \"{$check->DataObjectClassName}\".\"{$check->FileClassName}ID\" = \"{$check->FileClassName}\".\"ID\"
+									WHERE \"{$check->FileClassName}\".\"ID\" = {$fileID};
+								";
+								$objectNameListOfPlaces = $check->DataObjectClassName;
+							}
 							break;
 						case "MANY_MANY":
+						case "BELONGS_MANY_MANY":
 							$sql = "
 								SELECT COUNT(\"{$check->DataObjectClassName}_{$check->DataObjectFieldName}\".\"ID\")
 								FROM \"{$check->DataObjectClassName}_{$check->DataObjectFieldName}\"
 								WHERE \"{$check->FileClassName}ID\" = $fileID;
 							";
+							if($saveListOfPlaces) {
+								$sqlListOfPlaces = "
+									SELECT \"{$check->DataObjectClassName}_{$check->DataObjectFieldName}\".\"{$check->DataObjectClassName}ID\"  AS MyID
+									FROM \"{$check->DataObjectClassName}_{$check->DataObjectFieldName}\"
+									WHERE \"{$check->FileClassName}ID\" = $fileID;
+								";
+								$objectNameListOfPlaces = $check->DataObjectClassName;
+							}
 							break;
 					}
 					$result = DB::query($sql, false);
@@ -212,6 +262,13 @@ class MetaTagCMSControlFileUse extends DataObject {
 							return true;
 						}
 						else {
+							if($saveListOfPlaces) {
+								if( ! $check->IsLiveVersion) {
+									self::list_of_places_adder($fileID, $sqlListOfPlaces, $objectNameListOfPlaces);
+									$sqlListOfPlaces = "";
+									$objectNameListOfPlaces = "";
+								}
+							}
 							self::$file_usage_array[$fileID] += $count;
 						}
 					}
@@ -219,6 +276,73 @@ class MetaTagCMSControlFileUse extends DataObject {
 			}
 		}
 		return self::$file_usage_array[$fileID];
+	}
+
+	/**
+	 * @param Int $fileID
+	 * @return DataObjectSet
+	 */
+	public static function retrieve_list_of_places($fileID){
+		if(isset(self::$list_of_places_dos[$fileID])) {
+			if(is_array(self::$list_of_places_dos[$fileID])) {
+				if(count(self::$list_of_places_dos[$fileID])) {
+					$dos = new DataObjectSet();
+					foreach(self::$list_of_places_dos[$fileID] as $item) {
+						if(method_exists($item, "Link")) {
+							$item->MyLink = $item->Link();
+						}
+						else {
+							$item->MyLink = null;
+						}
+						if(method_exists($item, "getTitle")) {
+							$item->MyTitle = $item->getTitle();
+						}
+						elseif(isset($item->Title)) {
+							$item->MyTitle = $item->Title;
+						}
+						else {
+							$item->MyTitle = "";
+						}
+						$arrayData = new ArrayData(
+							array(
+								"ClassName" => $item->ClassName,
+								"ID" => $item->ID,
+								"Title" => $item->MyTitle,
+								"Link" => $item->MyLink
+							)
+						);
+						$dos->push($arrayData);
+					}
+					return $dos;
+				}
+			}
+		}
+	}
+
+	/**
+	 *
+	 * @param Int $fileID
+	 * @param String $sqlListOfPlaces
+	 * @param String $objectNameListOfPlaces
+	 * @return void
+	 */
+	private static function list_of_places_adder($fileID, $sqlListOfPlaces, $objectNameListOfPlaces){
+		$rows = DB::query($sqlListOfPlaces, false);
+		if($rows) {
+			$IDarray = array();
+			foreach($rows as $row) {
+				$IDarray[] = $row["MyID"];
+			}
+			$items = DataObject::get($objectNameListOfPlaces, "\"$objectNameListOfPlaces\".\"ID\" IN(".implode(",", $IDarray).")");
+			if($items && $items->count()) {
+				foreach($items as $item) {
+					if(!isset(self::$list_of_places_dos[$fileID])) {
+						self::$list_of_places_dos[$fileID] = array();
+					}
+					self::$list_of_places_dos[$fileID][$item->ID.$item->ClassName] = $item;
+				}
+			}
+		}
 	}
 
 	private static $file_sub_string = array(
@@ -232,7 +356,40 @@ class MetaTagCMSControlFileUse extends DataObject {
 		".GIF"
 	);
 
-	public static function upgrade_file_names(){
+	public static function recycle_folder($folderID = 0, $verbose = true){
+		$count = 0;
+		set_time_limit(60*10); // 10 minutes
+		$recyclefolder = Folder::findOrMake(MetaTagCMSControlFiles::get_recycling_bin_name());
+		if($recyclefolder) {
+			$files = DataObject::get("File", " ParentID <> ".$recyclefolder->ID." AND ParentID = ".$folderID);
+			if($files && $files->count()) {
+				foreach($files as $file) {
+					if(self::file_usage_count($file, true)) {
+						if($verbose) {DB::alteration_message($file->Title." is in use. No action taken.", "created");}
+					}
+					else {
+						if(MetaTagCMSControlFileUse_RecyclingRecord::recycle($file, $verbose)) {
+							if($verbose) {DB::alteration_message($file->Title." recycled", "edited");}
+							$count++;
+						}
+						else {
+							if($verbose) {DB::alteration_message("Could not recycle file: ".$file->ID.'-'.$file->Title, "deleted");}
+						}
+					}
+				}
+			}
+			else {
+				if($verbose) {DB::alteration_message("There are no files to recycle", "created");}
+			}
+		}
+		else {
+			if($verbose) {DB::alteration_message("Could not create recycling folder", "deleted");}
+		}
+		return $count;
+	}
+
+
+	public static function upgrade_file_names($verbose = true){
 		set_time_limit(60*10); // 10 minutes
 		$whereArray = array();
 		$whereArray[] = "\"Title\" = \"Name\"";
@@ -240,24 +397,37 @@ class MetaTagCMSControlFileUse extends DataObject {
 			$whereArray[] = "LOCATE('$subString', \"Title\") > 0";
 		}
 		$whereString =  "\"ClassName\" <> 'Folder' AND ( ".implode (" OR ", $whereArray)." )";
+		$folder = Folder::findOrMake(MetaTagCMSControlFiles::get_recycling_bin_name());
+		if($folder) {
+			$whereString .= " AND ParentID <> ".$folder->ID;
+		}
 		$files = DataObject::get("File", $whereString);
 		if($files && $files->count()) {
 			foreach($files as $file) {
-				self::upgrade_file_name($file);
+				if($verbose) {
+					DB::alteration_message("Examining ".$file->Title);
+				}
+				self::upgrade_file_name($file, $verbose);
 			}
 		}
 		else {
-			DB::alteration_message("All files have proper names", "created");
+			if($verbose) {
+				DB::alteration_message("All files have proper names", "created");
+			}
 		}
 	}
 
-	private static function upgrade_file_name(File $file) {
+	private static function upgrade_file_name(File $file, $verbose = true) {
 		$fileID = $file->ID;
 		if(self::file_usage_count($file, true)) {
 			$checks = DataObject::get("MetaTagCMSControlFileUse");
 			if($checks && $checks->count()) {
 				foreach($checks as $check) {
 					if(!$check->IsLiveVersion) {
+						$objName = "";
+						$where = "";
+						$innerJoinTable = "";
+						$innerJoinJoin = "";
 						switch ($check->ConnectionType) {
 							case "HAS_ONE":
 								$objName = $check->DataObjectClassName;
@@ -272,11 +442,6 @@ class MetaTagCMSControlFileUse extends DataObject {
 								$innerJoinJoin = "\"{$check->DataObjectClassName}\".\"{$check->FileClassName}ID\" = \"{$check->FileClassName}\".\"ID\"";
 								break;
 							case "BELONGS_MANY_MANY":
-								$objName = "";
-								$where = "";
-								$innerJoinTable = "";
-								$innerJoinJoin = "";
-								break;
 							case "MANY_MANY":
 								$objName = $check->DataObjectClassName;
 								$where = "\"{$check->DataObjectClassName}_{$check->DataObjectFieldName}\".\"{$check->FileClassName}ID\" = $fileID";
@@ -315,33 +480,77 @@ class MetaTagCMSControlFileUse extends DataObject {
 								if((substr($newTitle, 0, 1) != "#") || (intval($newTitle) == $newTitle)) {
 									$file->Title = $newTitle;
 									$file->write();
-									DB::alteration_message("Updating ".$file->Name." title from ".$oldTitle." to ".$newTitle, "created");
+									if($verbose) {DB::alteration_message("Updating ".$file->Name." title from ".$oldTitle." to ".$newTitle, "created");}
 								}
 								else {
-									DB::alteration_message("There is no real title for ".$obj->ClassName.": ".$newTitle);
+									if($verbose) {DB::alteration_message("There is no real title for ".$obj->ClassName.": ".$newTitle);}
 								}
 							}
 							else {
-								echo ".";
+								if($verbose) {echo ".";}
 							}
+						}
+						else {
+							if($verbose) {echo ";";}
 						}
 					}
 					else {
-						DB::alteration_message("Skipping Live version <i>".$check->DataObjectClassName."</i>");
+						if($verbose) {echo "-";}
 					}
 				}
 			}
 			else {
-				DB::alteration_message("There are no checks", "deleted");
+				if($verbose) {DB::alteration_message("There are no checks", "deleted");}
 			}
 		}
 		else {
-			DB::alteration_message("File <i>".$file->Title."</i> is not being used");
+			if($verbose) {DB::alteration_message("File <i>".$file->Title."</i> is not being used");}
 		}
 		return self::$file_usage_array[$fileID];
 	}
 
+
+
 }
 
 
+class MetaTagCMSControlFileUse_RecyclingRecord extends DataObject {
+
+	static $db = array(
+		"FileID" => "Int",
+		"FromFolderID" => "Int"
+	);
+
+	public static function recycle(File $file, $verbose = true) {
+		$recylcingFolder = Folder::findOrMake(MetaTagCMSControlFiles::get_recycling_bin_name());
+		if($recylcingFolder) {
+			if($file) {
+				if($file->exists()) {
+					if(file_exists($file->getFullPath())) {
+						$valid = $file->validate();
+						if($valid->valid()) {
+							$record = new MetaTagCMSControlFileUse_RecyclingRecord();
+							$record->FileID = $file->ID;
+							$record->FromFolderID = $file->ParentID;
+							$record->write();
+							//doing it.....
+							$file->ParentID = $recylcingFolder->ID;
+							$file->write();
+							//IMPORTANT!
+							return true;
+						}
+					}
+					$record = new MetaTagCMSControlFileUse_RecyclingRecord();
+					$record->FileID = $file->ID;
+					$record->FromFolderID = $file->ParentID;
+					$record->write();
+					DB::query("UPDATE \"File\" SET \"ParentID\" = ".$recylcingFolder->ID." WHERE \"File\".\"ID\" = ".$file->ID);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+}
 

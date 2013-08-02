@@ -30,6 +30,8 @@
 								<ul>
 									<li><a href="{$Link}lowercase/Title/" class="lowercase ajaxify" rel="Title">lowercase</a></li>
 									<li><a href="{$Link}titlecase/Title/" class="titlecase ajaxify" rel="Title">Title Case</a></li>
+									<li><a href="{$Link}recyclefolder/$ParentID/" class="recycle ajaxify" rel="Title">recycle all un-used files in this folder</a></li>
+									<li><a href="{$Link}updatefilenames/" class="updatefilenames ajaxify" rel="Title">guess file titles based on links</a></li>
 								</ul>
 							</li>
 						</ul>

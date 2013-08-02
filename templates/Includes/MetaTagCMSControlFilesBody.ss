@@ -28,6 +28,9 @@
 					<div class="usage">
 			<% if UsageCount %>
 						<span class="label">Used:</span> <span class="data">$UsageCount time(s)</span>
+						<% if ListOfPlaces.Count %><ul><% control ListOfPlaces %>
+							<li><% if Link %><a href="$Link">$Title</a><% else %>$ClassName ($Title)<% end_if %></li>
+						<% end_control %></ul><% end_if %>
 			<% else %>
 					<a href="$RecycleLink" class=" ajaxify">not used on the site: <img src="metatags/images/recycle.png" alt="Recycle" title="Recycle" /></a>
 			<% end_if %>

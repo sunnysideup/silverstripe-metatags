@@ -2,11 +2,15 @@
 
 class MetaTagCMSControlFiles extends Controller {
 
-	protected static $url_segment = 'metatagmanagementfiles';
+	private static $recycling_bin_name = 'ZzzeRecyclingBin';
+		static function set_recycling_bin_name($s){self::$recycling_bin_name = $s;}
+		static function get_recycling_bin_name(){return self::$recycling_bin_name;}
+
+	private static $url_segment = 'metatagmanagementfiles';
 		static function set_url_segment($s){self::$url_segment = $s;}
 		static function get_url_segment(){return self::$url_segment;}
 
-	protected static $records_per_page = 10;
+	private static $records_per_page = 10;
 		static function set_records_per_page($i){self::$records_per_page = $i;}
 		static function get_records_per_page(){return self::$records_per_page;}
 
@@ -95,6 +99,28 @@ class MetaTagCMSControlFiles extends Controller {
 		return $this->returnAjaxOrRedirectBack();
 	}
 
+
+	function updatefilenames($request) {
+		if($count = MetaTagCMSControlFileUse::upgrade_file_names(false)) {
+			Session::set("MetaTagCMSControlMessage",  _t("MetaTagCMSControl.NAMESUPDATED", "Updated $count file names."));
+			return $this->returnAjaxOrRedirectBack();
+		}
+		Session::set("MetaTagCMSControlMessage",  _t("MetaTagCMSControl.NAMESNOTUPDATED", "ERROR: Did not update any file names"));
+		return $this->returnAjaxOrRedirectBack();
+	}
+
+	function recyclefolder($request) {
+		if($folderID = intval($request->param("ID"))) {
+			if($count = MetaTagCMSControlFileUse::recycle_folder($folderID, false)) {
+				Session::set("MetaTagCMSControlMessage",  _t("MetaTagCMSControl.RECYCLED_FILES", "Recycled unused files in this folder."));
+				return $this->returnAjaxOrRedirectBack();
+			}
+		}
+		Session::set("MetaTagCMSControlMessage",  _t("MetaTagCMSControl.DID_NOT_RECYCLE_FILES", "ERROR: Could not recycle all files"));
+		return $this->returnAjaxOrRedirectBack();
+	}
+
+
 	function copyfromtitle($request){
 		if($fieldName = $request->param("ID")) {
 			if(in_array($fieldName, $this->updatableFields)) {
@@ -156,20 +182,10 @@ class MetaTagCMSControlFiles extends Controller {
 	function recycle($request) {
 		$id = intval($request->param("ID"));
 		if($id) {
-			$folder = Folder::findOrMake("ZzzeRecyclingBin");
-			if($folder) {
-				$file = DataObject::get_by_id("File", $id);
-				if($file) {
-					if(file_exists($file->getFullPath())) {
-						$file->ParentID = $folder->ID;
-						$file->write();
-						Session::set("MetaTagCMSControlMessage",  _t("MetaTagCMSControl.FILERECYCLED", "File &quot;".$file->Title."&quot; has been recycled."));
-						return $this->returnAjaxOrRedirectBack();
-					}
-					else {
-						$file->delete();
-					}
-				}
+			$file = DataObject::get_by_id("File", $id);
+			if(MetaTagCMSControlFileUse_RecyclingRecord::recycle($file)) {
+				Session::set("MetaTagCMSControlMessage",  _t("MetaTagCMSControl.FILERECYCLED", "File &quot;".$file->Title."&quot; has been recycled."));
+				return $this->returnAjaxOrRedirectBack();
 			}
 		}
 		Session::set("MetaTagCMSControlMessage",  _t("MetaTagCMSControl.FILENOTRECYCLED", "ERROR: File &quot;".$file->Title."&quot; could NOT be recycled."));
@@ -208,10 +224,16 @@ class MetaTagCMSControlFiles extends Controller {
 				if(DataObject::get_one($this->tableArray[0], "ParentID = ".$file->ID)) {
 					$file->ChildrenLink = $this->createLevelLink($file->ID);
 				}
-				$file->UsageCount = MetaTagCMSControlFileUse::file_usage_count($file, false);
+				$file->UsageCount = MetaTagCMSControlFileUse::file_usage_count($file, false, $saveListOfPlaces = true);
 				if($file instanceOf Folder) {
 					$file->Type == "Folder";
 					$file->Icon == "metatags/images/Folder.png";
+				}
+				elseif($file->UsageCount) {
+					$file->ListOfPlaces = MetaTagCMSControlFileUse::retrieve_list_of_places($file->ID);
+				}
+				if(!$file->ListOfPlaces) {
+					unset($file->ListOfPlaces);
 				}
 				$file->GoOneUpLink = $this->GoOneUpLink();
 				$file->RecycleLink = $this->makeRecycleLink($file->ID);
