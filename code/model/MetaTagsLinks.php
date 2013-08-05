@@ -3,7 +3,7 @@
 class MetaTagsLinks extends DataObject {
 
 		//database
-	public static $db = array(
+	private static $db = array(
 		"WebsiteAddress" => "Varchar(255)",
 		"SpecificPageAddress" => "Text",
 		"UsernameUsed" => "Varchar(100)",
@@ -11,23 +11,23 @@ class MetaTagsLinks extends DataObject {
 		"LastChecked" => "Date",
 		"Notes" => "Text"
 	);
-	public static $searchable_fields = array(
+	private static $searchable_fields = array(
 		"WebsiteAddress" => "PartialMatchFilter"
 	);
-	public static $field_labels = array(
+	private static $field_labels = array(
 		"WebsiteAddress" => "WebsiteAddress (e.g. http://www.thedirectory.com/)",
 		"SpecificPageAddress" => "SpecificPageAddress (e.g. http://www.thedirectory.com/ourlisting/",
 		"PageRank" => "Page Rank (as assigned by google - higher page ranked sites are more important)",
 	);
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		"WebsiteAddress" => "WebsiteAddress"
 	);
 
-	public static $singular_name = "Referring Site";
+	private static $singular_name = "Referring Site";
 
-	public static $plural_name = "Referring Sites";
+	private static $plural_name = "Referring Sites";
 
-	public static $default_sort = "Created DESC";
+	private static $default_sort = "Created DESC";
 
 	public function onBeforeWrite(){
 		parent::onBeforeWrite();

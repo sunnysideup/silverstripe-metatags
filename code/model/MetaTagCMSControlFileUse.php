@@ -31,7 +31,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $db = array(
+	private static $db = array(
 		"DataObjectClassName" => "Varchar(255)",
 		"DataObjectFieldName" => "Varchar(255)",
 		"FileClassName" => "Varchar(255)",

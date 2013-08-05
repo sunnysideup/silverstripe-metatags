@@ -32,10 +32,10 @@ class MetaTagsSTE extends SiteTreeExtension {
 	 * google fonts to be used
 	 * @var Array
 	 **/
-	protected static $google_font_collection = array();
-		static function add_google_font($s) {self::$google_font_collection[$s] = $s;}
-		static function remove_google_font($s) {unset(self::$google_font_collection[$s]);}
-		static function get_google_font_collection() {return self::$google_font_collection;}
+	private static $google_font_collection = array();
+		//static function add_google_font($s) {self::$google_font_collection[$s] = $s;}
+		//static function remove_google_font($s) {unset(self::$google_font_collection[$s]);}
+		//static function get_google_font_collection() {return self::$google_font_collection;}
 
 	/**
 	 * @var Boolean
@@ -47,6 +47,7 @@ class MetaTagsSTE extends SiteTreeExtension {
 	 * @var Array
 	 **/
 	static $db = array(
+		'MetaTitle' => 'Varchar',
 		'AutomateMetatags' => 'Boolean',
 		'MetatagCache' => 'HTMLText'
 	);
@@ -64,9 +65,6 @@ class MetaTagsSTE extends SiteTreeExtension {
 	 * @var Array
 	 **/
 	public function updateCMSFields(FieldList $fields) {
-		if(self::$hide_keywords_altogether) {
-			$fields->removeByName('MetaKeywords');
-		}
 		$automatedFields =  $this->updatedFieldsArray();
 		if(count($automatedFields)) {
 			$updated_field_string = " (the following fields will be automatically updated: <i>".implode("</i>, <i>", $automatedFields)."</i>).";

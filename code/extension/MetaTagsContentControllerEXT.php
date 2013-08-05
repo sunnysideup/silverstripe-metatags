@@ -7,13 +7,13 @@ class MetaTagsContentControllerEXT extends Extension {
 
 	/* combined files */
 
-	protected static $folder_for_combined_files = 'assets';
+	private static $folder_for_combined_files = 'assets';
 		static function set_folder_for_combined_files($s) {self::$folder_for_combined_files = $s;}
 
-	protected static $combine_css_files_into_one = false;
+	private static $combine_css_files_into_one = false;
 		static function set_combine_css_files_into_one($b) {self::$combine_css_files_into_one = $b;}
 
-	protected static $combine_js_files_into_one = false;
+	private static $combine_js_files_into_one = false;
 		static function set_combine_js_files_into_one($b) {self::$combine_js_files_into_one = $b;}
 
 	/**
@@ -58,7 +58,7 @@ class MetaTagsContentControllerEXT extends Extension {
 			if(self::$combine_js_files_into_one) {
 				Requirements::combine_files(self::$folder_for_combined_files."/MetaTagAutomation.js", $jsArray);
 			}
-			$googleFontArray = MetaTagsSTE::get_google_font_collection();
+			$googleFontArray = Config::inst()->get('MetaTagsSTE', 'google_font_collection');
 			if($googleFontArray && count($googleFontArray)) {
 				$protocol = Director::protocol();
 				foreach($googleFontArray as $font) {
@@ -96,9 +96,6 @@ class MetaTagsContentControllerEXT extends Extension {
 		//base tag
 		$base = Director::absoluteBaseURL();
 		$tags .= "<base href=\"$base\" />";
-		if(! MetaTagsSTE::$hide_keywords_altogether) {
-			$keywords = Convert::raw2xml(($page->MetaKeywords) ? $page->MetaKeywords : $page->Title );
-		}
 		if($page->MetaDescription) {
 			$description = '
 			<meta name="description" http-equiv="description" content="'.Convert::raw2att($page->MetaDescription).'" />';
