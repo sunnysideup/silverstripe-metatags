@@ -44,7 +44,7 @@ var MetaTagCMSControl = {
 		jQuery("#MetatagOuterHolder .newWindow").attr("target", "_blank");
 		jQuery("#MetatagOuterHolder .actions ul, #MetatagOuterHolder  tr.subsequentActions").hide();
 		jQuery(MetaTagCMSControl.delegateRootSelector).delegate(
-			".bactchactions a",
+			".batchactions a",
 			"click",
 			function(event) {
 				jQuery(".actions ul, tr.subsequentActions").slideToggle();
