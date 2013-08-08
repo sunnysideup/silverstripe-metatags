@@ -1,9 +1,10 @@
 <?php
 
 
-class MetaTagFileExtension extends DataObjectDecorator {
+class MetaTagFileExtension extends DataExtension {
 
 	private $stillNeedsToReplace = true;
+
 	private $imageTrackingAddAgain = array();
 
 	function onBeforeWrite(){
