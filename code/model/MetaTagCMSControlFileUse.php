@@ -122,7 +122,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 				//DB
 				$dbArray = null;
 				//get the has_one fields
-				$newItems = (array) Object::uninherited_static($class, 'db');
+				$newItems = (array) Config::inst()->get($class, 'db');
 
 				// Validate the data
 				//do we need this?
@@ -140,7 +140,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 			//HAS_ONE
 			$hasOneArray = null;
 			//get the has_one fields
-			$newItems = (array) Object::uninherited_static($class, 'has_one');
+			$newItems = (array) Config::inst()->get($class, 'has_one');
 			// Validate the data
 			//do we need this?
 			$hasOneArray = $newItems; //isset($hasOneArray) ? array_merge($newItems, (array)$hasOneArray) : $newItems;
@@ -153,13 +153,13 @@ class MetaTagCMSControlFileUse extends DataObject {
 
 			//HAS_MANY
 			$hasManyArray = null;
-			$newItems = (array) Object::uninherited_static($class, 'has_many');
+			$newItems = (array) Config::inst()->get($class, 'has_many');
 			// Validate the data
 			$hasManyArray = $newItems; //isset($hasManyArray) ? array_merge($newItems, (array)$hasManyArray) : $newItems;
 			if($hasManyArray && count($hasManyArray)) {
 				foreach($hasManyArray as $fieldName => $hasManyClass) {
 					//NOTE - We are referencing HAS_ONE here on purpose!!!!
-					$hasManyCheckItems = (array) Object::uninherited_static($hasManyClass, 'has_one');
+					$hasManyCheckItems = (array) Config::inst()->get($class, 'has_one');
 					$hasManyFound = false;
 					foreach($hasManyCheckItems as $hasManyfieldName => $hasManyForeignClass) {
 						if($hasManyForeignClass == $class) {
@@ -176,10 +176,10 @@ class MetaTagCMSControlFileUse extends DataObject {
 			}
 			//many many
 			$manyManyArray = null;
-			$newItems = (array) Object::uninherited_static($class, 'many_many');
+			$newItems = (array) Config::inst()->get($class, 'many_many');
 			$manyManyArray = $newItems;
 			//belongs many many
-			$newItems = (array) Object::uninherited_static($class, 'belongs_many_many');
+			$newItems = (array) Config::inst()->get($class, 'belongs_many_many');
 			$manyManyArray = isset($manyManyArray) ? array_merge($newItems, $manyManyArray) : $newItems;
 			//do both
 			if($manyManyArray && count($manyManyArray)) {
@@ -232,7 +232,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 					$obj->BothAreFiles =  $bothAreFiles;
 					$obj->IsLiveVersion = 0;
 					$obj->write();
-					if(ClassInfo::is_subclass_of($dataObjectClassName, "SiteTree")) {
+					if(is_subclass_of($dataObjectClassName, "SiteTree")) {
 						$obj = new MetaTagCMSControlFileUse();
 						$obj->DataObjectClassName = $dataObjectClassName."_Live";
 						$obj->DataObjectFieldName = $dataObjectFieldName;
