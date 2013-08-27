@@ -133,7 +133,7 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 		}
 		else {
 			if(!$verbose) {
-				Director::redirect($this->Link());
+				$this->redirect($this->Link());
 			}
 			return array();
 		}

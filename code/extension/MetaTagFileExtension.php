@@ -10,7 +10,7 @@ class MetaTagFileExtension extends DataExtension {
 	function onBeforeWrite(){
 		if($this->stillNeedsToReplace && $this->owner instanceOf Image) {
 			$this->stillNeedsToReplace = false;
-			$oldObject = DataObject::get_by_id("File", $this->owner->ID, false);
+			$oldObject = File::get()->byID($this->owner->ID);
 			$oldFileName = $oldObject->Name;
 			$oldPath = $oldObject->Filename;
 			if(!$oldPath) {
@@ -21,13 +21,16 @@ class MetaTagFileExtension extends DataExtension {
 			$newPath = $this->owner->getRelativePath();
 			$newPath = str_replace($newFileName, "", $newPath);
 			if(($oldFileName != $newFileName) || ($oldPath != $oldPath)) {
-				$checks = DataObject::get("MetaTagCMSControlFileUse", "\"ConnectionType\" = 'DB' AND \"IsLiveVersion\" = 0");
-				$siteTreeItemsToChange = DataObject::get(
-					"SiteTree",
-					"\"SiteTree_ImageTracking\".\"FileID\" = ".$this->owner->ID,
-					"",
-					"INNER JOIN \"SiteTree_ImageTracking\" ON \"SiteTree_ImageTracking\".\"SiteTreeID\" = \"SiteTree\".\"ID\" "
-				);
+				$checks = MetaTagCMSControlFileUse::get()
+					->filter(
+						array(
+							"ConnectionType" => "DB",
+							"IsLiveVersion" => "0"
+						)
+					);
+				$siteTreeItemsToChange = SiteTree::get()
+					->where("\"SiteTree_ImageTracking\".\"FileID\" = ".$this->owner->ID)
+					->innerJoin("SiteTree_ImageTracking", "\"SiteTree_ImageTracking\".\"SiteTreeID\" = \"SiteTree\".\"ID\"");
 				if($siteTreeItemsToChange && $siteTreeItemsToChange->count()) {
 					foreach($siteTreeItemsToChange as $siteTreeItemToChange) {
 						$trackings = $siteTreeItemToChange->ImageTracking();
@@ -52,10 +55,10 @@ class MetaTagFileExtension extends DataExtension {
 						$className = $check->DataObjectClassName;
 						$fieldName = $check->DataObjectFieldName;
 						if(isset($check->IsImageTracking) && $check->IsImageTracking) {
-							$dosToChange = DataObject::get($className, "\"$className\".\"ID\" = ".$check->TrackedID);
+							$dosToChange = $className::get()->filter(array("ID" => $check->TrackedID));
 						}
 						else {
-							$dosToChange = DataObject::get($className, "LOCATE('$oldFileName', \"".$fieldName."\") > 0");
+							$dosToChange = $className::get()->where("LOCATE('$oldFileName', \"".$fieldName."\") > 0");
 						}
 						if($dosToChange && $dosToChange->count()) {
 							foreach($dosToChange as $doToChange) {

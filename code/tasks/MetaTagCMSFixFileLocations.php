@@ -67,7 +67,7 @@ class MetaTagCMSFixImageLocations extends BuildTask {
 
 		//work out the folders to ignore...
 		foreach(self::$folders_to_ignore as $folderToIgnoreName) {
-			$folderToIgnore = Folder::findOrMake($folderToIgnoreName);
+			$folderToIgnore = Folder::find_or_make($folderToIgnoreName);
 			$this->addListOfIgnoreFoldersArray($folderToIgnore);
 		}
 		if(count($this->listOfIgnoreFoldersArray)) {
@@ -80,7 +80,7 @@ class MetaTagCMSFixImageLocations extends BuildTask {
 			if(!$this->summaryOnly) {
 				DB::alteration_message("Prefer a <a href=\"".$this->linkWithGetParameter("summaryonly", 1)."\">summary only</a>?<hr />", "repaired");
 			}
-			$checks = DataObject::get("MetaTagCMSControlFileUse", "\"ConnectionType\" IN ('HAS_ONE') AND \"IsLiveVersion\" = 0 AND \"DataObjectClassName\" <> 'File'");
+			$checks = MetaTagCMSControlFileUse::get()-where("\"ConnectionType\" IN ('HAS_ONE') AND \"IsLiveVersion\" = 0 AND \"DataObjectClassName\" <> 'File'");
 			if($checks && $checks->count()) {
 				foreach($checks as $check) {
 					$folderName = $check->DataObjectClassName."_".$check->DataObjectFieldName;
@@ -98,11 +98,10 @@ class MetaTagCMSFixImageLocations extends BuildTask {
 						else {
 							$objects = null;
 							if($check->FileIsFile) {
-								$objects = DataObject::get($objectName, "\"".$fieldName."\" > 0");
+								$objects = $objectName::get()->where("\"".$fieldName."\" > 0");
 							}
 							elseif($check->DataObjectIsFile) {
-								//$fieldName = $check->DataObjectClassName."ID";
-								$objects = DataObject::get($objectName, "\"".$fieldName."\" > 0");
+								$objects = $objectName::get()->where("\"".$fieldName."\" > 0");
 							}
 							if($objects && $objects->count()) {
 								foreach($objects as $object) {
@@ -110,7 +109,7 @@ class MetaTagCMSFixImageLocations extends BuildTask {
 										$file = $object;//do nothing
 									}
 									else {
-										$file = DataObject::get_by_id("File", $object->$fieldName);
+										$file = File::get()->byID($object->$fieldName);
 									}
 									if($file) {
 										if($file instanceOf Folder) {
@@ -118,7 +117,7 @@ class MetaTagCMSFixImageLocations extends BuildTask {
 										}
 										else {
 											if(!$folder){
-												$folder = Folder::findOrMake($folderName);
+												$folder = Folder::find_or_make($folderName);
 											}
 											if($file->ParentID == $folder->ID) {
 												DB::alteration_message(
@@ -189,7 +188,7 @@ class MetaTagCMSFixImageLocations extends BuildTask {
 		DB::alteration_message("CLEANING FOLDERS");
 		DB::alteration_message("---------------------------------------");
 		DB::alteration_message("---------------------------------------");
-		$folders = DataObject::get("Folder");
+		$folders = Folder::get();
 		$hasEmptyFolders = false;
 		if($folders && $folders->count()) {
 			foreach($folders as $folder) {
@@ -227,7 +226,7 @@ class MetaTagCMSFixImageLocations extends BuildTask {
 
 	private function addListOfIgnoreFoldersArray(Folder $folderToIgnore) {
 		$this->listOfIgnoreFoldersArray[$folderToIgnore->ID] = $folderToIgnore->FileName;
-		$childFolders = DataObject::get("Folder", "ParentID = ".$folderToIgnore->ID);
+		$childFolders = Folder::get()->filter(array("ParentID" => $folderToIgnore->ID));
 		if($childFolders && $childFolders->count()) {
 			foreach($childFolders as $childFolder) {
 				$this->addListOfIgnoreFoldersArray($childFolder);

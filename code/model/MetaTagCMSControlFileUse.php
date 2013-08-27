@@ -284,8 +284,8 @@ class MetaTagCMSControlFileUse extends DataObject {
 					self::list_of_places_adder($fileID, "SELECT SiteTreeID as MyID FROM \"SiteTree_ImageTracking\" WHERE \"FileID\" = {$fileID};", "SiteTree");
 				}
 			}
-			$checks = DataObject::get("MetaTagCMSControlFileUse");
-			if($checks) {
+			$checks = MetaTagCMSControlFileUse::get();
+			if($checks && $checks->count()) {
 				foreach($checks as $check) {
 						for($i = 0; $i < 2; $i++) {
 						$sql = "";
@@ -414,7 +414,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 		if(isset(self::$list_of_places_dos[$fileID])) {
 			if(is_array(self::$list_of_places_dos[$fileID])) {
 				if(count(self::$list_of_places_dos[$fileID])) {
-					$dos = new DataObjectSet();
+					$dos = new ArrayList();
 					foreach(self::$list_of_places_dos[$fileID] as $item) {
 						if(method_exists($item, "Link")) {
 							$item->MyLink = $item->Link();
@@ -461,7 +461,8 @@ class MetaTagCMSControlFileUse extends DataObject {
 			foreach($rows as $row) {
 				$IDarray[] = $row["MyID"];
 			}
-			$items = DataObject::get($objectNameListOfPlaces, "\"$objectNameListOfPlaces\".\"ID\" IN(".implode(",", $IDarray).")");
+			$items = $objectNameListOfPlaces::get()
+				->filter(array("ID" => $IDarray));
 			if($items && $items->count()) {
 				foreach($items as $item) {
 					if(!isset(self::$list_of_places_dos[$fileID])) {
@@ -487,9 +488,11 @@ class MetaTagCMSControlFileUse extends DataObject {
 	public static function recycle_folder($folderID = 0, $verbose = true){
 		$count = 0;
 		set_time_limit(60*10); // 10 minutes
-		$recyclefolder = Folder::findOrMake(MetaTagCMSControlFiles::get_recycling_bin_name());
+		$recyclefolder = Folder::find_or_make(MetaTagCMSControlFiles::get_recycling_bin_name());
 		if($recyclefolder) {
-			$files = DataObject::get("File", " ParentID <> ".$recyclefolder->ID." AND ParentID = ".$folderID);
+			$files = File::get()
+				->filter(array("ParentID" => $folderID))
+				->exclude(array("ParentID" => $recyclefolder->ID));
 			if($files && $files->count()) {
 				foreach($files as $file) {
 					if(self::file_usage_count($file, true)) {
@@ -525,11 +528,11 @@ class MetaTagCMSControlFileUse extends DataObject {
 			$whereArray[] = "LOCATE('$subString', \"Title\") > 0";
 		}
 		$whereString =  "\"ClassName\" <> 'Folder' AND \"ParentID\" = $folderID AND ( ".implode (" OR ", $whereArray)." )";
-		$recyclefolder = Folder::findOrMake(MetaTagCMSControlFiles::get_recycling_bin_name());
+		$recyclefolder = Folder::find_or_make(MetaTagCMSControlFiles::get_recycling_bin_name());
 		if($recyclefolder) {
 			$whereString .= " AND ParentID <> ".$recyclefolder->ID;
 		}
-		$files = DataObject::get("File", $whereString);
+		$files = File::get()->where($whereString);
 		if($files && $files->count()) {
 			foreach($files as $file) {
 				if($verbose) {
@@ -548,7 +551,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 	private static function upgrade_file_name(File $file, $verbose = true) {
 		$fileID = $file->ID;
 		if(self::file_usage_count($file, true)) {
-			$checks = DataObject::get("MetaTagCMSControlFileUse", "\"BothAreFiles\" = 0");
+			$checks = MetaTagCMSControlFileUse::get()->filter(array("BothAreFiles", 0));
 			if($checks && $checks->count()) {
 				foreach($checks as $check) {
 					if(!$check->IsLiveVersion) {
@@ -592,9 +595,6 @@ class MetaTagCMSControlFileUse extends DataObject {
 								break;
 						}
 						$join = "";
-						if($innerJoinTable && $innerJoinJoin) {
-							$join = " INNER JOIN $innerJoinTable ON $innerJoinJoin ";
-						}
 						if($objName) {
 							$sort = null;
 							$limit = 1;
@@ -608,13 +608,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 								echo "LIMIT: ".$limit."<br />";
 								echo "<hr />";
 							}
-							$objects = DataObject::get(
-								$objName,
-								$where,
-								$sort,
-								$join,
-								$limit
-							);
+							$objects = $objName::get()->where($where)->sort($sort)->innerJoin($innerJoinTable, $innerJoinJoin)->limit($limit);
 							if($objects && $objects->count()) {
 								$obj = $objects->First();
 								$oldTitle = $file->Title;
@@ -664,7 +658,7 @@ class MetaTagCMSControlFileUse_RecyclingRecord extends DataObject {
 	);
 
 	public static function recycle(File $file, $verbose = true) {
-		$recylcingFolder = Folder::findOrMake(MetaTagCMSControlFiles::get_recycling_bin_name());
+		$recylcingFolder = Folder::find_or_make(MetaTagCMSControlFiles::get_recycling_bin_name());
 		if($recylcingFolder) {
 			if($file) {
 				if($file->exists()) {

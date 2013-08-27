@@ -164,7 +164,7 @@ class MetaTagsContentControllerEXT extends Extension {
 		$array = array(
 			"title" => $this->owner->Title,
 			"type" => "website",
-			//"image" => $this->owner->BaseHref()."themes/main/img/h/apple-touch-icon-144x144-precomposed.png", //This is wrong for 3.0 use Director::getAbsoluteURL()
+			//"image" => $this->owner->BaseHref()."themes/main/img/h/apple-touch-icon-144x144-precomposed.png",
 			"url" => $this->owner->AbsoluteLink(),
 			"site_name" => $this->owner->SiteConfig()->Title,
 			"description" => $this->owner->Title
