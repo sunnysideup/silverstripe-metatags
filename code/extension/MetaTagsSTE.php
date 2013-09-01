@@ -33,9 +33,6 @@ class MetaTagsSTE extends SiteTreeExtension {
 	 * @var Array
 	 **/
 	private static $google_font_collection = array();
-		//static function add_google_font($s) {self::$google_font_collection[$s] = $s;}
-		//static function remove_google_font($s) {unset(self::$google_font_collection[$s]);}
-		//static function get_google_font_collection() {return self::$google_font_collection;}
 
 	/**
 	 * @var Boolean
