@@ -228,7 +228,7 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 		if($action) {
 			$action .= "/";
 		}
-		return  "/" . self::$url_segment . "/" . $action;
+		return  "/" . $this->Config()->get("url_segment") . "/" . $action;
 	}
 
 
@@ -252,7 +252,7 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 		$title = trim($title);
 		$words = explode(' ', $title);
 		foreach ($words as $key => $word) {
-			if ($key == 0 or !in_array($word, self::get_small_words_array())) {
+			if ($key == 0 or !in_array($word, $this->Config()->get("small_words_array"))) {
 				$words[$key] = ucwords(strtolower($word));
 			}
 		}

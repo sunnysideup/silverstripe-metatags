@@ -295,7 +295,7 @@ class MetaTagCMSControlFiles extends Controller {
 		if($action) {
 			$action .= "/";
 		}
-		return  "/" . self::$url_segment . "/" . $action;
+		return  "/" . $this->Config()->get("url_segment") . "/" . $action;
 	}
 
 	function GoOneUpLink() {
@@ -343,7 +343,7 @@ class MetaTagCMSControlFiles extends Controller {
 		if(isset($_GET["start"])) {
 			$start = intval($_GET["start"]);
 		}
-		return "$start, ".self::get_records_per_page();
+		return "$start, ".$this->Config()->get("records_per_page");
 	}
 
 

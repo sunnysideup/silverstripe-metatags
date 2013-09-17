@@ -15,7 +15,6 @@ class MetaTagCMSFixImageLocations extends BuildTask {
 	 * @var Array
 	 */
 	private static $folders_to_ignore = array();
-		public static function set_folders_to_ignore($a){self::$folders_to_ignore = $a;}
 
 	/**
 	 * automatically includes any child folders
@@ -66,7 +65,7 @@ class MetaTagCMSFixImageLocations extends BuildTask {
 		}
 
 		//work out the folders to ignore...
-		foreach(self::$folders_to_ignore as $folderToIgnoreName) {
+		foreach($this->Config()->get("folders_to_ignore") as $folderToIgnoreName) {
 			$folderToIgnore = Folder::find_or_make($folderToIgnoreName);
 			$this->addListOfIgnoreFoldersArray($folderToIgnore);
 		}

@@ -21,7 +21,7 @@ class MetaTagsSiteConfigDE extends DataExtension {
 	);
 
 	function updateCMSFields(FieldList $fields) {
-		$linkToManagerForPages = $linkToManagerForFiles = MetaTagCMSControlPages::get_url_segment() . '/';
+		$linkToManagerForPages = $linkToManagerForFiles = Config::inst()->get("MetaTagCMSControlPages", "url_segment") . '/';
 		$fields->addFieldToTab('Root.SearchEngines',
 			new TabSet('Options',
 				new Tab('Help',

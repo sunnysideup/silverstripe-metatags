@@ -8,13 +8,10 @@ class MetaTagsContentControllerEXT extends Extension {
 	/* combined files */
 
 	private static $folder_for_combined_files = 'assets';
-		static function set_folder_for_combined_files($s) {self::$folder_for_combined_files = $s;}
 
 	private static $combine_css_files_into_one = false;
-		static function set_combine_css_files_into_one($b) {self::$combine_css_files_into_one = $b;}
 
 	private static $combine_js_files_into_one = false;
-		static function set_combine_js_files_into_one($b) {self::$combine_js_files_into_one = $b;}
 
 	/**
 	 * add all the basic js and css files - call from Page::init()
@@ -26,7 +23,7 @@ class MetaTagsContentControllerEXT extends Extension {
 			self::$metatags_building_completed = false;
 		}
 		if(!self::$metatags_building_completed) {
-			$themeFolder = SSViewer::get_theme_folder() . '/';
+			$themeFolder = Config::inst()->get("SSViewer", "theme_folder") . '/';
 			$cssArrayLocationOnly = array();
 			$jsArray =
 				array(
@@ -52,10 +49,10 @@ class MetaTagsContentControllerEXT extends Extension {
 				Requirements::css($cssArraySub["location"], $cssArraySub["media"]);
 				$cssArrayLocationOnly[] = $cssArraySub["location"];
 			}
-			if(self::$combine_css_files_into_one) {
+			if($this->owner->Config()->get("combine_css_files_into_one")) {
 				Requirements::combine_files(self::$folder_for_combined_files."/MetaTagAutomation.css",$cssArrayLocationOnly);
 			}
-			if(self::$combine_js_files_into_one) {
+			if($this->owner->Config()->get("combine_js_files_into_one")) {
 				Requirements::combine_files(self::$folder_for_combined_files."/MetaTagAutomation.js", $jsArray);
 			}
 			$googleFontArray = Config::inst()->get('MetaTagsSTE', 'google_font_collection');
@@ -82,7 +79,7 @@ class MetaTagsContentControllerEXT extends Extension {
 	 */
 	function ExtendedMetatags($includeTitle = true, $addExtraSearchEngineData = true) {
 		$this->addBasicMetatagRequirements();
-		$themeFolder = SSViewer::get_theme_folder() . '/';
+		$themeFolder = Config::inst()->get("SSViewer", "theme_folder") . '/';
 		$tags = "";
 		$page = $this->owner;
 		$siteConfig = SiteConfig::current_site_config();
@@ -128,9 +125,9 @@ class MetaTagsContentControllerEXT extends Extension {
 			<link rel="icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />
 			<link rel="apple-touch-icon" href="'.$faviconBase.'apple-touch-icon.png" type="image/x-icon" />
 			<link rel="shortcut icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />';
-		if(! MetaTagsSTE::$hide_keywords_altogether) {
-			$tags .= '<meta name="keywords" http-equiv="keywords" content="'.Convert::raw2att($keywords).'" />';
-		}
+		//if(! Config::inst()->get("MetaTagsSTE", "hide_keywords_altogether")) {
+			//$tags .= '<meta name="keywords" http-equiv="keywords" content="'.Convert::raw2att($keywords).'" />';
+		//}
 		if(!$page->ExtraMeta && $siteConfig->ExtraMeta) {
 			$page->ExtraMeta = $siteConfig->ExtraMeta;
 		}

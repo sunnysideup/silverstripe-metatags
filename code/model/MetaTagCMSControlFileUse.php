@@ -193,7 +193,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 
 	private function createNewRecord($dataObjectClassName, $dataObjectFieldName, $fileClassName, $connectionType) {
 		//exceptions....
-		if(in_array($dataObjectClassName, self::$excluded_classes)  || in_array($fileClassName, self::$excluded_classes)) {
+		if(in_array($dataObjectClassName, $this->Config()->get("excluded_classes"))  || in_array($fileClassName, $this->Config()->get("excluded_classes"))) {
 			return;
 		}
 		if($dataObjectFieldName == "ImageTracking" || $dataObjectFieldName == "BackLinkTracking") {
@@ -201,14 +201,14 @@ class MetaTagCMSControlFileUse extends DataObject {
 		}
 
 		//at least one of them is a file...
-		if( in_array($dataObjectClassName, self::$file_classes) || in_array($fileClassName, self::$file_classes)) {
+		if( in_array($dataObjectClassName, $this->Config()->get("file_classes")) || in_array($fileClassName, $this->Config()->get("file_classes"))) {
 			if( ! DB::query("
 				SELECT COUNT(*)
 				FROM \"MetaTagCMSControlFileUse\"
 				WHERE \"DataObjectClassName\" = '$dataObjectClassName' AND  \"DataObjectFieldName\" = '$dataObjectFieldName' AND \"FileClassName\" = '$fileClassName'
 			")->value()) {
-				$dataObjectIsFile =  in_array($dataObjectClassName, self::$file_classes) ? 1 : 0;
-				$fileIsFile =  in_array($fileClassName, self::$file_classes) ? 1 : 0;
+				$dataObjectIsFile =  in_array($dataObjectClassName, $this->Config()->get("file_classes")) ? 1 : 0;
+				$fileIsFile =  in_array($fileClassName, $this->Config()->get("file_classes")) ? 1 : 0;
 				for($i = 0; $i < ($dataObjectIsFile + $fileIsFile); $i++) {
 					$computedDataObjectIsFile = false;
 					$computedFileIsFile = false;
@@ -488,7 +488,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 	public static function recycle_folder($folderID = 0, $verbose = true){
 		$count = 0;
 		set_time_limit(60*10); // 10 minutes
-		$recyclefolder = Folder::find_or_make(MetaTagCMSControlFiles::get_recycling_bin_name());
+		$recyclefolder = Folder::find_or_make(Config::inst()->get("MetaTagCMSControlFiles", "recycling_bin_name")));
 		if($recyclefolder) {
 			$files = File::get()
 				->filter(array("ParentID" => $folderID))
@@ -524,11 +524,11 @@ class MetaTagCMSControlFileUse extends DataObject {
 		set_time_limit(60*10); // 10 minutes
 		$whereArray = array();
 		$whereArray[] = "\"Title\" = \"Name\"";
-		foreach(self::$file_sub_string as $subString) {
+		foreach($this->Config()->get("file_sub_string") as $subString) {
 			$whereArray[] = "LOCATE('$subString', \"Title\") > 0";
 		}
 		$whereString =  "\"ClassName\" <> 'Folder' AND \"ParentID\" = $folderID AND ( ".implode (" OR ", $whereArray)." )";
-		$recyclefolder = Folder::find_or_make(MetaTagCMSControlFiles::get_recycling_bin_name());
+		$recyclefolder = Folder::find_or_make(Config::inst()->get("MetaTagCMSControlFiles", "recycling_bin_name"));
 		if($recyclefolder) {
 			$whereString .= " AND ParentID <> ".$recyclefolder->ID;
 		}
@@ -658,7 +658,7 @@ class MetaTagCMSControlFileUse_RecyclingRecord extends DataObject {
 	);
 
 	public static function recycle(File $file, $verbose = true) {
-		$recylcingFolder = Folder::find_or_make(MetaTagCMSControlFiles::get_recycling_bin_name());
+		$recylcingFolder = Folder::find_or_make(Config::inst()->get("MetaTagCMSControlFiles", "recycling_bin_name"));
 		if($recylcingFolder) {
 			if($file) {
 				if($file->exists()) {

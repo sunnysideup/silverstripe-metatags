@@ -11,22 +11,10 @@
 class MetaTagsSTE extends SiteTreeExtension {
 
 	/**
-	 * pop-ups and form interaction
-	 * @var Boolean
-	 */
-	static $disable_update_popup = false;
-
-	/**
 	 * length of auto-generated meta descriptions in header
 	 * @var Int
 	 */
-	static $meta_desc_length = 24;
-
-	/**
-	 * exclude meta keywords from header altogether
-	 * @var Boolean
-	 **/
-	static $hide_keywords_altogether = true;
+	private static $meta_desc_length = 24;
 
 	/**
 	 * google fonts to be used
@@ -75,11 +63,7 @@ class MetaTagsSTE extends SiteTreeExtension {
 			}
 		}
 		$fields->removeByName('ExtraMeta');
-		if(self::$disable_update_popup) {
-			Requirements::clear('framework/javascript/UpdateURL.js');
-			Requirements::javascript(SS_METATAGS_DIR.'/javascript/UpdateURL.js');
-		}
-		$linkToManager = '/' . MetaTagCMSControlPages::get_url_segment() . '/';
+		$linkToManager = Config::inst()->get("MetaTagCMSControlPages", "url_segment") . '/';
 		$fields->addFieldToTab('Root.Metadata', new LiteralField("LinkToManagerHeader", "<p>Open the Meta Tag Manager to <a href=\"$linkToManager\" target=\"_blank\">Review and Edit</a> the Meta Data for all pages on this site. Also make sure to review the general <a href=\"/admin/show/root/\">settings for Search Engines</a>.</p>"));
 		if($this->owner->URLSegment == RootURLController::get_default_homepage_link()) {
 			$newField = $fields->dataFieldByName('URLSegment');
@@ -155,9 +139,6 @@ class MetaTagsSTE extends SiteTreeExtension {
 	private function updatedFieldsArray(){
 		$config = SiteConfig::current_site_config();
 		$fields = array();
-		if(self::$disable_update_popup) {
-			$fields['URLSegment'] = _t('SiteTree.URLSegment', 'URL Segment ');
-		}
 		if($config->UpdateMenuTitle) {
 			$fields['MenuTitle'] = _t('SiteTree.MENUTITLE', 'Menu Title ');
 		}
