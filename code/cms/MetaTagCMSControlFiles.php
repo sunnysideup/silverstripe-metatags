@@ -2,6 +2,18 @@
 
 class MetaTagCMSControlFiles extends Controller {
 
+	private static $allowed_actions = array(
+		"cleanupfolders" => "ADMIN",
+		"childrenof" => "ADMIN",
+		"lowercase" => "ADMIN",
+		"titlecase" => "ADMIN",
+		"upgradefilenames" => "ADMIN",
+		"recyclefolder" => "ADMIN",
+		"copyfromtitle" => "ADMIN",
+		"update" => "ADMIN",
+		"recycle" => "ADMIN"
+	);
+
 	private static $recycling_bin_name = 'ZzzeRecyclingBin';
 
 	private static $url_segment = 'metatagmanagementfiles';

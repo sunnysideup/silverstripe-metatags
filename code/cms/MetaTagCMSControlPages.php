@@ -2,6 +2,13 @@
 
 class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 
+	private static $allowed_actions = array(
+		"copyfromcontent" => "ADMIN",
+		"togglecopyfromtitle" => "ADMIN",
+		"setpageflag" => "ADMIN"
+	);
+
+
 	private static $url_segment = "metatagmanagementpages";
 
 	/***************************************************
