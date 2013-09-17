@@ -23,7 +23,7 @@ class MetaTagsContentControllerEXT extends Extension {
 			self::$metatags_building_completed = false;
 		}
 		if(!self::$metatags_building_completed) {
-			$themeFolder = Config::inst()->get("SSViewer", "theme_folder") . '/';
+			$themeFolder = SSViewer::get_theme_folder();
 			$cssArrayLocationOnly = array();
 			$jsArray =
 				array(
@@ -33,13 +33,13 @@ class MetaTagsContentControllerEXT extends Extension {
 			array_merge($jsArray, $additionalJS);
 			$cssArray =
 				array(
-					array("media" => null, "location" => $themeFolder.'css/reset.css'),
-					array("media" => null, "location" => $themeFolder.'css/typography.css'),
-					array("media" => null, "location" => $themeFolder.'css/layout.css'),
-					array("media" => null, "location" => $themeFolder.'css/form.css'),
-					array("media" => null, "location" => $themeFolder.'css/menu.css'),
-					array("media" => "print", "location" => $themeFolder.'css/print.css'),
-					array("media" => null, "location" => $themeFolder.'css/individualPages.css')
+					array("media" => null, "location" => $themeFolder.'/css/reset.css'),
+					array("media" => null, "location" => $themeFolder.'/css/typography.css'),
+					array("media" => null, "location" => $themeFolder.'/css/layout.css'),
+					array("media" => null, "location" => $themeFolder.'/css/form.css'),
+					array("media" => null, "location" => $themeFolder.'/css/menu.css'),
+					array("media" => "print", "location" => $themeFolder.'/css/print.css'),
+					array("media" => null, "location" => $themeFolder.'/css/individualPages.css')
 				);
 			array_merge($cssArray, $additionalCSS);
 			foreach($jsArray as $js) {
@@ -79,7 +79,7 @@ class MetaTagsContentControllerEXT extends Extension {
 	 */
 	function ExtendedMetatags($includeTitle = true, $addExtraSearchEngineData = true) {
 		$this->addBasicMetatagRequirements();
-		$themeFolder = Config::inst()->get("SSViewer", "theme_folder") . '/';
+		$themeFolder = SSViewer::get_theme_folder() . '/';
 		$tags = "";
 		$page = $this->owner;
 		$siteConfig = SiteConfig::current_site_config();
