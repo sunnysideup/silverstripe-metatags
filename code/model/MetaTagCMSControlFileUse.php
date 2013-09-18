@@ -488,7 +488,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 	public static function recycle_folder($folderID = 0, $verbose = true){
 		$count = 0;
 		set_time_limit(60*10); // 10 minutes
-		$recyclefolder = Folder::find_or_make(Config::inst()->get("MetaTagCMSControlFiles", "recycling_bin_name")));
+		$recyclefolder = Folder::find_or_make(Config::inst()->get("MetaTagCMSControlFiles", "recycling_bin_name"));
 		if($recyclefolder) {
 			$files = File::get()
 				->filter(array("ParentID" => $folderID))
