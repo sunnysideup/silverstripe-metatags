@@ -8,19 +8,18 @@ class MetaTagFileExtension extends DataExtension {
 	private $imageTrackingAddAgain = array();
 
 	function onBeforeWrite(){
-		if($this->stillNeedsToReplace && $this->owner instanceOf Image) {
+		if($this->stillNeedsToReplace && $this->owner instanceOf Image && $this->owner->ID) {
 			$this->stillNeedsToReplace = false;
 			$oldObject = File::get()->byID($this->owner->ID);
 			$oldFileName = "";
 			if($oldObject->Name) {
 				$oldFileName = $oldObject->Name;
 			}
-				if($oldFileName) {
+			if($oldFileName) {
 				$oldPath = "";
 				if(isset($oldObject->Filename)) {
 					$oldPath = $oldObject->Filename;
 				}
-
 				if(!$oldPath) {
 					$oldPath = $oldObject->getFilename();
 				}
