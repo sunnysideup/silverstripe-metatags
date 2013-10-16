@@ -652,7 +652,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 
 class MetaTagCMSControlFileUse_RecyclingRecord extends DataObject {
 
-	static $db = array(
+	private static $db = array(
 		"FileID" => "Int",
 		"FromFolderID" => "Int"
 	);

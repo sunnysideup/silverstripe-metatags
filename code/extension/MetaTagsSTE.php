@@ -25,13 +25,13 @@ class MetaTagsSTE extends SiteTreeExtension {
 	/**
 	 * @var Boolean
 	 **/
-	static $use_themed_favicon = false;
+	private static $use_themed_favicon = false;
 
 	/**
 	 * standard SS method
 	 * @var Array
 	 **/
-	static $db = array(
+	private static $db = array(
 		'MetaTitle' => 'Varchar',
 		'AutomateMetatags' => 'Boolean',
 		'MetatagCache' => 'HTMLText'
@@ -41,7 +41,7 @@ class MetaTagsSTE extends SiteTreeExtension {
 	 * standard SS method
 	 * @var Array
 	 **/
-	static $defaults = array(
+	private static $defaults = array(
 		'AutomateMetatags' => true
 	);
 

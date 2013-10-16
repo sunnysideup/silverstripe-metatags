@@ -3,7 +3,7 @@
 
 class MetaTagsSiteConfigDE extends DataExtension {
 
-	static $db = array(
+	private static $db = array(
 		//meta title embelishments
 		'PrependToMetaTitle' => 'Varchar(60)',
 		'AppendToMetaTitle' => 'Varchar(60)',

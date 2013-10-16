@@ -107,7 +107,7 @@ class MetaTagsContentControllerEXT extends Extension {
 
 		//use base url rather than / so that sites that aren't a run from the root directory can have a favicon
 		$faviconBase = $base;
-		if(MetaTagsSTE::$use_themed_favicon) {
+		if(Config::inst()->get("MetaTagsSTE", "use_themed_favicon")) {
 			$faviconBase .= $themeFolder;
 		}
 		if($includeTitle) {
