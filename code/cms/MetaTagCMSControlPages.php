@@ -5,9 +5,18 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 	private static $allowed_actions = array(
 		"copyfromcontent" => "ADMIN",
 		"togglecopyfromtitle" => "ADMIN",
-		"setpageflag" => "ADMIN"
+		"setpageflag" => "ADMIN",
+		//standard
+		"cleanupfolders" => "ADMIN",
+		"childrenof" => "ADMIN",
+		"lowercase" => "ADMIN",
+		"titlecase" => "ADMIN",
+		"upgradefilenames" => "ADMIN",
+		"recyclefolder" => "ADMIN",
+		"copyfromtitle" => "ADMIN",
+		"update" => "ADMIN",
+		"recycle" => "ADMIN"
 	);
-
 
 	private static $url_segment = "metatagmanagementpages";
 
@@ -211,6 +220,7 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 		return $pages;
 	}
 
+
 	function AlwaysUpdateMenuTitle() {
 		return $this->mySiteConfig()->UpdateMenuTitle;
 	}
@@ -228,7 +238,7 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 		if($action) {
 			$action .= "/";
 		}
-		return  "/" . $this->Config()->get("url_segment") . "/" . $action;
+		return $this->Config()->get("url_segment") . "/" . $action;
 	}
 
 

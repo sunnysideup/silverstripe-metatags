@@ -1,4 +1,4 @@
-	<% loop MyRecords %>
+	<% loop MyPaginatedRecords %>
 	<tr class="$FirstLast $EvenOdd" id="TR-$ID">
 
 		<td class="filename">
@@ -9,7 +9,7 @@
 				<a href="$Link" title="File Type: $ClassName, Title: $Title  - click to open pages on this level" class="goOneUpLink" rel="TR-$ID">$FilenameSegment/</a>
 				<% end_if %>
 			<% end_loop %>
-			<% if ClassName = Folder %>
+			<% if $ClassName = Folder %>
 				<% if ChildrenLink %><a href="$ChildrenLink" class="goOneDownLink" title="go down one level and view child pages of: $Name.ATT" rel="TR-$ID">+</a><% end_if %>
 				<div class="iconHolder"><img src="/metatags/images/Folder.png" alt="$ClassName" class="defaultIcon" /></div>
 				<div class="fileInfo">
@@ -28,9 +28,9 @@
 					<div class="usage">
 			<% if UsageCount %>
 						<span class="label">Used:</span> <span class="data">$UsageCount time(s)</span>
-						<% if ListOfPlaces.Count %><ul><% with/loopListOfPlaces %>
+						<% if ListOfPlaces.Count %><ul><% loop ListOfPlaces %>
 							<li><% if Link %><a href="$Link">$Title</a><% else %>$ClassName ($Title)<% end_if %></li>
-						<% end_with/loop%></ul><% end_if %>
+						<% end_loop%></ul><% end_if %>
 			<% else %>
 					<a href="$RecycleLink" class=" ajaxify">not used on the site: <img src="metatags/images/recycle.png" alt="Recycle" title="Recycle" /></a>
 			<% end_if %>

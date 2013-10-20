@@ -45,7 +45,7 @@ class MetaTagCMSControlFiles extends Controller {
 		//Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
 		Requirements::javascript(THIRDPARTY_DIR."/jquery-form/jquery.form.js");
 		Requirements::javascript("metatags/javascript/MetaTagCMSControl.js");
-		Requirements::themedCSS("MetaTagCMSControl");
+		Requirements::themedCSS("MetaTagCMSControl", "metatags");
 		if($parentID = intval($this->request->getVar("childrenof"))) {
 			$this->ParentID = $parentID;
 		}
@@ -231,8 +231,8 @@ class MetaTagCMSControlFiles extends Controller {
 		$className = $this->tableArray[0];
 		$files = $className::get()
 			->filter("ParentID", $this->ParentID)
-			->sort("IF(\"ClassName\" = 'Folder', 0, 1) ASC, \"Name\" ASC ")
-			->limit($this->myRecordsLimit());
+			->sort(array("IF(\"ClassName\" = 'Folder', 0, 1)" => "ASC", "\"Name\"" => "ASC"));
+			//->limit($this->myRecordsLimit());
 		$dos = null;
 		if($files && $files->count()) {
 			foreach($files as $file) {
@@ -286,6 +286,11 @@ class MetaTagCMSControlFiles extends Controller {
 		return $files;
 	}
 
+	function MyPaginatedRecords(){
+		return new PaginatedList($this->MyRecords(), $this->request);
+	}
+
+
 
 	function FormAction() {
 		return Director::absoluteBaseURL().$this->Link("update");
@@ -295,7 +300,7 @@ class MetaTagCMSControlFiles extends Controller {
 		if($action) {
 			$action .= "/";
 		}
-		return  "/" . $this->Config()->get("url_segment") . "/" . $action;
+		return $this->Config()->get("url_segment") . "/" . $action;
 	}
 
 	function GoOneUpLink() {
