@@ -1,7 +1,8 @@
-	<% loop MyPaginatedRecords %>
+	<% loop MyRecords %>
 	<tr class="$FirstLast $EvenOdd" id="TR-$ID">
 
 		<td class="filename">
+		<% if ParentSegments %>
 			<% loop ParentSegments %>
 				<% if Last %>
 				<strong>$URLSegment</strong>
@@ -9,8 +10,9 @@
 				<a href="$Link" title="File Type: $ClassName, Title: $Title  - click to open pages on this level" class="goOneUpLink" rel="TR-$ID">$FilenameSegment/</a>
 				<% end_if %>
 			<% end_loop %>
-			<% if $ClassName = Folder %>
-				<% if ChildrenLink %><a href="$ChildrenLink" class="goOneDownLink" title="go down one level and view child pages of: $Name.ATT" rel="TR-$ID">+</a><% end_if %>
+		<% end_if %>
+			<% if ClassName = Folder %>
+				<% if ChildrenLink %><a href="$ChildrenLink" class="goOneDownLink" title="go down one level and view child pages of: $Name.ATT" rel="TR-$ID">++++++++++=</a><% end_if %>
 				<div class="iconHolder"><img src="/metatags/images/Folder.png" alt="$ClassName" class="defaultIcon" /></div>
 				<div class="fileInfo">
 			<% else %>

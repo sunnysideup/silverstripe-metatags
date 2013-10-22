@@ -226,15 +226,22 @@ class MetaTagCMSControlFiles extends Controller {
 	 ***************************************************/
 
 
-	function MyRecords() {
-		//Filesystem::sync($this->ParentID);
+	function MyPaginatedRecords(){
 		$className = $this->tableArray[0];
-		$files = $className::get()
+		$records = $className::get()
 			->filter("ParentID", $this->ParentID)
 			->sort(array("IF(\"ClassName\" = 'Folder', 0, 1)" => "ASC", "\"Name\"" => "ASC"));
 			//->limit($this->myRecordsLimit());
+		return new PaginatedList($records, $this->request);
+	}
+
+
+	function MyRecords(){
+		$className = $this->tableArray[0];
+		$files = $this->MyPaginatedRecords();
 		$dos = null;
-		if($files && $files->count()) {
+		$ar = new ArrayList(array());
+		if($files) {
 			foreach($files as $file) {
 				$file->ChildrenLink = '';
 				if(!$file->canView() ) {
@@ -266,7 +273,13 @@ class MetaTagCMSControlFiles extends Controller {
 				$dos[$file->ID] = new ArrayList();
 				$segmentArray = array();
 				$item = $file;
-				$segmentArray[] = array("URLSegment" => $item->Name, "ID" => $item->ID, "ClassName" => $item->ClassName, "Title" => $item->Title, "Link" => "/".$item->Filename);
+				$segmentArray[] = array(
+					"URLSegment" => $item->Name,
+					"ID" => $item->ID,
+					"ClassName" => $item->ClassName,
+					"Title" => $item->Title,
+					"Link" => "/".$item->Filename
+				);
 				$x = 0;
 				while($item && $item->ParentID && $x < 10) {
 					$x++;
@@ -280,14 +293,11 @@ class MetaTagCMSControlFiles extends Controller {
 					$dos[$file->ID]->push(new ArrayData($segment));
 				}
 				$file->ParentSegments = $dos[$file->ID] ;
-				$dos = null;
+				$file->TEST = "BOOOOOOOOOOO";
+				$ar->add($file);
 			}
 		}
-		return $files;
-	}
-
-	function MyPaginatedRecords(){
-		return new PaginatedList($this->MyRecords(), $this->request);
+		return $ar;
 	}
 
 

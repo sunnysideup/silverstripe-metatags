@@ -88,8 +88,18 @@ td.filename .errorHolder {height: 100px; width:100px; color: red!important;margi
 .fileInfo span.label {font-weight: bold;}
 .fileInfo span.data {}
 
+.pageNumbers {width: 100%;}
+.pageNumbers a , .pageNumbers strong {
+	display: block;
+	float: left;
+	width: auto;
+	text-align: center;
+	padding: 0 5px 0 5px;
+}
 
-.pageNumbers strong{background-color: #BFFA37!important;}
+.pageNumbers a {font-size: 20px; background-color: #BFFA37!important; opacity: 0.5}
+.pageNumbers a:hover {opacity: 1}
+.pageNumbers strong{background-color: #BFFA37!important; font-size: 24px; }
 .fileInfo .usage {margin-top: 10px; text-align: right;}
 
 .loading .response {background-image: url(/metatags/images/loading.gif); background-repeat: no-repeat; background-position: 5px 7px;}

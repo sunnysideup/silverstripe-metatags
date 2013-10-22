@@ -2,7 +2,7 @@
 	<% if MyPaginatedRecords.MoreThanOnePage %>
 	<p class="pageNumbers">
 	<% if MyPaginatedRecords.PrevLink %>
-	<a href="/$MyRecords.PrevLink"><< Prev</a> |
+	<a href="$MyPaginatedRecords.PrevLink"><< Prev</a>
 	<% end_if %>
 
 	<% loop MyPaginatedRecords.Pages %>
@@ -14,7 +14,7 @@
 	<% end_loop %>
 
 	<% if MyPaginatedRecords.NextLink %>
-	| <a href="/$MyPaginatedRecords.NextLink">Next >></a>
+	 <a href="$MyPaginatedRecords.NextLink">Next >></a>
 	<% end_if %>
 	</p>
 	<% end_if %>

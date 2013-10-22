@@ -1,4 +1,4 @@
-	<% loop MyPaginatedRecords %>
+	<% loop MyRecords %>
 	<tr class="$FirstLast $EvenOdd" id="TR-$ID">
 
 		<td class="url">

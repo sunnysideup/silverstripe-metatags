@@ -54,7 +54,7 @@
 		</table>
 		<div class="response">$Message</div>
 	<% else %>
-		<p>No pages found</p>
+		<p>No files found</p>
 	<% end_if %>
 	</form>
 </div>
