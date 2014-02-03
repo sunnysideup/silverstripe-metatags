@@ -20,6 +20,13 @@ class MetaTagsSiteConfigDE extends DataExtension {
 		'ExtraMeta' => 'HTMLText'
 	);
 
+	function populateDefaults(){
+		$this->MetaDataCountry = "New Zealand";
+		$this->MetaDataCopyright = "site owner";
+		$this->MetaDataDesign = "site owner";
+		$this->MetaDataCoding = "site owner";
+	}
+
 	function updateCMSFields(FieldList $fields) {
 		$linkToManagerForPages = Config::inst()->get("MetaTagCMSControlPages", "url_segment") . '/';
 		$linkToManagerForFiles = Config::inst()->get("MetaTagCMSControlFiles", "url_segment") . '/';
