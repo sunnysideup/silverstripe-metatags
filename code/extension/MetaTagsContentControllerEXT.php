@@ -107,8 +107,10 @@ class MetaTagsContentControllerEXT extends Extension {
 
 		//use base url rather than / so that sites that aren't a run from the root directory can have a favicon
 		$faviconBase = $base;
+		$faviconFileBase = "";
 		if(Config::inst()->get("MetaTagsSTE", "use_themed_favicon")) {
 			$faviconBase .= $themeFolder;
+			$faviconFileBase = $themeFolder;
 		}
 		if($includeTitle) {
 			$titleTag = '
@@ -121,14 +123,14 @@ class MetaTagsContentControllerEXT extends Extension {
 			<meta charset="utf-8" />
 			<meta http-equiv="Content-type" content="text/html; charset=utf-8" />'.
 			$titleTag;
-		if(file_exists(Director::baseFolder().'/'.$faviconBase.'favicon.ico')) {
+		if(file_exists(Director::baseFolder().'/'.$faviconFileBase.'favicon.ico')) {
 			$tags .= '
-				<link rel="icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />
-				<link rel="shortcut icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />';
+			<link rel="icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />
+			<link rel="shortcut icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />';
 		}
-		if(file_exists(Director::baseFolder().'/'.$faviconBase.'apple-touch-icon.png')) {
+		if(file_exists(Director::baseFolder().'/'.$faviconFileBase.'apple-touch-icon.png')) {
 			$tags .= '
-				<link rel="apple-touch-icon" href="'.$faviconBase.'apple-touch-icon.png" type="image/x-icon" />';
+			<link rel="apple-touch-icon" href="'.$faviconBase.'apple-touch-icon.png" type="image/x-icon" />';
 		}
 		//if(! Config::inst()->get("MetaTagsSTE", "hide_keywords_altogether")) {
 			//$tags .= '<meta name="keywords" http-equiv="keywords" content="'.Convert::raw2att($keywords).'" />';
