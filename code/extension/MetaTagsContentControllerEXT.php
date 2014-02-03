@@ -120,11 +120,16 @@ class MetaTagsContentControllerEXT extends Extension {
 		$tags .= '
 			<meta charset="utf-8" />
 			<meta http-equiv="Content-type" content="text/html; charset=utf-8" />'.
-			$titleTag
-			.'
-			<link rel="icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />
-			<link rel="apple-touch-icon" href="'.$faviconBase.'apple-touch-icon.png" type="image/x-icon" />
-			<link rel="shortcut icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />';
+			$titleTag;
+		if(file_exists(Director::baseFolder().'/'.$faviconBase.'favicon.ico')) {
+			$tags .= '
+				<link rel="icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />
+				<link rel="shortcut icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />';
+		}
+		if(file_exists(Director::baseFolder().'/'.$faviconBase.'apple-touch-icon.png')) {
+			$tags .= '
+				<link rel="apple-touch-icon" href="'.$faviconBase.'apple-touch-icon.png" type="image/x-icon" />';
+		}
 		//if(! Config::inst()->get("MetaTagsSTE", "hide_keywords_altogether")) {
 			//$tags .= '<meta name="keywords" http-equiv="keywords" content="'.Convert::raw2att($keywords).'" />';
 		//}
@@ -137,7 +142,7 @@ class MetaTagsContentControllerEXT extends Extension {
 			$tags .= '
 			<meta name="robots" content="'.$noopd.'all, index, follow" />
 			<meta name="googlebot" content="'.$noopd.'all, index, follow" />
-			<meta name="copyright" content="'.$siteConfig->MetaDataCopyright.'" />
+			<meta name="copyright" content="'.Convert::raw2att($siteConfig->MetaDataCopyright).'" />
 			<meta name="coding" content="'.$siteConfig->MetaDataCoding.'" />
 			<meta name="design" content="'.$siteConfig->MetaDataDesign.'" />
 			<meta name="date-modified-yyyymmdd" content="'.$lastEdited->Format("Ymd").'" />
