@@ -62,7 +62,9 @@ class MetaTagsContentControllerEXT extends Extension {
 					Requirements::insertHeadTags('<link href="' . $protocol . 'fonts.googleapis.com/css?family=' . urlencode($font) . '" rel="stylesheet" type="text/css" />');
 				}
 			}
-			Requirements::insertHeadTags('<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1" />', 'use-ie-edge');
+			if (isset($_SERVER['HTTP_USER_AGENT']) &&  (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false)) {
+				header('X-UA-Compatible: IE=edge,chrome=1');
+			}
 			self::$metatags_building_completed = true;
 		}
 	}
