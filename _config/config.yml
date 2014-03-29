@@ -4,7 +4,9 @@ After:
   - 'framework/*'
   - 'cms/*'
 ---
+SiteConfig:
+  extensions:
+    - MetaTagsConfigExtension
 SiteTree:
   extensions:
-    - MetaTagsExtension
-    - MetaTagsControllerExtension
+    - MetaTagsPageExtension

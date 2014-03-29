@@ -1,0 +1,5 @@
+zh_TW:
+  MetaTags:
+    METATITLE: 標題
+    METATITLEHELP: Shown at the top of the browser window and used as the "linked text" by search engines.
+    GENERATOR: 'Show the Generator Meta Tag'
