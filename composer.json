@@ -3,7 +3,7 @@
 	"type": "silverstripe-module",
 	"description": "manage metatags in Silverstripe",
 	"homepage": "https://github.com/sunnysideup/silverstripe-metatags",
-	"keywords": ["metatags", "silverstripe"],
+	"keywords": ["metatags", "silverstripe", "search engine optimsation", "seo", "filenames", "meta tags", "meta data"],
 	"license": "Sunny Side Up (BSD-3-Clause and CUSTOM)",
 	"authors":[
 		{
