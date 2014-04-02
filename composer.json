@@ -2,7 +2,7 @@
 	"name": "sunnysideup/metatags",
 	"type": "silverstripe-module",
 	"description": "manage metatags in Silverstripe",
-	"homepage": "http://www.silverstripe-webdevelopment.com",
+	"homepage": "https://github.com/sunnysideup/silverstripe-metatags",
 	"keywords": ["metatags", "silverstripe"],
 	"license": "Sunny Side Up (BSD-3-Clause and CUSTOM)",
 	"authors":[
@@ -14,8 +14,8 @@
 		}
 	],
 	"require":{
-		"silverstripe/framework": "dev-master",
-		"silverstripe/cms": "dev-master"
+		"silverstripe/framework": "~3.1",
+		"silverstripe/cms": "~3.1",
 	},
 	"extra": {
 		"installer-name": "metatags"
