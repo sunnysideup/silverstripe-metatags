@@ -56,9 +56,15 @@ class MetaTagsSTE extends SiteTreeExtension {
 			$fields->addFieldToTab('Root.Metadata', new CheckboxField('AutomateMetatags', _t('MetaManager.UPDATEMETA','Allow Meta (Search Engine) Fields to be updated automatically? '). $updated_field_string));
 			if($this->owner->AutomateMetatags) {
 				foreach($automatedFields as $fieldName => $fieldTitle) {
-					$newField = $fields->dataFieldByName($fieldName)->performReadonlyTransformation();
-					$newField->setTitle($newField->Title()." (automatically updated when you save this page)");
-					$fields->replaceField($fieldName, $newField);
+					$newField = $fields->dataFieldByName($fieldName);
+					if($newField) {
+						$newField->performReadonlyTransformation();
+						$newField->setTitle($newField->Title()." (automatically updated when you save this page)");
+						$fields->replaceField($fieldName, $newField);
+					}
+					else {
+						echo $newField;
+					}
 				}
 			}
 		}

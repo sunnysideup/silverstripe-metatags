@@ -6,9 +6,8 @@ MetaTagsSTE:
   disable_update_popup: false
   meta_desc_length: 24
   hide_keywords_altogether: true
-  MetaTagsSTE:
-   google_font_collection:
-   - Inconsolata
+  google_font_collection:
+    - Inconsolata
 MetaTagsContentControllerEXT:
   folder_for_combined_files: 'cache'
   combine_css_files_into_one: true
