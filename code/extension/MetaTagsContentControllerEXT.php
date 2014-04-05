@@ -146,11 +146,9 @@ class MetaTagsContentControllerEXT extends Extension {
 			$tags .= '
 			<meta name="robots" content="'.$noopd.'all, index, follow" />
 			<meta name="googlebot" content="'.$noopd.'all, index, follow" />
-			<meta name="copyright" content="'.Convert::raw2att($siteConfig->MetaDataCopyright).'" />
-			<meta name="coding" content="'.$siteConfig->MetaDataCoding.'" />
-			<meta name="design" content="'.$siteConfig->MetaDataDesign.'" />
-			<meta name="date-modified-yyyymmdd" content="'.$lastEdited->Format("Ymd").'" />
-			<meta name="country" content="'.$siteConfig->MetaDataCountry.'" />
+			<meta name="rights" content="'.Convert::raw2att($siteConfig->MetaDataCopyright).'" />
+			<meta name="created" content="'.$lastEdited->Format("Ymd").'" />
+			<meta name="geo.country" content="'.$siteConfig->MetaDataCountry.'" />
 			<meta http-equiv="imagetoolbar" content="no" />
 			<meta name="viewport" content="width=device-width,initial-scale=1" />
 			<meta http-equiv="Content-Language" content="'.i18n::get_locale().'" />
