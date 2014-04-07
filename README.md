@@ -1,6 +1,4 @@
-###############################################
-Meta Tags
-###############################################
+Meta Tags================================================================================
 
 This module simplifies the management of the header
 tags for any html document.  It adds all the basics by
