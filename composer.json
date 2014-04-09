@@ -20,7 +20,7 @@
     },
     "target-dir" : "metatags",
 	"require": {
-		"silverstripe/fremework": ">=3.*",
-        "silverstripe/cms": ">=3.*"
+		"silverstripe/fremework": "3.*",
+        "silverstripe/cms": "3.*"
 	}
 }
