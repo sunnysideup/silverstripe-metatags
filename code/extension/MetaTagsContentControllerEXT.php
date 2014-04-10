@@ -50,10 +50,10 @@ class MetaTagsContentControllerEXT extends Extension {
 				$cssArrayLocationOnly[] = $cssArraySub["location"];
 			}
 			if($this->owner->Config()->get("combine_css_files_into_one")) {
-				Requirements::combine_files(self::$folder_for_combined_files."/MetaTagAutomation.css",$cssArrayLocationOnly);
+				Requirements::combine_files($this->config()->get("folder_for_combined_files")."/MetaTagAutomation.css",$cssArrayLocationOnly);
 			}
 			if($this->owner->Config()->get("combine_js_files_into_one")) {
-				Requirements::combine_files(self::$folder_for_combined_files."/MetaTagAutomation.js", $jsArray);
+				Requirements::combine_files($this->config()->get("folder_for_combined_files")."/MetaTagAutomation.js", $jsArray);
 			}
 			$googleFontArray = Config::inst()->get('MetaTagsSTE', 'google_font_collection');
 			if($googleFontArray && count($googleFontArray)) {

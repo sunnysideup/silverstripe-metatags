@@ -104,7 +104,7 @@ class MetaTagsSTE extends SiteTreeExtension {
 					$this->owner->MenuTitle = $this->cleanInput($this->owner->Title, 0);
 				}
 			}
-			if($siteConfig->UpdateMetaDescription && self::$meta_desc_length ){
+			if($siteConfig->UpdateMetaDescription && $this->config()->get("meta_desc_length")){
 				// Empty MetaDescription
 				// Check for Content, to prevent errors
 

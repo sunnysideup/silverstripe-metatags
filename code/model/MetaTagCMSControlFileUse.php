@@ -598,7 +598,7 @@ class MetaTagCMSControlFileUse extends DataObject {
 						if($objName) {
 							$sort = null;
 							$limit = 1;
-							if(self::$debug) {
+							if(Config::inst()->get("MetaTagCMSControlFileUse", "debug")) {
 								echo "<hr />";
 								echo "TYPE: ".$check->ConnectionType."<br />";
 								echo "CLASS: ".$objName."<br />";
