@@ -25,13 +25,7 @@ Behaviour.register({
 			/*}*/
 			// If you type in Page name, the Navigation Label and Meta Title should automatically update the first time
 			// @todo: Change file name from UpdateURL to something more geneneric since we now do more than update the URL.
-			if($('Form_EditForm_MetaTitle') && $('Form_EditForm_MenuTitle').value.indexOf("New") == 0 ) {
-				$('Form_EditForm_MenuTitle').value = this.value;
-			}
 			// @todo see if updating this is confusing (Q: why isn't my page title changing? A: Check the Meta-Data tab)
-			if($('Form_EditForm_MetaTitle') && $('Form_EditForm_MetaTitle').value.length == 0 ) {
-				$('Form_EditForm_MetaTitle').value = this.value;
-			}
 		}
 	}
 });

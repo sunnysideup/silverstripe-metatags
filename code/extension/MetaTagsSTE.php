@@ -32,7 +32,6 @@ class MetaTagsSTE extends SiteTreeExtension {
 	 * @var Array
 	 **/
 	private static $db = array(
-		'MetaTitle' => 'Varchar',
 		'AutomateMetatags' => 'Boolean',
 		'MetatagCache' => 'HTMLText'
 	);
@@ -56,14 +55,11 @@ class MetaTagsSTE extends SiteTreeExtension {
 			$fields->addFieldToTab('Root.Metadata', new CheckboxField('AutomateMetatags', _t('MetaManager.UPDATEMETA','Allow Meta (Search Engine) Fields to be updated automatically? '). $updated_field_string));
 			if($this->owner->AutomateMetatags) {
 				foreach($automatedFields as $fieldName => $fieldTitle) {
-					$newField = $fields->dataFieldByName($fieldName);
-					if($newField) {
-						$newField->performReadonlyTransformation();
+					$oldField = $fields->dataFieldByName($fieldName);
+					if($oldField) {
+						$newField = $oldField->performReadonlyTransformation();
 						$newField->setTitle($newField->Title()." (automatically updated when you save this page)");
 						$fields->replaceField($fieldName, $newField);
-					}
-					else {
-						echo $newField;
 					}
 				}
 			}
@@ -88,16 +84,8 @@ class MetaTagsSTE extends SiteTreeExtension {
 		// if UpdateMeta checkbox is checked, update metadata based on content and title
 		// we only update this from the CMS to limit slow-downs in programatic updates
 		if(isset($_REQUEST['AutomateMetatags']) && $_REQUEST['AutomateMetatags']){
-			if($siteConfig->UpdateMetaTitle){
-				// Empty MetaTitle
-				$this->owner->MetaTitle = '';
-				// Check for Content, to prevent errors
-				if($this->owner->Title){
-					$this->owner->MetaTitle = $this->cleanInput($this->owner->Title, 0);
-				}
-			}
 			if($siteConfig->UpdateMenuTitle){
-				// Empty MetaTitle
+				// Empty MenuTitle
 				$this->owner->MenuTitle = '';
 				// Check for Content, to prevent errors
 				if($this->owner->Title){
@@ -121,35 +109,11 @@ class MetaTagsSTE extends SiteTreeExtension {
 
  	}
 
-	public function onAfterWrite() {
-		// TODO : find a nicer way to reload the page and when exactly it needs reloading
-		//LeftAndMain::ForceReload ();
-		parent::onAfterWrite();
-		$siteConfig = SiteConfig::current_site_config();
-		$oldMetaTitle = $this->owner->MetaTitle;
-		if($siteConfig->PrependToMetaTitle) {
-			if(strpos($this->owner->MetaTitle, $siteConfig->PrependToMetaTitle) === 0) {
-				$this->owner->MetaTitle = str_replace($siteConfig->PrependToMetaTitle, "", $this->owner->MetaTile);
-			}
-		}
-		if($siteConfig->AppendToMetaTitle) {
-			if(strpos($this->owner->MetaTitle, $siteConfig->AppendToMetaTitle) === (strlen($this->owner->MetaTitle) - strlen($siteConfig->AppendToMetaTitle))) {
-				$this->owner->MetaTitle = str_replace($siteConfig->AppendToMetaTitle, "", $this->owner->MetaTitle);
-			}
-		}
-		if($this->owner->MetaTitle != $oldMetaTitle) {
-			$this->owner->write();
-		}
-	}
-
 	private function updatedFieldsArray(){
 		$config = SiteConfig::current_site_config();
 		$fields = array();
 		if($config->UpdateMenuTitle) {
 			$fields['MenuTitle'] = _t('SiteTree.MENUTITLE', 'Menu Title ');
-		}
-		if($config->UpdateMetaTitle) {
-			$fields['MetaTitle'] = _t('SiteTree.METATITLE', 'Title ');
 		}
 		if($config->UpdateMetaDescription) {
 			$fields['MetaDescription'] = _t('SiteTree.METADESCRIPTION', 'Description ');

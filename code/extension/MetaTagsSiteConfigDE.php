@@ -13,7 +13,6 @@ class MetaTagsSiteConfigDE extends DataExtension {
 		'MetaDataDesign' => 'Varchar(60)',
 		'MetaDataCoding' => 'Varchar(60)',
 		// flags
-		'UpdateMetaTitle' => 'Boolean',
 		'UpdateMenuTitle' => 'Boolean',
 		'UpdateMetaDescription' => 'Boolean',
 		// extra meta
@@ -60,8 +59,6 @@ class MetaTagsSiteConfigDE extends DataExtension {
 					new CheckboxField('UpdateMenuTitle', 'Automatically update the Menu Title to match the Page Title?')
 				),
 				new Tab('Meta Title',
-					new LiteralField('MetaTitleExplanation', '<h3>&ldquo;Meta Title&rdquo;: Title for Search Engines and Tab/Window</h3><p>The Meta Title is the name of your page shown in the top of the browser.  This is an important indication to search engine about the content of the page.  It should be around seven words long.  Below you can add something to the front / end of every meta title (e.g. the name of your business).  Often this is done with some characters, e.g. two colons (::) or a hyphen ( - ) so that the full title reads something like: \'My Business Site :: Contact Us Page\'</p>'),
-					new CheckboxField('UpdateMetaTitle', 'Automatically update every meta title to the same content as the page title?'),
 					new TextField('PrependToMetaTitle', 'Prepend (add in front) of Meta Title'),
 					new TextField('AppendToMetaTitle', 'Append (add at the end) of Meta Title')
 				),

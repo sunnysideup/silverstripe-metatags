@@ -85,10 +85,7 @@ class MetaTagsContentControllerEXT extends Extension {
 		$tags = "";
 		$page = $this->owner;
 		$siteConfig = SiteConfig::current_site_config();
-		$title = $page->MetaTitle;
-		if(!$title) {
-			$title = $page->Title;
-		}
+		$title = $page->Title;
 		if(!$title) {
 			$title = $page->MenuTitle;
 		}

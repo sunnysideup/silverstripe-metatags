@@ -29,11 +29,9 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 
 	protected $updatableFields = array(
 		'Title',
-		'MetaTitle',
 		'MenuTitle',
 		'MetaDescription',
 		'UpdateMenuTitle',
-		'UpdateMetaTitle',
 		'UpdateMetaDescription',
 		'AutomateMetatags'
 	);
@@ -173,16 +171,10 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 					$pages->remove($page);
 				}
 				$page->ChildrenLink = '';
-				$page->MetaTitleIdentical = $page->MenuTitleIdentical = false;
-				$page->MetaTitleAutoUpdate = $page->MenuTitleAutoUpdate = false;
-				if(strtolower($page->MetaTitle) == strtolower($page->Title)) {
-					$page->MetaTitleIdentical = true;
-				}
+				$page->MenuTitleIdentical = false;
+				$page->MenuTitleAutoUpdate = false;
 				if(strtolower($page->MenuTitle) == strtolower($page->Title)) {
 					$page->MenuTitleIdentical = true;
-				}
-				if($this->mySiteConfig()->UpdateMetaTitle && $page->AutomateMetatags) {
-					$page->MetaTitleAutoUpdate = true;
 				}
 				if($this->mySiteConfig()->UpdateMenuTitle && $page->AutomateMetatags) {
 					$page->MenuTitleAutoUpdate = true;
@@ -225,10 +217,6 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 		return $this->mySiteConfig()->UpdateMenuTitle;
 	}
 
-	function AlwaysUpdateMetaTitle() {
-		return $this->mySiteConfig()->UpdateMetaTitle;
-	}
-
 	function AlwaysUpdateMetaDescription() {
 		return $this->mySiteConfig()->UpdateMetaDescription;
 	}
@@ -249,14 +237,6 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 
 
 
-	/* admin only functions */
-	protected function updateAllMetaTitles() {
-		if($this->mySiteConfig()->UpdateMetaTitle) {
-			foreach($this->tableArray as $table) {
-				DB::query("UPDATE \"$table\" SET \"MetaTitle\" = \"Title\" WHERE AutomateMetatags = 1");
-			}
-		}
-	}
 
 	protected function convert2TitleCase($title) {
 		$title = trim($title);
