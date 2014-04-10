@@ -7,5 +7,4 @@
 
 define('SS_METATAGS_DIR', 'metatags');
 
-// dont forget to add $this->addBasicMetatagRequirements() to Page_Controller->init();
 // and add this to your Page.ss template file: $ExtendedMetatags

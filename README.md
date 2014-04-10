@@ -47,6 +47,8 @@ you can usually find some examples of config options (if any).
 	$ExtendedMetatags
 </head>
 
+
+
 Note, you can add two variables:
 ExtendedMetatags($includeTitle = true, $addExtraSearchEngineData = true)
 
