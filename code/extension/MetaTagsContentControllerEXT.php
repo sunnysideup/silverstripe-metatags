@@ -49,11 +49,12 @@ class MetaTagsContentControllerEXT extends Extension {
 				Requirements::css($cssArraySub["location"], $cssArraySub["media"]);
 				$cssArrayLocationOnly[] = $cssArraySub["location"];
 			}
+			$folderForCombinedFiles = Config::inst()->get("MetaTagsContentControllerEXT", "folder_for_combined_files");
 			if($this->owner->Config()->get("combine_css_files_into_one")) {
-				Requirements::combine_files($this->config()->get("folder_for_combined_files")."/MetaTagAutomation.css",$cssArrayLocationOnly);
+				Requirements::combine_files($folderForCombinedFiles."/MetaTagAutomation.css",$cssArrayLocationOnly);
 			}
 			if($this->owner->Config()->get("combine_js_files_into_one")) {
-				Requirements::combine_files($this->config()->get("folder_for_combined_files")."/MetaTagAutomation.js", $jsArray);
+				Requirements::combine_files($folderForCombinedFiles."/MetaTagAutomation.js", $jsArray);
 			}
 			$googleFontArray = Config::inst()->get('MetaTagsSTE', 'google_font_collection');
 			if($googleFontArray && count($googleFontArray)) {
