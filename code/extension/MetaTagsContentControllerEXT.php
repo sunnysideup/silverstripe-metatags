@@ -18,7 +18,7 @@ class MetaTagsContentControllerEXT extends Extension {
 	 */
 	private static $metatags_building_completed = false;
 
-	function addBasicMetatagRequirements($additionalJS = array(), $additionalCSS = array(), $force = false) {
+	public function addBasicMetatagRequirements($additionalJS = array(), $additionalCSS = array(), $force = false) {
 		if($force) {
 			self::$metatags_building_completed = false;
 		}
