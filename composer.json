@@ -1,7 +1,7 @@
 {
-	"name": "zucchi/metatags",
-	"description": "Module to add 'MetaTitle' to pages and injecting in to frontend by extending the SiteTree->MetaTags method",
-	"type": "silverstripe-module",
+    "name": "zucchi/metatags",
+    "description": "Module to add 'MetaTitle' to pages and injecting in to frontend by extending the SiteTree->MetaTags method",
+    "type": "silverstripe-module",
     "keywords" : ["silverstripe", "meta"],
     "license" : "BSD-3-Clause",
     "authors": [
@@ -18,9 +18,11 @@
         "wiki": "https://github.com/zucchi/Silverstripe-MetaTags/wiki",
         "source": "https://github.com/zucchi/Silverstripe-MetaTags"
     },
-    "target-dir" : "metatags",
-	"require": {
-		"silverstripe/framework": "3.*",
+    "require": {
+	"silverstripe/framework": "3.*",
         "silverstripe/cms": "3.*"
-	}
+    },
+    "extra": {
+	"installer-name": "metatags",
+    }
 }
