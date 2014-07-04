@@ -23,6 +23,6 @@
         "silverstripe/cms": "3.*"
     },
     "extra": {
-	"installer-name": "metatags",
+	"installer-name": "metatags"
     }
 }
