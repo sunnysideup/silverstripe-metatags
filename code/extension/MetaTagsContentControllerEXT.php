@@ -5,12 +5,42 @@
  */
 class MetaTagsContentControllerEXT extends Extension {
 
-	/* combined files */
-
+	/**
+	 * @var String
+	 * folder where the combined css / js files will be stored
+	 * if they are combined.
+	 */
 	private static $folder_for_combined_files = 'assets';
 
+	/**
+	 * @var String
+	 * viewport setting
+	 */
+	private static $viewport_setting = 'width=device-width,initial-scale=1';
+
+
+	/**
+	 * google fonts to be used
+	 * @var Array
+	 **/
+	private static $google_font_collection = array();
+
+	/**
+	 * should we use a favicon in the theme?
+	 * @var Boolean
+	 **/
+	private static $use_themed_favicon = false;
+
+	/**
+	 * combine css files into one?
+	 * @var Boolean
+	 */
 	private static $combine_css_files_into_one = false;
 
+	/**
+	 * combine js files into one?
+	 * @var Boolean
+	 */
 	private static $combine_js_files_into_one = false;
 
 	/**
@@ -56,7 +86,7 @@ class MetaTagsContentControllerEXT extends Extension {
 			if($this->owner->Config()->get("combine_js_files_into_one")) {
 				Requirements::combine_files($folderForCombinedFiles."/MetaTagAutomation.js", $jsArray);
 			}
-			$googleFontArray = Config::inst()->get('MetaTagsSTE', 'google_font_collection');
+			$googleFontArray = Config::inst()->get('MetaTagsContentControllerEXT', 'google_font_collection');
 			if($googleFontArray && count($googleFontArray)) {
 				$protocol = Director::protocol();
 				foreach($googleFontArray as $font) {
@@ -108,7 +138,7 @@ class MetaTagsContentControllerEXT extends Extension {
 		//use base url rather than / so that sites that aren't a run from the root directory can have a favicon
 		$faviconBase = $base;
 		$faviconFileBase = "";
-		if(Config::inst()->get("MetaTagsSTE", "use_themed_favicon")) {
+		if(Config::inst()->get("MetaTagsContentControllerEXT", "use_themed_favicon")) {
 			$faviconBase .= $themeFolder;
 			$faviconFileBase = $themeFolder;
 		}
@@ -148,7 +178,7 @@ class MetaTagsContentControllerEXT extends Extension {
 			<meta name="created" content="'.$lastEdited->Format("Ymd").'" />
 			<meta name="geo.country" content="'.$siteConfig->MetaDataCountry.'" />
 			<meta http-equiv="imagetoolbar" content="no" />
-			<meta name="viewport" content="width=device-width,initial-scale=1" />
+			<meta name="viewport" content="'.Config::inst()->get("MetaTagsContentControllerEXT", "viewport_setting").'" />
 			<meta http-equiv="Content-Language" content="'.i18n::get_locale().'" />
 			'.$page->ExtraMeta.
 			$description;

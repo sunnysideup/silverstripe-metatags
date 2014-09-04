@@ -17,17 +17,6 @@ class MetaTagsSTE extends SiteTreeExtension {
 	private static $meta_desc_length = 24;
 
 	/**
-	 * google fonts to be used
-	 * @var Array
-	 **/
-	private static $google_font_collection = array();
-
-	/**
-	 * @var Boolean
-	 **/
-	private static $use_themed_favicon = false;
-
-	/**
 	 * standard SS method
 	 * @var Array
 	 **/
