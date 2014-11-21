@@ -116,7 +116,7 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 				$className = $this->tableArray[0];
 				$record = $className::get()->byID($recordID);
 				if($record) {
-					if(method_exists($record, "canPublish") && !$record->canPublish()) {
+					if($record->hasMethod("canPublish") && !$record->canPublish()) {
 						return Security::permissionFailure($this);
 					}
 					foreach($this->tableArray as $table) {

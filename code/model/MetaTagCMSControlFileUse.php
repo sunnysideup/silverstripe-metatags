@@ -416,13 +416,13 @@ class MetaTagCMSControlFileUse extends DataObject {
 				if(count(self::$list_of_places_dos[$fileID])) {
 					$dos = new ArrayList();
 					foreach(self::$list_of_places_dos[$fileID] as $item) {
-						if(method_exists($item, "Link")) {
+						if($item->hasMethod("Link")) {
 							$item->MyLink = $item->Link();
 						}
 						else {
 							$item->MyLink = null;
 						}
-						if(method_exists($item, "getTitle")) {
+						if($item->hasMethod("getTitle")) {
 							$item->MyTitle = $item->getTitle();
 						}
 						elseif(isset($item->Title)) {
