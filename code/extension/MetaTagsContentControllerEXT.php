@@ -45,14 +45,15 @@ class MetaTagsContentControllerEXT extends Extension {
 
 	/**
 	 * add all the basic js and css files - call from Page::init()
+	 * @var Array
 	 */
-	private static $metatags_building_completed = false;
+	private static $metatags_building_completed = array();
 
 	public function addBasicMetatagRequirements($additionalJS = array(), $additionalCSS = array(), $force = false) {
 		if($force) {
-			self::$metatags_building_completed = false;
+			self::$metatags_building_completed[$this->owner->dataRecord->ID] = false;
 		}
-		if(!self::$metatags_building_completed) {
+		if(!isset(self::$metatags_building_completed[$this->owner->dataRecord->ID])) {
 			$themeFolder = SSViewer::get_theme_folder();
 			$cssArrayLocationOnly = array();
 			$jsArray =
@@ -96,7 +97,7 @@ class MetaTagsContentControllerEXT extends Extension {
 			if (isset($_SERVER['HTTP_USER_AGENT']) &&  (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false)) {
 				header('X-UA-Compatible: IE=edge,chrome=1');
 			}
-			self::$metatags_building_completed = true;
+			self::$metatags_building_completed[$this->owner->dataRecord->ID] = true;
 		}
 	}
 
