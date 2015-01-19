@@ -1,9 +1,9 @@
 {
 	"name": "sunnysideup/metatags",
 	"type": "silverstripe-module",
-	"description": "manage metatags in Silverstripe",
+	"description": "simplify your metatags - a ton of tools to increase SEO visibility, including file name adjustments",
 	"homepage": "https://github.com/sunnysideup/silverstripe-metatags",
-	"keywords": ["metatags", "silverstripe", "search engine optimsation", "seo", "filenames", "meta tags", "meta data"],
+	"keywords": ["metatags", "silverstripe", "search engine optimsation", "seo", "filenames", "meta tags", "meta data", "google"],
 	"license": "Sunny Side Up (BSD-3-Clause and CUSTOM)",
 	"authors":[
 		{
