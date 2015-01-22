@@ -41,7 +41,7 @@ class MetaTagsSTE extends SiteTreeExtension {
 		$automatedFields =  $this->updatedFieldsArray();
 		if(count($automatedFields)) {
 			$updated_field_string = " (the following fields will be automatically updated: <i>".implode("</i>, <i>", $automatedFields)."</i>).";
-			$fields->addFieldToTab('Root.Metadata', new CheckboxField('AutomateMetatags', _t('MetaManager.UPDATEMETA','Allow Meta (Search Engine) Fields to be updated automatically? '). $updated_field_string));
+			$fields->addFieldToTab('Root.Main.Metadata', new CheckboxField('AutomateMetatags', _t('MetaManager.UPDATEMETA','Allow Meta (Search Engine) Fields to be updated automatically? '). $updated_field_string));
 			if($this->owner->AutomateMetatags) {
 				foreach($automatedFields as $fieldName => $fieldTitle) {
 					$oldField = $fields->dataFieldByName($fieldName);
@@ -55,7 +55,7 @@ class MetaTagsSTE extends SiteTreeExtension {
 		}
 		$fields->removeByName('ExtraMeta');
 		$linkToManager = Config::inst()->get("MetaTagCMSControlPages", "url_segment") . '/';
-		$fields->addFieldToTab('Root.Metadata', new LiteralField("LinkToManagerHeader", "<p>Open the Meta Tag Manager to <a href=\"$linkToManager\" target=\"_blank\">Review and Edit</a> the Meta Data for all pages on this site. Also make sure to review the general <a href=\"/admin/show/root/\">settings for Search Engines</a>.</p>"));
+		$fields->addFieldToTab('Root.Main.Metadata', new LiteralField("LinkToManagerHeader", "<p>Open the Meta Tag Manager to <a href=\"$linkToManager\" target=\"_blank\">Review and Edit</a> the Meta Data for all pages on this site. Also make sure to review the general <a href=\"/admin/show/root/\">settings for Search Engines</a>.</p>"));
 		if($this->owner->URLSegment == RootURLController::get_default_homepage_link()) {
 			$newField = $fields->dataFieldByName('URLSegment');
 			$newField->setRightTitle("Careful: changing the URL from 'home' to anything else means that this page will no longer be the home page");
