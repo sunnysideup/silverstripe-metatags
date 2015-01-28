@@ -40,14 +40,24 @@ class MetaTagsSTE extends SiteTreeExtension {
 	public function updateCMSFields(FieldList $fields) {
 		$automatedFields =  $this->updatedFieldsArray();
 		if(count($automatedFields)) {
-			$updated_field_string = " (the following fields will be automatically updated: <i>".implode("</i>, <i>", $automatedFields)."</i>).";
-			$fields->addFieldToTab('Root.Main.Metadata', new CheckboxField('AutomateMetatags', _t('MetaManager.UPDATEMETA','Allow Meta (Search Engine) Fields to be updated automatically? '). $updated_field_string));
+			$updatedFieldString = " ("
+				._t("MetaManager.UPDATED_EXTERNALLY", "the following fields will be automatically updated") 
+				.": <i>"
+				.implode("</i>, <i>", $automatedFields)
+				."</i>).";
+			$fields->addFieldsToTab('Root.Main.Metadata',
+				array(
+					$allowField2 = new LiteralField('AutomateMetatags_explanation',"<p><em>$updatedFieldString</em></p>"),
+					$allowField1 = new CheckboxField('AutomateMetatags', _t('MetaManager.UPDATEMETA','Allow Meta (Search Engine) Fields to be updated automatically? '))
+				)
+			);
 			if($this->owner->AutomateMetatags) {
 				foreach($automatedFields as $fieldName => $fieldTitle) {
 					$oldField = $fields->dataFieldByName($fieldName);
 					if($oldField) {
 						$newField = $oldField->performReadonlyTransformation();
-						$newField->setTitle($newField->Title()." (automatically updated when you save this page)");
+						//$newField->setTitle($newField->Title());
+						$newField->setRightTitle(_t("MetaTags.AUTOMATICALLY_UPDATED", "Automatically updated when you save this page (see metadata settings)."));
 						$fields->replaceField($fieldName, $newField);
 					}
 				}
