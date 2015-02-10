@@ -41,7 +41,7 @@ class MetaTagsSTE extends SiteTreeExtension {
 		$automatedFields =  $this->updatedFieldsArray();
 		if(count($automatedFields)) {
 			$updatedFieldString = " ("
-				._t("MetaManager.UPDATED_EXTERNALLY", "the following fields will be automatically updated") 
+				._t("MetaManager.UPDATED_EXTERNALLY", "the following fields will be automatically updated")
 				.": <i>"
 				.implode("</i>, <i>", $automatedFields)
 				."</i>).";
