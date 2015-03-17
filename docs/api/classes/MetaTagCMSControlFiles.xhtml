@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - MetaTagCMSControlFiles</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">MetaTagCMSControlFiles</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#hierarchy">Hierarchy</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="../source/code/cms/MetaTagCMSControlFiles.php.xhtml#line3">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>\</small>MetaTagCMSControlFiles</h1>
+        <h4/>
+        <p/>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class MetaTagCMSControlFiles
+                extends <a title="Controller" href="../classes/Controller.xhtml">Controller</a>
+            {<br/><ul class="none"><li>// members</li><li>private array <a href="#members">$allowed_actions</a>;
+                    </li><li>private string <a href="#members">$recycling_bin_name</a>;
+                    </li><li>private string <a href="#members">$url_segment</a>;
+                    </li><li>private integer <a href="#members">$records_per_page</a>;
+                    </li><li>protected integer <a href="#members">$ParentID</a>;
+                    </li><li>protected array <a href="#members">$updatableFields</a>;
+                    </li><li>protected array <a href="#members">$tableArray</a>;
+                    </li></ul><ul class="none"><li>// methods</li><li>public void <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/init.xhtml">init</a>()
+                    </li><li>public void <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/index.xhtml">index</a>()
+                    </li><li>public void <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/cleanupfolders.xhtml">cleanupfolders</a>()
+                    </li><li>public void <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/childrenof.xhtml">childrenof</a>()
+                    </li><li>public void <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/lowercase.xhtml">lowercase</a>()
+                    </li><li>public void <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/titlecase.xhtml">titlecase</a>()
+                    </li><li>public void <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/upgradefilenames.xhtml">upgradefilenames</a>()
+                    </li><li>public void <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/recyclefolder.xhtml">recyclefolder</a>()
+                    </li><li>public void <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/copyfromtitle.xhtml">copyfromtitle</a>()
+                    </li><li>public void <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/update.xhtml">update</a>()
+                    </li><li>public void <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/recycle.xhtml">recycle</a>()
+                    </li><li>protected void <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/returnAjaxOrRedirectBack.xhtml">returnAjaxOrRedirectBack</a>()
+                    </li><li>public void <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/MyPaginatedRecords.xhtml">MyPaginatedRecords</a>()
+                    </li><li>public void <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/MyRecords.xhtml">MyRecords</a>()
+                    </li><li>public void <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/FormAction.xhtml">FormAction</a>()
+                    </li><li>public void <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/Link.xhtml">Link</a>()
+                    </li><li>public void <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/GoOneUpLink.xhtml">GoOneUpLink</a>()
+                    </li><li>protected void <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/makeRecycleLink.xhtml">makeRecycleLink</a>()
+                    </li><li>public void <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/Message.xhtml">Message</a>()
+                    </li><li>protected void <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/createLevelLink.xhtml">createLevelLink</a>()
+                    </li><li>protected void <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/mySiteConfig.xhtml">mySiteConfig</a>()
+                    </li><li>protected void <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/myRecordsLimit.xhtml">myRecordsLimit</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="hierarchy">Hierarchy</h2>
+        <div class="styled">
+          <h4>Extends</h4>
+          <ul>
+            <li>
+              <a href="../classes/Controller.xhtml">Controller</a>
+            </li>
+          </ul>
+          <h4>Extended by</h4>
+          <ul>
+            <li>
+              <a href="../classes/MetaTagCMSControlPages.xhtml">MetaTagCMSControlPages</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="allowed_actions">
+              <strong>$allowed_actions</strong>
+            </li>
+            <li id="records_per_page">
+              <strong>$records_per_page</strong>
+            </li>
+            <li id="recycling_bin_name">
+              <strong>$recycling_bin_name</strong>
+            </li>
+            <li id="url_segment">
+              <strong>$url_segment</strong>
+            </li>
+          </ul>
+          <h4>protected</h4>
+          <ul class="members">
+            <li id="ParentID">
+              <strong>$ParentID</strong>
+            </li>
+            <li id="tableArray">
+              <strong>$tableArray</strong>
+              <br/>
+              <span class="indent">First table is main table - e.g. $this-&gt;tableArray[0] should work</span>
+            </li>
+            <li id="updatableFields">
+              <strong>$updatableFields</strong>
+            </li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>protected</h4>
+          <ul>
+            <li id="createLevelLink">
+              <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/createLevelLink.xhtml">createLevelLink()</a>
+            </li>
+            <li id="makeRecycleLink">
+              <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/makeRecycleLink.xhtml">makeRecycleLink()</a>
+            </li>
+            <li id="myRecordsLimit">
+              <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/myRecordsLimit.xhtml">myRecordsLimit()</a>
+            </li>
+            <li id="mySiteConfig">
+              <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/mySiteConfig.xhtml">mySiteConfig()</a>
+            </li>
+            <li id="returnAjaxOrRedirectBack">
+              <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/returnAjaxOrRedirectBack.xhtml">returnAjaxOrRedirectBack()</a>
+            </li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="FormAction">
+              <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/FormAction.xhtml">FormAction()</a>
+            </li>
+            <li id="GoOneUpLink">
+              <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/GoOneUpLink.xhtml">GoOneUpLink()</a>
+            </li>
+            <li id="Link">
+              <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/Link.xhtml">Link()</a>
+            </li>
+            <li id="Message">
+              <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/Message.xhtml">Message()</a>
+            </li>
+            <li id="MyPaginatedRecords">
+              <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/MyPaginatedRecords.xhtml">MyPaginatedRecords()</a>
+            </li>
+            <li id="MyRecords">
+              <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/MyRecords.xhtml">MyRecords()</a>
+            </li>
+            <li id="childrenof">
+              <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/childrenof.xhtml">childrenof()</a>
+            </li>
+            <li id="cleanupfolders">
+              <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/cleanupfolders.xhtml">cleanupfolders()</a>
+            </li>
+            <li id="copyfromtitle">
+              <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/copyfromtitle.xhtml">copyfromtitle()</a>
+            </li>
+            <li id="index">
+              <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/index.xhtml">index()</a>
+            </li>
+            <li id="init">
+              <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/init.xhtml">init()</a>
+            </li>
+            <li id="lowercase">
+              <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/lowercase.xhtml">lowercase()</a>
+            </li>
+            <li id="recycle">
+              <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/recycle.xhtml">recycle()</a>
+            </li>
+            <li id="recyclefolder">
+              <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/recyclefolder.xhtml">recyclefolder()</a>
+            </li>
+            <li id="titlecase">
+              <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/titlecase.xhtml">titlecase()</a>
+            </li>
+            <li id="update">
+              <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/update.xhtml">update()</a>
+            </li>
+            <li id="upgradefilenames">
+              <a title="MetaTagCMSControlFiles" href="../classes/MetaTagCMSControlFiles/upgradefilenames.xhtml">upgradefilenames()</a>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer>
+      <span/>
+    </footer>
+  </body>
+</html>

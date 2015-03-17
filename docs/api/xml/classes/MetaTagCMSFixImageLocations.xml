@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="MetaTagCMSFixImageLocations" namespace="" name="MetaTagCMSFixImageLocations" abstract="false" final="false" start="3" end="240">
+  <file path="/var/www/_modules/metatags/trunk/docs/en/phpdox/../../../code/tasks" file="MetaTagCMSFixFileLocations.php" realpath="/var/www/_modules/metatags/trunk/code/tasks/MetaTagCMSFixFileLocations.php" size="8423" time="2015-03-14T10:22:16+13:00" unixtime="1426281736" sha1="364e409d8720c7f9e3337da4024f25bb32fafec1" relative="code/tasks/MetaTagCMSFixFileLocations.php"/>
+  <extends full="BuildTask" namespace="" name="BuildTask"/>
+  <method name="my_link" start="5" end="7" abstract="false" final="false" static="true" visibility="public"/>
+  <member name="title" type="string" default="&quot;Fix File Locations&quot;" visibility="protected" line="9"/>
+  <member name="description" type="string" default="&quot;This method is useful when most of your files end up in the 'Upload' folder.  This task will put all the HAS_ONE and HAS_MANY files into the following folders {CLASSNAME}_{FIELDNAME}.  You can run this task safely, as it will only execute with a special GET parameter (i.e. it defaults to run in test-mode only).&quot;" visibility="protected" line="11"/>
+  <member name="folders_to_ignore" type="array" visibility="private" line="17">
+    <docblock>
+      <description compact="Names of folders to ignore"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="listOfIgnoreFoldersArray" type="array" visibility="private" line="23">
+    <docblock>
+      <description compact="automatically includes any child folders"/>
+      <var type="array"/>
+    </docblock>
+  </member>
+  <member name="forReal" type="{unknown}" default="false" visibility="private" line="29">
+    <docblock>
+      <description compact="is this task running 'for real' or as test only?"/>
+      <var type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="doOne" type="{unknown}" default="false" visibility="private" line="35">
+    <docblock>
+      <description compact="do one attachment type for real?"/>
+      <var type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="cleanupFolder" type="integer" default="0" visibility="private" line="42">
+    <docblock>
+      <description compact="clean up folder? This deletes the empty folders"/>
+      <var type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="summaryOnly" type="{unknown}" default="false" visibility="private" line="49">
+    <docblock>
+      <description compact="only show the summary OR the full details summaries only is not available for non-test tasks"/>
+      <var type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="run" start="51" end="224" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="request" byreference="false" type="{unknown}"/>
+    <inline>
+      <comment value="work out the folders to ignore..." line="67"/>
+    </inline>
+  </method>
+  <method name="addListOfIgnoreFoldersArray" start="226" end="234" abstract="false" final="false" static="false" visibility="private">
+    <parameter name="folderToIgnore" byreference="false" type="object">
+      <type full="\\Folder" namespace="\" name="Folder"/>
+    </parameter>
+  </method>
+  <method name="linkWithGetParameter" start="236" end="238" abstract="false" final="false" static="false" visibility="private">
+    <parameter name="var" byreference="false" type="{unknown}"/>
+    <parameter name="value" byreference="false" type="{unknown}"/>
+  </method>
+</class>

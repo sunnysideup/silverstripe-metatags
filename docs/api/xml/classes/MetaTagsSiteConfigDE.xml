@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="MetaTagsSiteConfigDE" namespace="" name="MetaTagsSiteConfigDE" abstract="false" final="false" start="4" end="95">
+  <file path="/var/www/_modules/metatags/trunk/docs/en/phpdox/../../../code/extension" file="MetaTagsSiteConfigDE.php" realpath="/var/www/_modules/metatags/trunk/code/extension/MetaTagsSiteConfigDE.php" size="5137" time="2015-03-14T10:22:16+13:00" unixtime="1426281736" sha1="dc3a974698fa45b621e9de5d28b2b7434a86d95a" relative="code/extension/MetaTagsSiteConfigDE.php"/>
+  <extends full="DataExtension" namespace="" name="DataExtension"/>
+  <member name="db" type="array" visibility="private" line="6"/>
+  <method name="populateDefaults" start="22" end="27" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="updateCMSFields" start="29" end="94" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="fields" byreference="false" type="object">
+      <type full="\\FieldList" namespace="\" name="FieldList"/>
+    </parameter>
+  </method>
+</class>

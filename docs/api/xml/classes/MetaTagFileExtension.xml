@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="MetaTagFileExtension" namespace="" name="MetaTagFileExtension" abstract="false" final="false" start="4" end="125">
+  <file path="/var/www/_modules/metatags/trunk/docs/en/phpdox/../../../code/extension" file="MetaTagFileExtension.php" realpath="/var/www/_modules/metatags/trunk/code/extension/MetaTagFileExtension.php" size="4403" time="2015-03-14T10:22:16+13:00" unixtime="1426281736" sha1="d317ad83ba0dd55ae680a70867a788ee37262677" relative="code/extension/MetaTagFileExtension.php"/>
+  <extends full="DataExtension" namespace="" name="DataExtension"/>
+  <member name="stillNeedsToReplace" type="{unknown}" default="true" visibility="private" line="6"/>
+  <member name="imageTrackingAddAgain" type="array" visibility="private" line="8"/>
+  <method name="onBeforeWrite" start="10" end="104" abstract="false" final="false" static="false" visibility="public">
+    <inline>
+      <comment value="$this-&gt;owner-&gt;generateFormattedImage($format, $arg1, $arg2)" line="89"/>
+    </inline>
+  </method>
+  <method name="onAfterWrite" start="106" end="123" abstract="false" final="false" static="false" visibility="public"/>
+</class>

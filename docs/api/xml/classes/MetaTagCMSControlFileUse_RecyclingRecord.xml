@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="MetaTagCMSControlFileUse_RecyclingRecord" namespace="" name="MetaTagCMSControlFileUse_RecyclingRecord" abstract="false" final="false" start="653" end="691">
+  <file path="/var/www/_modules/metatags/trunk/docs/en/phpdox/../../../code/model" file="MetaTagCMSControlFileUse.php" realpath="/var/www/_modules/metatags/trunk/code/model/MetaTagCMSControlFileUse.php" size="22001" time="2015-03-14T10:22:16+13:00" unixtime="1426281736" sha1="30f23440d922d9985179c663eb1c7d32b170cf97" relative="code/model/MetaTagCMSControlFileUse.php"/>
+  <extends full="DataObject" namespace="" name="DataObject"/>
+  <member name="db" type="array" visibility="private" line="655"/>
+  <method name="recycle" start="660" end="689" abstract="false" final="false" static="true" visibility="public">
+    <parameter name="file" byreference="false" type="object">
+      <type full="\\File" namespace="\" name="File"/>
+    </parameter>
+    <parameter name="verbose" byreference="false" type="{unknown}" default="true"/>
+    <inline>
+      <comment value="doing it....." line="672"/>
+      <comment value="IMPORTANT!" line="675"/>
+    </inline>
+  </method>
+</class>

@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<source xmlns="http://xml.phpdox.net/token">
+  <file xmlns="http://xml.phpdox.net/src" path="/var/www/_modules/metatags/trunk/docs/en/phpdox/../../.." file="_config.php" realpath="/var/www/_modules/metatags/trunk/_config.php" size="224" time="2015-03-14T10:22:16+13:00" unixtime="1426281736" sha1="9929e4e33df3c2e5fdeebafb5e7c8716e202e849" relative="_config.php"/>
+  <line no="1">
+    <token name="T_OPEN_TAG">&lt;?php</token>
+  </line>
+  <line no="2">
+    <token name="T_DOC_COMMENT">/**</token>
+  </line>
+  <line no="3">
+    <token name="T_DOC_COMMENT"> * developed by www.sunnysideup.co.nz</token>
+  </line>
+  <line no="4">
+    <token name="T_DOC_COMMENT"> * authors:</token>
+  </line>
+  <line no="5">
+    <token name="T_DOC_COMMENT"> * Nicolaas modules [at] sunnysideup.co.nz</token>
+  </line>
+  <line no="6">
+    <token name="T_DOC_COMMENT"> **/</token>
+  </line>
+  <line no="7"/>
+  <line no="8">
+    <token name="T_STRING">define</token>
+    <token name="T_PHPDOX_OPEN_BRACKET">(</token>
+    <token name="T_CONSTANT_ENCAPSED_STRING">'SS_METATAGS_DIR'</token>
+    <token name="T_PHPDOX_COMMA">,</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_CONSTANT_ENCAPSED_STRING">'metatags'</token>
+    <token name="T_PHPDOX_CLOSE_BRACKET">)</token>
+    <token name="T_PHPDOX_SEMICOLON">;</token>
+  </line>
+  <line no="9"/>
+  <line no="10">
+    <token name="T_COMMENT">// and add this to your Page.ss template file: $ExtendedMetatags</token>
+  </line>
+  <line no="11"/>
+</source>

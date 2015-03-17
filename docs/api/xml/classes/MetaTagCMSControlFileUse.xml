@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="MetaTagCMSControlFileUse" namespace="" name="MetaTagCMSControlFileUse" abstract="false" final="false" start="56" end="650">
+  <file path="/var/www/_modules/metatags/trunk/docs/en/phpdox/../../../code/model" file="MetaTagCMSControlFileUse.php" realpath="/var/www/_modules/metatags/trunk/code/model/MetaTagCMSControlFileUse.php" size="22001" time="2015-03-14T10:22:16+13:00" unixtime="1426281736" sha1="30f23440d922d9985179c663eb1c7d32b170cf97" relative="code/model/MetaTagCMSControlFileUse.php"/>
+  <docblock>
+    <description compact="SITUATIONS">0. A NonFileObject.HasOne File
+   example: SiteTree HasOne Image
+   type = HAS_ONE
+   DataObjectIsFile = false
+   FileIsFile = true
+
+1. A NonFileObject.HasMany Files = see (4)
+
+2. A NonFileObject.ManyMany Files
+   example: SiteTree ManyMany Images
+   type = MANY_MANY
+   DataObjectIsFile = false
+   FileIsFile = true
+
+3. A NonFileObject.BelongsManyMany Files
+   example: SiteTree BELONGS_MANY_MANY Images
+   type = BELONGS_MANY_MANY
+   DataObjectIsFile = false
+   FileIsFile = true
+
+4. A File.HasOne NonFileObject
+   example: Image HasOne SiteTree
+   type = HAS_ONE
+   DataObjectIsFile = false
+   FileIsFile = true
+
+5. A File.HasMany NonFileObjects = see 1
+
+6. A File.HasOne AnotherFile
+   example: Image HAS_ONE Images
+   type = BELONGS_MANY_MANY
+   DataObjectIsFile = true
+   FileIsFile = true
+
+7. A File.HasMany Files = see (6)
+
+8. A File.ManyMany Files
+   example: Image MANY_MANY Images
+   type = MANY_MANY
+   DataObjectIsFile = true
+   FileIsFile = true
+
+9. A File.BelongsManyMany Files
+   example: Image MANY_MANY Images
+   type = BELONGS_MANY_MANY
+   DataObjectIsFile = true
+   FileIsFile = true</description>
+  </docblock>
+  <extends full="DataObject" namespace="" name="DataObject"/>
+  <member name="debug" type="{unknown}" default="false" visibility="private" line="62">
+    <docblock>
+      <description compact="debug data"/>
+      <var type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="file_usage_array" type="array" visibility="private" line="68">
+    <docblock>
+      <description compact="keep data stored to reduce overhead"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="list_of_places_dos" type="array" visibility="private" line="74">
+    <docblock>
+      <description compact="keep data stored to reduce overhead"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="excluded_classes" type="array" visibility="private" line="80">
+    <docblock>
+      <description compact="classes to exclude"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="file_classes" type="array" visibility="private" line="86">
+    <docblock>
+      <description compact="list of classes that are files"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="db" type="array" visibility="private" line="92">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="requireDefaultRecords" start="107" end="192" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="create a list of tables and fields that need to be checked see class comments"/>
+    </docblock>
+    <inline>
+      <comment value="start again" line="110"/>
+      <comment value="get all classes" line="112"/>
+      <comment value="classes from sitetree are linked through image tracker" line="114"/>
+      <comment value="files can have files attached to them so we have commented out the line below" line="116"/>
+      <comment value="$allClassesExceptFiles = array_diff($allClasses, $fileClasses);" line="117"/>
+      <comment value="lets go through class" line="118"/>
+      <comment value="DB" line="122"/>
+      <comment value="get the has_one fields" line="124"/>
+      <comment value="Validate the data" line="127"/>
+      <comment value="do we need this?" line="128"/>
+      <comment value="isset($hasOneArray) ? array_merge($newItems, (array)$hasOneArray) : $newItems;" line="129"/>
+      <comment value="lets inspect" line="130"/>
+      <comment value="HAS_ONE" line="140"/>
+      <comment value="get the has_one fields" line="142"/>
+      <comment value="Validate the data" line="144"/>
+      <comment value="do we need this?" line="145"/>
+      <comment value="isset($hasOneArray) ? array_merge($newItems, (array)$hasOneArray) : $newItems;" line="146"/>
+      <comment value="lets inspect" line="147"/>
+      <comment value="HAS_MANY" line="154"/>
+      <comment value="Validate the data" line="157"/>
+      <comment value="isset($hasManyArray) ? array_merge($newItems, (array)$hasManyArray) : $newItems;" line="158"/>
+      <comment value="NOTE - We are referencing HAS_ONE here on purpose!!!!" line="161"/>
+      <comment value="now we have to guess!" line="170"/>
+      <comment value="many many" line="177"/>
+      <comment value="belongs many many" line="181"/>
+      <comment value="do both" line="184"/>
+    </inline>
+  </method>
+  <method name="createNewRecord" start="194" end="251" abstract="false" final="false" static="false" visibility="private">
+    <parameter name="dataObjectClassName" byreference="false" type="{unknown}"/>
+    <parameter name="dataObjectFieldName" byreference="false" type="{unknown}"/>
+    <parameter name="fileClassName" byreference="false" type="{unknown}"/>
+    <parameter name="connectionType" byreference="false" type="{unknown}"/>
+    <inline>
+      <comment value="exceptions...." line="195"/>
+      <comment value="at least one of them is a file..." line="203"/>
+    </inline>
+  </method>
+  <method name="file_usage_count" start="260" end="407" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object" variable="$file">
+        <type full="File" namespace="" name="File"/>
+      </param>
+      <param description="#quickBooleanCheck - if true just returns if the file is used YES or NO in a more efficient manner" type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </param>
+      <param description="-" type="object" variable="$saveListOfPlaces">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </param>
+      <return type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </return>
+    </docblock>
+    <parameter name="file" byreference="false" type="{unknown}"/>
+    <parameter name="quickBooleanCheck" byreference="false" type="{unknown}" default="false"/>
+    <parameter name="saveListOfPlaces" byreference="false" type="{unknown}" default="false"/>
+    <inline>
+      <comment value="check for self-referencing (folders)" line="264"/>
+      <comment value="check for SiteTree_ImageTracking" line="274"/>
+    </inline>
+  </method>
+  <method name="retrieve_list_of_places" start="413" end="448" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object" variable="$fileID">
+        <type full="Int" namespace="" name="Int"/>
+      </param>
+      <return type="object">
+        <type full="DataObjectSet" namespace="" name="DataObjectSet"/>
+      </return>
+    </docblock>
+    <parameter name="fileID" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="list_of_places_adder" start="457" end="475" abstract="false" final="false" static="true" visibility="private">
+    <docblock>
+      <description/>
+      <param type="object" variable="$fileID">
+        <type full="Int" namespace="" name="Int"/>
+      </param>
+      <param type="object" variable="$sqlListOfPlaces">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <param type="object" variable="$objectNameListOfPlaces">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return type="object">
+        <type full="void" namespace="" name="void"/>
+      </return>
+    </docblock>
+    <parameter name="fileID" byreference="false" type="{unknown}"/>
+    <parameter name="sqlListOfPlaces" byreference="false" type="{unknown}"/>
+    <parameter name="objectNameListOfPlaces" byreference="false" type="{unknown}"/>
+  </method>
+  <member name="file_sub_string" type="array" visibility="private" line="477"/>
+  <method name="recycle_folder" start="488" end="520" abstract="false" final="false" static="true" visibility="public">
+    <parameter name="folderID" byreference="false" type="integer" default="0"/>
+    <parameter name="verbose" byreference="false" type="{unknown}" default="true"/>
+    <inline>
+      <comment value="10 minutes" line="490"/>
+    </inline>
+  </method>
+  <method name="upgrade_file_names" start="523" end="549" abstract="false" final="false" static="true" visibility="public">
+    <parameter name="folderID" byreference="false" type="{unknown}"/>
+    <parameter name="verbose" byreference="false" type="{unknown}" default="true"/>
+    <inline>
+      <comment value="10 minutes" line="524"/>
+    </inline>
+  </method>
+  <method name="upgrade_file_name" start="551" end="646" abstract="false" final="false" static="true" visibility="private">
+    <parameter name="file" byreference="false" type="object">
+      <type full="\\File" namespace="\" name="File"/>
+    </parameter>
+    <parameter name="verbose" byreference="false" type="{unknown}" default="true"/>
+  </method>
+</class>
