@@ -178,9 +178,7 @@ class MetaTagsContentControllerEXT extends Extension {
 			<meta name="rights" content="'.Convert::raw2att($siteConfig->MetaDataCopyright).'" />
 			<meta name="created" content="'.$lastEdited->Format("Ymd").'" />
 			<meta name="geo.country" content="'.$siteConfig->MetaDataCountry.'" />
-			<meta http-equiv="imagetoolbar" content="no" />
 			<meta name="viewport" content="'.Config::inst()->get("MetaTagsContentControllerEXT", "viewport_setting").'" />
-			<meta http-equiv="Content-Language" content="'.i18n::get_locale().'" />
 			'.$page->ExtraMeta.
 			$description;
 		}
