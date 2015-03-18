@@ -126,7 +126,7 @@ class MetaTagsContentControllerEXT extends Extension {
 		$tags .= "<base href=\"$base\" />";
 		if($page->MetaDescription) {
 			$description = '
-			<meta name="description" http-equiv="description" content="'.Convert::raw2att($page->MetaDescription).'" />';
+			<meta name="description" content="'.Convert::raw2att($page->MetaDescription).'" />';
 			$noopd = '';
 		}
 		else {
@@ -151,8 +151,7 @@ class MetaTagsContentControllerEXT extends Extension {
 			$titleTag = '';
 		}
 		$tags .= '
-			<meta charset="utf-8" />
-			<meta http-equiv="Content-type" content="text/html; charset=utf-8" />'.
+			<meta charset="utf-8" />'.
 			$titleTag;
 		if(file_exists(Director::baseFolder().'/'.$faviconFileBase.'favicon.ico')) {
 			$tags .= '
@@ -163,9 +162,6 @@ class MetaTagsContentControllerEXT extends Extension {
 			$tags .= '
 			<link rel="apple-touch-icon" href="'.$faviconBase.'apple-touch-icon.png" type="image/x-icon" />';
 		}
-		//if(! Config::inst()->get("MetaTagsSTE", "hide_keywords_altogether")) {
-			//$tags .= '<meta name="keywords" http-equiv="keywords" content="'.Convert::raw2att($keywords).'" />';
-		//}
 		if(!$page->ExtraMeta && $siteConfig->ExtraMeta) {
 			$page->ExtraMeta = $siteConfig->ExtraMeta;
 		}
