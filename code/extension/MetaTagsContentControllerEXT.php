@@ -165,7 +165,6 @@ class MetaTagsContentControllerEXT extends Extension {
 		if(!$page->ExtraMeta && $siteConfig->ExtraMeta) {
 			$page->ExtraMeta = $siteConfig->ExtraMeta;
 		}
-		//if(!$siteConfig->MetaDataCountry) {$siteConfig->MetaDataCountry = Geoip::countryCode2name(Geoip::$default_country_code);}
 		if(!$siteConfig->MetaDataCopyright) {$siteConfig->MetaDataCopyright = $siteConfig->Title;}
 		if($addExtraSearchEngineData) {
 			$tags .= '
