@@ -5,7 +5,6 @@
 MetaTagsSTE:
   disable_update_popup: false
   meta_desc_length: 24
-  hide_keywords_altogether: true
   google_font_collection:
     - Inconsolata
 MetaTagsContentControllerEXT:
