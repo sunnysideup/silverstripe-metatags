@@ -3,7 +3,6 @@
 #########################
 
 MetaTagsSTE:
-  disable_update_popup: false
   meta_desc_length: 24
   google_font_collection:
     - Inconsolata
