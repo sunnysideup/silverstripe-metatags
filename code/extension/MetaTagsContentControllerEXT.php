@@ -159,7 +159,7 @@ class MetaTagsContentControllerEXT extends Extension {
 	 */
 	function ExtendedMetatags($includeTitle = true, $addExtraSearchEngineData = true) {
 		$this->addBasicMetatagRequirements();
-		$cacheKey = 'metatags_ExtendedMetaTags_'.$this->owner->ID;
+		$cacheKey = 'metatags_ExtendedMetaTags_'.abs($this->owner->ID);
 		$cache = SS_Cache::factory($cacheKey);
 		if (!($tags = $cache->load($cacheKey))) {
 			$themeFolder = SSViewer::get_theme_folder() . '/';
