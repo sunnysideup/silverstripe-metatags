@@ -2,9 +2,9 @@
 /**
 *
 * @Author Nicolaas Francken
+* adding meta tag functionality to the SiteTree Model Classes.
 *
-* @Silverstripe version 2.3.2
-* @package metatags
+*
 *
 **/
 
@@ -21,8 +21,7 @@ class MetaTagsSTE extends SiteTreeExtension {
 	 * @var Array
 	 **/
 	private static $db = array(
-		'AutomateMetatags' => 'Boolean',
-		'MetatagCache' => 'HTMLText'
+		'AutomateMetatags' => 'Boolean'
 	);
 
 	/**
@@ -79,7 +78,6 @@ class MetaTagsSTE extends SiteTreeExtension {
 	 */
 	public function onBeforeWrite() {
 		$siteConfig = SiteConfig::current_site_config();
-		$this->owner->MetatagCache = "";
 		// if UpdateMeta checkbox is checked, update metadata based on content and title
 		// we only update this from the CMS to limit slow-downs in programatic updates
 		if(isset($_REQUEST['AutomateMetatags']) && $_REQUEST['AutomateMetatags']){

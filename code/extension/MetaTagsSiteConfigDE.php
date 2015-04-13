@@ -1,6 +1,10 @@
 <?php
 
-
+/**
+ * adding functionality to SiteConfig
+ *
+ *
+ */
 class MetaTagsSiteConfigDE extends DataExtension {
 
 	private static $db = array(

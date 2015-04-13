@@ -1,9 +1,36 @@
 <?php
 
-/*
- * @todo Fix the MetaDataCountry in the extra tags
+/**
+ * adds meta tag functionality to the Page_Controller
+ *
+ *
+ *
  */
 class MetaTagsContentControllerEXT extends Extension {
+
+	/**
+	 * what should be included on every page?
+	 * @var Array
+	 */
+	private static $default_css = array(
+		'reset' =>  null,
+		'typography' => null,
+		'layout' => null,
+		'form' => null,
+		'menu' => null,
+		'individualPages' => null,
+		'responsive' => null,
+		'print' => 'print'
+	);
+
+	/**
+	 * what should be included on every page?
+	 * @var Array
+	 */
+	private static $default_js = array(
+		"framework/thirdparty/jquery/jquery.js",
+		"mysite/javascript/j.js"
+	);
 
 	/**
 	 * @var String
@@ -44,42 +71,40 @@ class MetaTagsContentControllerEXT extends Extension {
 	private static $combine_js_files_into_one = false;
 
 	/**
+	 * place metatags into a cache....
+	 * @var Boolean
+	 */
+	private static $cache_metatags = false;
+
+	/**
 	 * add all the basic js and css files - call from Page::init()
 	 * @var Array
 	 */
-	private static $metatags_building_completed = array();
+	private static $_metatags_building_completed = array();
 
 	public function addBasicMetatagRequirements($additionalJS = array(), $additionalCSS = array(), $force = false) {
 		if($force) {
-			self::$metatags_building_completed[$this->owner->dataRecord->ID] = false;
+			unset(self::$_metatags_building_completed[$this->owner->dataRecord->ID]);
 		}
-		if(!isset(self::$metatags_building_completed[$this->owner->dataRecord->ID])) {
-			$themeFolder = SSViewer::get_theme_folder();
-			$cssArrayLocationOnly = array();
-			$jsArray =
-				array(
-					THIRDPARTY_DIR."/jquery/jquery.js",
-					$this->owner->project().'/javascript/j.js'
-				);
-			array_merge($jsArray, $additionalJS);
-			$cssArray =
-				array(
-					array("media" => null, "location" => $themeFolder.'/css/reset.css'),
-					array("media" => null, "location" => $themeFolder.'/css/typography.css'),
-					array("media" => null, "location" => $themeFolder.'/css/layout.css'),
-					array("media" => null, "location" => $themeFolder.'/css/form.css'),
-					array("media" => null, "location" => $themeFolder.'/css/menu.css'),
-					array("media" => "print", "location" => $themeFolder.'/css/print.css'),
-					array("media" => null, "location" => $themeFolder.'/css/individualPages.css')
-				);
-			array_merge($cssArray, $additionalCSS);
+		if(!isset(self::$_metatags_building_completed[$this->owner->dataRecord->ID])) {
+			//javascript
+			$jsArray = Config::inst()->get("MetaTagsContentControllerEXT", "default_js");
+			$jsArray = array_merge($jsArray, $additionalJS);
 			foreach($jsArray as $js) {
 				Requirements::javascript($js);
 			}
+			// css
+			$themeFolder = SSViewer::get_theme_folder();
+			$cssArrayLocationOnly = array();
+			foreach( Config::inst()->get("MetaTagsContentControllerEXT", "default_css") as $name => $media) {
+				$cssArray[] = array("media" => $media, "location" => $themeFolder.'/css/'.$name.'.css');
+			}
+			$cssArray = array_merge($cssArray, $additionalCSS);
 			foreach($cssArray as $cssArraySub) {
 				Requirements::css($cssArraySub["location"], $cssArraySub["media"]);
 				$cssArrayLocationOnly[] = $cssArraySub["location"];
 			}
+			//combine ...
 			$folderForCombinedFiles = Config::inst()->get("MetaTagsContentControllerEXT", "folder_for_combined_files");
 			if(Config::inst()->get("MetaTagsContentControllerEXT", "combine_css_files_into_one")) {
 				Requirements::combine_files($folderForCombinedFiles."/MetaTagAutomation.css",$cssArrayLocationOnly);
@@ -87,6 +112,7 @@ class MetaTagsContentControllerEXT extends Extension {
 			if(Config::inst()->get("MetaTagsContentControllerEXT", "combine_js_files_into_one")) {
 				Requirements::combine_files($folderForCombinedFiles."/MetaTagAutomation.js", $jsArray);
 			}
+			//google font
 			$googleFontArray = Config::inst()->get('MetaTagsContentControllerEXT', 'google_font_collection');
 			if($googleFontArray && count($googleFontArray)) {
 				$protocol = Director::protocol();
@@ -94,10 +120,11 @@ class MetaTagsContentControllerEXT extends Extension {
 					Requirements::insertHeadTags('<link href="' . $protocol . 'fonts.googleapis.com/css?family=' . urlencode($font) . '" rel="stylesheet" type="text/css" />');
 				}
 			}
+			//ie header...
 			if (isset($_SERVER['HTTP_USER_AGENT']) &&  (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false)) {
 				header('X-UA-Compatible: IE=edge,chrome=1');
 			}
-			self::$metatags_building_completed[$this->owner->dataRecord->ID] = true;
+			self::$_metatags_building_completed[$this->owner->dataRecord->ID] = true;
 		}
 	}
 
@@ -113,72 +140,79 @@ class MetaTagsContentControllerEXT extends Extension {
 	 */
 	function ExtendedMetatags($includeTitle = true, $addExtraSearchEngineData = true) {
 		$this->addBasicMetatagRequirements();
-		$themeFolder = SSViewer::get_theme_folder() . '/';
-		$tags = "";
-		$page = $this->owner;
-		$siteConfig = SiteConfig::current_site_config();
-		$title = $page->Title;
-		if(!$title) {
-			$title = $page->MenuTitle;
-		}
-		//base tag
-		$base = Director::absoluteBaseURL();
-		$tags .= "<base href=\"$base\" />";
-		if($page->MetaDescription) {
-			$description = '
-			<meta name="description" content="'.Convert::raw2att($page->MetaDescription).'" />';
-			$noopd = '';
-		}
-		else {
-			$noopd = "NOODP, ";
-			$description = '';
-		}
-		$lastEdited = new SS_Datetime();
-		$lastEdited->value = $page->LastEdited;
+		$cacheKey = 'metatags_ExtendedMetaTags_'.$this->owner->ID;
+		$cache = SS_Cache::factory($cacheKey);
+		if (!($tags = $cache->load($cacheKey))) {
+			$themeFolder = SSViewer::get_theme_folder() . '/';
+			$tags = "";
+			$page = $this->owner;
+			$siteConfig = SiteConfig::current_site_config();
+			$title = $page->Title;
+			if(!$title) {
+				$title = $page->MenuTitle;
+			}
+			//base tag
+			$base = Director::absoluteBaseURL();
+			$tags .= "<base href=\"$base\" />";
+			if($page->MetaDescription) {
+				$description = '
+				<meta name="description" content="'.Convert::raw2att($page->MetaDescription).'" />';
+				$noopd = '';
+			}
+			else {
+				$noopd = "NOODP, ";
+				$description = '';
+			}
+			$lastEdited = new SS_Datetime();
+			$lastEdited->value = $page->LastEdited;
 
-		//use base url rather than / so that sites that aren't a run from the root directory can have a favicon
-		$faviconBase = $base;
-		$faviconFileBase = "";
-		if(Config::inst()->get("MetaTagsContentControllerEXT", "use_themed_favicon")) {
-			$faviconBase .= $themeFolder;
-			$faviconFileBase = $themeFolder;
-		}
-		if($includeTitle) {
-			$titleTag = '
-			<title>'.trim(Convert::raw2att($siteConfig->PrependToMetaTitle.' '.$title.' '.$siteConfig->AppendToMetaTitle)).'</title>';
-		}
-		else {
-			$titleTag = '';
-		}
-		$tags .= '
-			<meta charset="utf-8" />'.
-			$titleTag;
-		if(file_exists(Director::baseFolder().'/'.$faviconFileBase.'favicon.ico')) {
+			//use base url rather than / so that sites that aren't a run from the root directory can have a favicon
+			$faviconBase = $base;
+			$faviconFileBase = "";
+			if(Config::inst()->get("MetaTagsContentControllerEXT", "use_themed_favicon")) {
+				$faviconBase .= $themeFolder;
+				$faviconFileBase = $themeFolder;
+			}
+			if($includeTitle) {
+				$titleTag = '
+				<title>'.trim(Convert::raw2att($siteConfig->PrependToMetaTitle.' '.$title.' '.$siteConfig->AppendToMetaTitle)).'</title>';
+			}
+			else {
+				$titleTag = '';
+			}
 			$tags .= '
-			<link rel="icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />
-			<link rel="shortcut icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />';
+				<meta charset="utf-8" />'.
+				$titleTag;
+			if(file_exists(Director::baseFolder().'/'.$faviconFileBase.'favicon.ico')) {
+				$tags .= '
+				<link rel="icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />
+				<link rel="shortcut icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />';
+			}
+			if(file_exists(Director::baseFolder().'/'.$faviconFileBase.'apple-touch-icon.png')) {
+				$tags .= '
+				<link rel="apple-touch-icon" href="'.$faviconBase.'apple-touch-icon.png" type="image/x-icon" />';
+			}
+			if(!$page->ExtraMeta && $siteConfig->ExtraMeta) {
+				$page->ExtraMeta = $siteConfig->ExtraMeta;
+			}
+			if(!$siteConfig->MetaDataCopyright) {$siteConfig->MetaDataCopyright = $siteConfig->Title;}
+			if($addExtraSearchEngineData) {
+				$tags .= '
+				<meta name="robots" content="'.$noopd.'all, index, follow" />
+				<meta name="googlebot" content="'.$noopd.'all, index, follow" />
+				<meta name="rights" content="'.Convert::raw2att($siteConfig->MetaDataCopyright).'" />
+				<meta name="created" content="'.$lastEdited->Format("Ymd").'" />
+				<meta name="geo.country" content="'.$siteConfig->MetaDataCountry.'" />
+				<meta name="viewport" content="'.Config::inst()->get("MetaTagsContentControllerEXT", "viewport_setting").'" />
+				'.$page->ExtraMeta.
+				$description;
+			}
+			$tags .= $this->OGTags();
+			$tags .= $this->iconTags();
+			$cache->save($tags, $cacheKey);
 		}
-		if(file_exists(Director::baseFolder().'/'.$faviconFileBase.'apple-touch-icon.png')) {
-			$tags .= '
-			<link rel="apple-touch-icon" href="'.$faviconBase.'apple-touch-icon.png" type="image/x-icon" />';
-		}
-		if(!$page->ExtraMeta && $siteConfig->ExtraMeta) {
-			$page->ExtraMeta = $siteConfig->ExtraMeta;
-		}
-		if(!$siteConfig->MetaDataCopyright) {$siteConfig->MetaDataCopyright = $siteConfig->Title;}
-		if($addExtraSearchEngineData) {
-			$tags .= '
-			<meta name="robots" content="'.$noopd.'all, index, follow" />
-			<meta name="googlebot" content="'.$noopd.'all, index, follow" />
-			<meta name="rights" content="'.Convert::raw2att($siteConfig->MetaDataCopyright).'" />
-			<meta name="created" content="'.$lastEdited->Format("Ymd").'" />
-			<meta name="geo.country" content="'.$siteConfig->MetaDataCountry.'" />
-			<meta name="viewport" content="'.Config::inst()->get("MetaTagsContentControllerEXT", "viewport_setting").'" />
-			'.$page->ExtraMeta.
-			$description;
-		}
-		$tags .= $this->owner->OGTags();
 		return $tags;
+
 	}
 
 	/**
@@ -186,7 +220,7 @@ class MetaTagsContentControllerEXT extends Extension {
 	 * @see: http://ogp.me/
 	 * @return String (HTML)
 	 */
-	public function OGTags(){
+	protected function OGTags(){
 		$array = array(
 			"title" => $this->owner->Title,
 			"type" => "website",
@@ -202,4 +236,39 @@ class MetaTagsContentControllerEXT extends Extension {
 		}
 		return $html;
 	}
+
+	protected function iconTags(){
+		$cacheKey = 'metatags_ExtendedMetaTags_iconsTags';
+		$cache = SS_Cache::factory($cacheKey);
+		if (!($html = $cache->load($cacheKey))) {
+			$html = '';
+			$sizes = array(
+				"16",
+				"32",
+				"57",
+				"72",
+				"76",
+				"96",
+				"114",
+				"120",
+				"128",
+				"144",
+				"152",
+				"180",
+				"192",
+				"310"
+			);
+			foreach($sizes as $size) {
+				$themeFolder = SSViewer::get_theme_folder();
+				$file = $themeFolder.'/icons/'.'icon-'.$size.'x'.$size.'.png';
+				if(file_exists($themeFolder)) {
+					$html .= '
+					<link rel="icon" type="image/png" sizes="'.$size.'x'.$size.'"  href="'.$file.'">';
+				}
+			}
+			$cache->save($html, $cacheKey);
+		}
+		return $html;
+	}
+
 }

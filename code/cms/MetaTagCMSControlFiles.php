@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Batch updates to Files...
+ *
+ *
+ */
+
 class MetaTagCMSControlFiles extends Controller {
 
 	private static $allowed_actions = array(

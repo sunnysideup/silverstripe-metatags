@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Batch updates to Pages...
+ *
+ *
+ */
+
 class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 
 	private static $allowed_actions = array(

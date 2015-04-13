@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * add functionality to files
+ *
+ *
+ */
 
 class MetaTagFileExtension extends DataExtension {
 
