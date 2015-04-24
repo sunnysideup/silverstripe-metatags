@@ -3,9 +3,12 @@
 #########################
 
 MetaTagsSTE:
-  meta_desc_length: 24
+
 
 MetaTagsContentControllerEXT:
+  meta_desc_length: 24
+  #must be set to one to work - NOT TRUE!
+  use_separate_metatitle: 0
   default_css:
     - mycss
   default_javascript:

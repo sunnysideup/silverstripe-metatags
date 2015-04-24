@@ -11,18 +11,32 @@
 class MetaTagsSTE extends SiteTreeExtension {
 
 	/**
-	 * length of auto-generated meta descriptions in header
-	 * @var Int
-	 */
-	private static $meta_desc_length = 24;
-
-	/**
 	 * standard SS method
 	 * @var Array
 	 **/
 	private static $db = array(
-		'AutomateMetatags' => 'Boolean'
+		'AutomateMetatags' => 'Boolean(1)'
 	);
+
+	/**
+	 * because we use this function you can NOT
+	 * use any statics in the file!!!
+	 * @return Array | null
+	 */
+	public static function get_extra_config($class, $extension, $args) {
+		if(Config::inst()->get("MetaTagsContentControllerEXT", "use_separate_metatitle") == 1)  {
+			$array = array(
+				'db' => array("MetaTitle" => "Varchar(100)") + self::$db
+			);
+		}
+		else {
+			$array = array(
+				'db' => self::$db
+			);
+		}
+
+		return ((array) parent::get_extra_config($class, $extension, $args)) + $array;
+	}
 
 	/**
 	 * standard SS method
@@ -37,18 +51,39 @@ class MetaTagsSTE extends SiteTreeExtension {
 	 * @var Array
 	 **/
 	public function updateCMSFields(FieldList $fields) {
+		if(Config::inst()->get("MetaTagsContentControllerEXT", "use_separate_metatitle")) {
+			$fields->addFieldToTab(
+				'Root.Main.Metadata',
+				$allowField0 = new TextField(
+					'MetaTitle',
+					_t('SiteTree.METATITLE', 'Meta Title')
+				),
+				"MetaDescription"
+			);
+			$allowField0->setRightTitle(
+				_t("SiteTree.METATITLE_EXPLANATION", "Leave this empty to use the page title")
+			);
+		}
+
+		$fields->addFieldToTab(
+			'Root.Main.Metadata',
+			$allowField1 = new CheckboxField(
+				'AutomateMetatags',
+				_t('MetaManager.UPDATEMETA','Allow Meta (Search Engine) Fields to be updated automatically? ')
+			)
+		);
 		$automatedFields =  $this->updatedFieldsArray();
 		if(count($automatedFields)) {
-			$updatedFieldString = " ("
+			$updatedFieldString = "<p><blockquote style='padding-left: 12px;'>("
 				._t("MetaManager.UPDATED_EXTERNALLY", "the following fields will be automatically updated")
-				.": <i>"
-				.implode("</i>, <i>", $automatedFields)
-				."</i>).";
+				.": <em>"
+				.implode("</em>, <em>", $automatedFields)
+				."</em>).</blockquote></p>";
 			$fields->addFieldsToTab('Root.Main.Metadata',
 				array(
-					$allowField2 = new LiteralField('AutomateMetatags_explanation',"<p><em>$updatedFieldString</em></p>"),
-					$allowField1 = new CheckboxField('AutomateMetatags', _t('MetaManager.UPDATEMETA','Allow Meta (Search Engine) Fields to be updated automatically? '))
-				)
+					$allowField2 = new LiteralField('AutomateMetatags_explanation', $updatedFieldString)
+				),
+				"MetaDescription"
 			);
 			if($this->owner->AutomateMetatags) {
 				foreach($automatedFields as $fieldName => $fieldTitle) {
@@ -64,7 +99,21 @@ class MetaTagsSTE extends SiteTreeExtension {
 		}
 		$fields->removeByName('ExtraMeta');
 		$linkToManager = Config::inst()->get("MetaTagCMSControlPages", "url_segment") . '/';
-		$fields->addFieldToTab('Root.Main.Metadata', new LiteralField("LinkToManagerHeader", "<p>Open the Meta Tag Manager to <a href=\"$linkToManager\" target=\"_blank\">Review and Edit</a> the Meta Data for all pages on this site. Also make sure to review the general <a href=\"/admin/show/root/\">settings for Search Engines</a>.</p>"));
+		$fields->addFieldToTab(
+			'Root.Main.Metadata',
+			new LiteralField(
+				"LinkToManagerHeader",
+				"<blockquote style='padding-left: 12px;'>
+					<p>
+						Open the Meta Tag Manager to
+						<a href=\"$linkToManager\" target=\"_blank\">Review and Edit</a>
+						the Meta Data for all pages on this site.
+						Also make sure to review the general
+						<a href=\"/admin/show/root/\">settings for Search Engines</a>.
+					</p>
+				</blockquote>"
+			)
+		);
 		if($this->owner->URLSegment == RootURLController::get_default_homepage_link()) {
 			$newField = $fields->dataFieldByName('URLSegment');
 			$newField->setRightTitle("Careful: changing the URL from 'home' to anything else means that this page will no longer be the home page");
@@ -80,40 +129,42 @@ class MetaTagsSTE extends SiteTreeExtension {
 		$siteConfig = SiteConfig::current_site_config();
 		// if UpdateMeta checkbox is checked, update metadata based on content and title
 		// we only update this from the CMS to limit slow-downs in programatic updates
-		if(isset($_REQUEST['AutomateMetatags']) && $_REQUEST['AutomateMetatags']){
-			if($siteConfig->UpdateMenuTitle){
-				// Empty MenuTitle
-				$this->owner->MenuTitle = '';
-				// Check for Content, to prevent errors
-				if($this->owner->Title){
-					$this->owner->MenuTitle = $this->cleanInput($this->owner->Title, 0);
-				}
-			}
-			if($siteConfig->UpdateMetaDescription && Config::inst()->get("MetaTagsSTE", "meta_desc_length")){
-				// Empty MetaDescription
-				// Check for Content, to prevent errors
-
-				if($this->owner->Content){
-					//added a few hacks here
-					$contentField = DBField::create_field("Text", $this->owner->Content, "MetaDescription");
-					$flex = ceil(MetaTagsSTE::$meta_desc_length / 2) + 5;
-					$summary = $contentField->Summary(MetaTagsSTE::$meta_desc_length, $flex);
-					$summary = str_replace("<br />", " ", $summary);
-					$this->owner->MetaDescription = strip_tags($summary);
-				}
+		if($this->owner->AutomateMetatags || $siteConfig->UpdateMenuTitle){
+			// Empty MenuTitle
+			$this->owner->MenuTitle = '';
+			// Check for Content, to prevent errors
+			if($this->owner->Title){
+				$this->owner->MenuTitle = $this->cleanInput($this->owner->Title, 0);
 			}
 		}
+		$length = Config::inst()->get("MetaTagsContentControllerEXT", "meta_desc_length");
+		if(($siteConfig->UpdateMetaDescription  || $siteConfig->UpdateMenuTitle) && $length > 0){
+			// Empty MetaDescription
+			// Check for Content, to prevent errors
 
+			if($this->owner->Content){
+				//added a few hacks here
+				$contentField = DBField::create_field("Text", $this->owner->Content, "MetaDescription");
+				$flex = ceil(Config::inst()->get("MetaTagsContentControllerEXT", "meta_desc_length") / 2) + 5;
+				$summary = $contentField->Summary($length, $flex);
+				$summary = str_replace("<br />", " ", $summary);
+				$this->owner->MetaDescription = strip_tags($summary);
+			}
+		}
  	}
 
+	/**
+	 * what fields are updated automatically?
+	 * @return Array
+	 */
 	private function updatedFieldsArray(){
 		$config = SiteConfig::current_site_config();
 		$fields = array();
-		if($config->UpdateMenuTitle) {
+		if($config->UpdateMenuTitle || $this->owner->AutomateMetatags) {
 			$fields['MenuTitle'] = _t('SiteTree.MENUTITLE', 'Menu Title ');
 		}
-		if($config->UpdateMetaDescription) {
-			$fields['MetaDescription'] = _t('SiteTree.METADESCRIPTION', 'Description ');
+		if($config->UpdateMetaDescription || $this->owner->AutomateMetatags) {
+			$fields['MetaDescription'] = _t('SiteTree.METADESCRIPTION', 'Meta Description');
 		}
 		return $fields;
 	}

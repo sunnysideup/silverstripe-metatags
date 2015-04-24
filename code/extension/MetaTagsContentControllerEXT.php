@@ -9,6 +9,18 @@
 class MetaTagsContentControllerEXT extends Extension {
 
 	/**
+	 * length of auto-generated meta descriptions in header
+	 * @var Boolean
+	 */
+	private static $use_separate_metatitle = 0;
+
+	/**
+	 * length of auto-generated meta descriptions in header
+	 * @var Int
+	 */
+	private static $meta_desc_length = 24;
+
+	/**
 	 * what should be included on every page?
 	 * @var Array
 	 */
@@ -166,9 +178,15 @@ class MetaTagsContentControllerEXT extends Extension {
 			$tags = "";
 			$page = $this->owner;
 			$siteConfig = SiteConfig::current_site_config();
-			$title = $page->Title;
-			if(!$title) {
-				$title = $page->MenuTitle;
+			$title = "";
+			if(!empty($page->MetaTitle)) {
+				$title = $page->MetaTitle;
+			}
+			else {
+				$title = $page->Title;
+				if(!$title) {
+					$title = $page->MenuTitle;
+				}
 			}
 			//base tag
 			$base = Director::absoluteBaseURL();
