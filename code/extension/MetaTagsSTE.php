@@ -26,7 +26,7 @@ class MetaTagsSTE extends SiteTreeExtension {
 	public static function get_extra_config($class, $extension, $args) {
 		if(Config::inst()->get("MetaTagsContentControllerEXT", "use_separate_metatitle") == 1)  {
 			$array = array(
-				'db' => array("MetaTitle" => "Varchar(100)") + self::$db
+				'db' => array("MetaTitle" => "Varchar(255)") + self::$db
 			);
 		}
 		else {
