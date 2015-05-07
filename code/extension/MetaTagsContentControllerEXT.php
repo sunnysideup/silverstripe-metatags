@@ -173,7 +173,7 @@ class MetaTagsContentControllerEXT extends Extension {
 			$page = $this->owner;
 			$siteConfig = SiteConfig::current_site_config();
 			$title = "";
-			if(!empty($page->MetaTitle)) {
+			if(Config::inst()->get("MetaTagsContentControllerEXT", "use_separate_metatitle") == 1) {
 				$title = $page->MetaTitle;
 			}
 			else {
