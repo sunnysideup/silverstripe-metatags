@@ -65,12 +65,6 @@ class MetaTagsContentControllerEXT extends Extension {
 	private static $google_font_collection = array();
 
 	/**
-	 * should we use a favicon in the theme?
-	 * @var Boolean
-	 **/
-	private static $use_themed_favicon = false;
-
-	/**
 	 * combine css files into one?
 	 * @var Boolean
 	 */
@@ -173,7 +167,7 @@ class MetaTagsContentControllerEXT extends Extension {
 		$this->addBasicMetatagRequirements();
 		$cacheKey = 'metatags_ExtendedMetaTags_'.abs($this->owner->ID);
 		$cache = SS_Cache::factory($cacheKey);
-		if (!($tags = $cache->load($cacheKey))) {
+		if (!($tags = $cache->load($cacheKey)) || 1 == 1) {
 			$themeFolder = SSViewer::get_theme_folder() . '/';
 			$tags = "";
 			$page = $this->owner;
@@ -206,10 +200,6 @@ class MetaTagsContentControllerEXT extends Extension {
 			//use base url rather than / so that sites that aren't a run from the root directory can have a favicon
 			$faviconBase = $base;
 			$faviconFileBase = "";
-			if(Config::inst()->get("MetaTagsContentControllerEXT", "use_themed_favicon")) {
-				$faviconBase .= $themeFolder;
-				$faviconFileBase = $themeFolder;
-			}
 			if($includeTitle) {
 				$titleTag = '
 			<title>'.trim(Convert::raw2att($siteConfig->PrependToMetaTitle.' '.$title.' '.$siteConfig->AppendToMetaTitle)).'</title>';
@@ -220,14 +210,11 @@ class MetaTagsContentControllerEXT extends Extension {
 			$tags .= '
 			<meta charset="utf-8" />'.
 				$titleTag;
+			$needsFavicon = true;
 			if(file_exists(Director::baseFolder().'/'.$faviconFileBase.'favicon.ico')) {
+				$needsFavicon = false;
 				$tags .= '
-			<link rel="icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />
 			<link rel="shortcut icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />';
-			}
-			if(file_exists(Director::baseFolder().'/'.$faviconFileBase.'apple-touch-icon.png')) {
-				$tags .= '
-			<link rel="apple-touch-icon" href="'.$faviconBase.'apple-touch-icon.png" type="image/x-icon" />';
 			}
 			if(!$page->ExtraMeta && $siteConfig->ExtraMeta) {
 				$page->ExtraMeta = $siteConfig->ExtraMeta;
@@ -245,7 +232,7 @@ class MetaTagsContentControllerEXT extends Extension {
 				$description;
 			}
 			$tags .= $this->OGTags();
-			$tags .= $this->iconTags();
+			$tags .= $this->iconTags($faviconBase, $needsFavicon);
 			$cache->save($tags, $cacheKey);
 		}
 		return $tags;
@@ -274,8 +261,9 @@ class MetaTagsContentControllerEXT extends Extension {
 		return $html;
 	}
 
-	protected function iconTags(){
+	protected function iconTags($baseURL = "", $includePNGFavicon = false){
 		$cacheKey = 'metatags_ExtendedMetaTags_iconsTags';
+		$baseURL = rtrim($baseURL, "/");
 		$cache = SS_Cache::factory($cacheKey);
 		if (!($html = $cache->load($cacheKey))) {
 			$html = '';
@@ -300,8 +288,30 @@ class MetaTagsContentControllerEXT extends Extension {
 				$file = "/".$themeFolder.'/icons/'.'icon-'.$size.'x'.$size.'.png';
 				if(file_exists(Director::baseFolder().$file)) {
 					$html .= '
-			<link rel="icon" type="image/png" sizes="'.$size.'x'.$size.'"  href="'.$file.'">';
+<link rel="icon" type="image/png" sizes="'.$size.'x'.$size.'"  href="'.$baseURL.$file.'" />
+<link rel="apple-touch-icon" type="image/png" sizes="'.$size.'x'.$size.'"  href="'.$baseURL.$file.'" />';
 				}
+				elseif($this->owner->getSiteConfig()->FaviconID) {
+					if($favicon = $this->owner->getSiteConfig()->Favicon()) {
+						$generatedImage = $favicon->setWidth($size);
+						$html .= '
+<link rel="icon" type="image/png" sizes="'.$size.'x'.$size.'"  href="'.$baseURL.$generatedImage->Link().'" />
+<link rel="apple-touch-icon" type="image/png" sizes="'.$size.'x'.$size.'"  href="'.$baseURL.$generatedImage->Link().'" />';
+					}
+				}
+			}
+			if($includePNGFavicon) {
+				$themeFolder = SSViewer::get_theme_folder();
+				$faviconLocation = "/".$themeFolder.'/icons/favicon.ico';
+				if(file_exists(Director::baseFolder().$faviconLocation)) {
+					$faviconLink = $baseURL.$faviconLocation;
+				}
+				else {
+					$generatedImage = $favicon->setWidth(16);
+					$faviconLink = $baseURL.$generatedImage->Link();
+				}
+				$html .= '
+<link rel="shortcut icon" href="'.$faviconLink.'" type="image/png" />';
 			}
 			$cache->save($html, $cacheKey);
 		}

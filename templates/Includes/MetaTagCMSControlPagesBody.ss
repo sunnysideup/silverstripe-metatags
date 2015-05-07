@@ -4,9 +4,9 @@
 		<td class="url">
 			<% loop ParentSegments %>
 				<% if Last %>
-				<a href="/admin/show/$ID" title="Page Type: $ClassName - click to open in CMS" class="newWindow bold">$URLSegment/</a>
+				<a href="$CMSEditLink" title="Page Type: $ClassName" class="newWindow bold">$URLSegment/</a>
 				<% else %>
-				<a href="$Link" title="Page Type: $ClassName, Title: $Title  - click to open pages on this level" class="goOneUpLink" rel="TR-$ID">$URLSegment/</a>
+				<a href="$Link" title="Title: $Title, Page Type: $ClassName" class="goOneUpLink" rel="TR-$ID">$URLSegment/</a>
 				<% end_if %>
 			<% end_loop %>
 			<% if ChildrenLink %><a href="$ChildrenLink" class="goOneDownLink" title="go down one level and view child pages of: $MenuTitle.ATT" rel="TR-$ID">+</a><% end_if %>
@@ -28,11 +28,13 @@
 			</span>
 		</td>
 
+		<% if SeparateMetaTitle = true %>
 		<td class="metaT">
 			<span class="<% if MetaTitleIdentical %>lowRes<% else %>highRes<% end_if %>">
 				<textarea rows="2" cols="20" id="MetaTitle_{$ID}" name="MetaTitle_{$ID}"<% if MetaTitleAutoUpdate %> disabled="disabled"<% end_if %>>$MetaTitle.XML</textarea>
 			</span>
 		</td>
+		<% end_if %>
 
 		<td class="metaD">
 			<span>

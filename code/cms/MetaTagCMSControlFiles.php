@@ -360,11 +360,11 @@ class MetaTagCMSControlFiles extends Controller {
 	}
 
 	protected function myRecordsLimit(){
-		$start = 0;
-		if(isset($_GET["start"])) {
-			$start = intval($_GET["start"]);
+		$limit = $this->Config()->get("records_per_page");
+		if(isset($_GET["start"]) && $_GET["start"] > 0) {
+			$limit .= ", ".intval($_GET["start"]);
 		}
-		return "$start, ".$this->Config()->get("records_per_page");
+		return $limit;
 	}
 
 

@@ -19,7 +19,6 @@ MetaTagsContentControllerEXT:
   folder_for_combined_files: 'cache'
   combine_css_files_into_one: true
   combine_js_files_into_one: true
-  use_themed_favicon: true
 
 MetaTagCMSControlPages:
   url_segment: "metatagmanagementpages"

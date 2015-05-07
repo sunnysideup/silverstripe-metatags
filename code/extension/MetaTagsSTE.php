@@ -51,7 +51,7 @@ class MetaTagsSTE extends SiteTreeExtension {
 	 * @var Array
 	 **/
 	public function updateCMSFields(FieldList $fields) {
-		if(Config::inst()->get("MetaTagsContentControllerEXT", "use_separate_metatitle")) {
+		if(Config::inst()->get("MetaTagsContentControllerEXT", "use_separate_metatitle") == 1) {
 			$fields->addFieldToTab(
 				'Root.Main.Metadata',
 				$allowField0 = new TextField(

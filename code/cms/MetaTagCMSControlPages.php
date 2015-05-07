@@ -160,17 +160,25 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 	 *                                                 *
 	 ***************************************************/
 
+	/**
+	 * @return Boolean
+	 */
+	function SeparateMetaTitle(){
+		return Config::inst()->get("MetaTagsContentControllerEXT", "use_separate_metatitle") == 1;
+	}
 
+	/**
+	 * @return ArrayList
+	 */
 	function MyRecords() {
 		$excludeWhere = "AND \"ShowInSearch\" = 1 AND \"ClassName\" <> 'ErrorPage'";
 		$className = $this->tableArray[0];
-		$pages = $className::get()->filter(array(
-			"ParentID" => $this->ParentID,
-			"ShowInSearch" => 1
-		))->exclude(array(
-			"ClassName" => 'ErrorPage'
-		))->limit($this->myRecordsLimit);
+		$pages = $className::get()
+			->filter(array("ParentID" => $this->ParentID,"ShowInSearch" => 1))
+			->exclude(array("ClassName" => 'ErrorPage'))
+			->limit($this->myRecordsLimit());
 		$dos = null;
+		$ar = new ArrayList();
 		if($pages->count()) {
 			foreach($pages as $page) {
 				if($page instanceOf ErrorPage || !$page->canView(new Member())) {
@@ -186,24 +194,35 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 					$page->MenuTitleAutoUpdate = true;
 				}
 				$className = $this->tableArray[0];
-				if($className::get()->filter(array(
-					"ParentID" => $this->ParentID,
-					"ShowInSearch" => 1
-				))->exclude(array(
-					"ClassName" => 'ErrorPage'
-				))->First()) {
+				$hasChildren = $className::get()
+					->filter(array("ParentID" => $this->ParentID,"ShowInSearch" => 1))
+					->exclude(array("ClassName" => 'ErrorPage'))->count();
+				if($hasChildren || 1 == 1) {
 					$page->ChildrenLink = $this->createLevelLink($page->ID);
 				}
 
 				$dos[$page->ID] = new ArrayList();
 				$segmentArray = array();
 				$item = $page;
-				$segmentArray[] = array("URLSegment" => $item->URLSegment, "ID" => $item->ID, "ClassName" => $item->ClassName, "Title" => $item->Title);
+				$segmentArray[] = array(
+					"URLSegment" => $item->URLSegment,
+					"ID" => $item->ID,
+					"ClassName" => $item->ClassName,
+					"Title" => $item->Title,
+					"CMSEditLink" => $item->CMSEditLink()
+				);
 				while($item && $item->ParentID) {
 					$className = $this->tableArray[0];
 					$item = $className::get()->byID($item->ParentID);
 					if($item) {
-						$segmentArray[] = array("URLSegment" => $item->URLSegment, "ID" => $item->ID, "ClassName" => $item->ClassName, "Title" => $item->Title, "Link" => $this->createLevelLink(intval($item->ParentID)-0));
+						$segmentArray[] = array(
+							"URLSegment" => $item->URLSegment,
+							"ID" => $item->ID,
+							"ClassName" => $item->ClassName,
+							"Title" => $item->Title,
+							"Link" => $this->createLevelLink(intval($item->ParentID)-0),
+							"CMSEditLink" => $item->CMSEditLink()
+						);
 					}
 				}
 				$segmentArray = array_reverse($segmentArray);
@@ -212,10 +231,12 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 				}
 				$page->ParentSegments = $dos[$page->ID] ;
 				$page->GoOneUpLink = $this->GoOneUpLink();
+				$page->SeparateMetaTitle = $this->SeparateMetaTitle() ? true : false;
 				$dos = null;
+				$ar->push($page);
 			}
 		}
-		return $pages;
+		return $ar;
 	}
 
 

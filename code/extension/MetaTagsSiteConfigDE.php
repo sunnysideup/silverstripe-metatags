@@ -23,6 +23,10 @@ class MetaTagsSiteConfigDE extends DataExtension {
 		'ExtraMeta' => 'HTMLText'
 	);
 
+	private static $has_one = array(
+		"Favicon" => "Image"
+	);
+
 	function populateDefaults(){
 		$this->MetaDataCountry = "New Zealand";
 		$this->MetaDataCopyright = "site owner";
@@ -94,6 +98,9 @@ class MetaTagsSiteConfigDE extends DataExtension {
 				)
 			)
 		);
+		$fields->addFieldToTab("Root.Icons", $uploadField = new UploadField('Favicon', 'Icon'));
+		$uploadField->setAllowedExtensions(array("png"));
+		$uploadField->setRightTitle("Upload a 480px wide x 480px high non-transparent PNG file. Ask your developer for help if unsure. Icons can also be loaded onto the server directly into the /themes/mytheme/icons/ folder and as a favicon.ico in the root directory.");
 		return $fields;
 	}
 }
