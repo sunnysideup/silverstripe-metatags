@@ -262,7 +262,7 @@ class MetaTagsContentControllerEXT extends Extension {
 	}
 
 	protected function iconTags($baseURL = "", $includePNGFavicon = false){
-		$cacheKey = 'metatags_ExtendedMetaTags_iconsTags_'.preg_replace("/[^A-Za-z0-9 ]/", '', $baseURL);;
+		$cacheKey = 'metatags_ExtendedMetaTags_iconsTags_'.preg_replace("/[^A-Za-z0-9 ]/", '', $baseURL);
 		$baseURL = rtrim($baseURL, "/");
 		$cache = SS_Cache::factory($cacheKey);
 		if (!($html = $cache->load($cacheKey))) {
