@@ -268,7 +268,7 @@ class MetaTagsContentControllerEXT extends Extension {
 		$cacheKey = 'metatags_ExtendedMetaTags_iconsTags_'.preg_replace("/[^A-Za-z0-9 ]/", '', $baseURL);
 		$baseURL = rtrim($baseURL, "/");
 		$cache = SS_Cache::factory($cacheKey);
-		if (!($html = $cache->load($cacheKey)) || 1 == 1) {
+		if (!($html = $cache->load($cacheKey))) {
 			$html = '';
 			$sizes = array(
 				"16",
