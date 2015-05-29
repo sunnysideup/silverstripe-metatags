@@ -123,7 +123,12 @@ class MetaTagsContentControllerEXT extends Extension {
 				$themeFolder = SSViewer::get_theme_folder();
 				$cssArrayLocationOnly = array();
 				foreach( Config::inst()->get("MetaTagsContentControllerEXT", "default_css") as $name => $media) {
-					$cssArray[] = array("media" => $media, "location" => $themeFolder.'/css/'.$name.'.css');
+					if(strpos($name, '.css')) {
+						$cssArray[] = array("media" => $media, "location" => $name);
+					}
+					else {
+						$cssArray[] = array("media" => $media, "location" => $themeFolder.'/css/'.$name.'.css');
+					}
 				}
 				$cssArray = array_merge($cssArray, $additionalCSS);
 				foreach($cssArray as $cssArraySub) {
@@ -210,11 +215,12 @@ class MetaTagsContentControllerEXT extends Extension {
 			$tags .= '
 			<meta charset="utf-8" />'.
 				$titleTag;
-			$needsFavicon = true;
+			$hasBaseFolderFavicon = false;
 			if(file_exists(Director::baseFolder().'/'.$faviconFileBase.'favicon.ico')) {
-				$needsFavicon = false;
+				$hasBaseFolderFavicon = true;
+				//ie only...
 				$tags .= '
-			<link rel="shortcut icon" href="'.$faviconBase.'favicon.ico" type="image/x-icon" />';
+			<link rel="SHORTCUT ICON" href="'.$faviconBase.'favicon.ico" />';
 			}
 			if(!$page->ExtraMeta && $siteConfig->ExtraMeta) {
 				$page->ExtraMeta = $siteConfig->ExtraMeta;
@@ -232,7 +238,7 @@ class MetaTagsContentControllerEXT extends Extension {
 				$description;
 			}
 			$tags .= $this->OGTags();
-			$tags .= $this->iconTags($faviconBase, $needsFavicon);
+			$tags .= $this->iconTags($faviconBase, $hasBaseFolderFavicon);
 			$cache->save($tags, $cacheKey);
 		}
 		return $tags;
@@ -261,7 +267,7 @@ class MetaTagsContentControllerEXT extends Extension {
 		return $html;
 	}
 
-	protected function iconTags($baseURL = "", $includePNGFavicon = false){
+	protected function iconTags($baseURL = "", $hasBaseFolderFavicon = false){
 		if(!$baseURL) {
 			$baseURL = Director::absoluteBaseURL();
 		}
@@ -303,7 +309,10 @@ class MetaTagsContentControllerEXT extends Extension {
 					}
 				}
 			}
-			if($includePNGFavicon) {
+			if($hasBaseFolderFavicon) {
+				//do nothing
+			}
+			else {
 				$themeFolder = SSViewer::get_theme_folder();
 				$faviconLocation = "/".$themeFolder.'/icons/favicon.ico';
 				if(file_exists(Director::baseFolder().$faviconLocation)) {
@@ -314,7 +323,7 @@ class MetaTagsContentControllerEXT extends Extension {
 					$faviconLink = $baseURL.$generatedImage->Link();
 				}
 				$html .= '
-<link rel="shortcut icon" href="'.$faviconLink.'" type="image/png" />';
+<link rel="SHORTCUT ICON" href="'.$faviconLink.'" />';
 			}
 			$cache->save($html, $cacheKey);
 		}

@@ -11,7 +11,7 @@ MetaTagsContentControllerEXT:
   use_separate_metatitle: 0
   default_css:
     - mycss
-  default_javascript:
+  default_js:
     - 'mysite/javascript/test.js'
   viewport_setting: 'width=device-width,initial-scale=1'
   google_font_collection:
