@@ -40,7 +40,6 @@ class MetaTagsContentControllerEXT extends Extension {
 	 * @var Array
 	 */
 	private static $default_js = array(
-		"framework/thirdparty/jquery/jquery.js",
 		"mysite/javascript/j.js"
 	);
 
@@ -104,6 +103,8 @@ class MetaTagsContentControllerEXT extends Extension {
 				Requirements::javascript($jsFile);
 			}
 			else {
+				Requirements::block("framework/thirdparty/jquery/jquery.js");
+				Requirements::javascript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
 				$jsArray = Config::inst()->get("MetaTagsContentControllerEXT", "default_js");
 				$jsArray = array_merge($jsArray, $additionalJS);
 				foreach($jsArray as $js) {
