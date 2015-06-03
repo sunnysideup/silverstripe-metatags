@@ -269,6 +269,7 @@ class MetaTagsContentControllerEXT extends Extension {
 	}
 
 	protected function iconTags($baseURL = "", $hasBaseFolderFavicon = false){
+		$favicon = null;
 		if(!$baseURL) {
 			$baseURL = Director::absoluteBaseURL();
 		}
@@ -314,17 +315,20 @@ class MetaTagsContentControllerEXT extends Extension {
 				//do nothing
 			}
 			else {
+				$faviconLink = "";
 				$themeFolder = SSViewer::get_theme_folder();
 				$faviconLocation = "/".$themeFolder.'/icons/favicon.ico';
 				if(file_exists(Director::baseFolder().$faviconLocation)) {
 					$faviconLink = $baseURL.$faviconLocation;
 				}
-				else {
+				elseif($favicon) {
 					$generatedImage = $favicon->setWidth(16);
 					$faviconLink = $baseURL.$generatedImage->Link();
 				}
-				$html .= '
+				if($faviconLink) {
+					$html .= '
 <link rel="SHORTCUT ICON" href="'.$faviconLink.'" />';
+				}
 			}
 			$cache->save($html, $cacheKey);
 		}
