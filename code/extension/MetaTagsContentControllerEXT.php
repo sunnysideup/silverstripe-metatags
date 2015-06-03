@@ -253,12 +253,12 @@ class MetaTagsContentControllerEXT extends Extension {
 	 */
 	protected function OGTags(){
 		$array = array(
-			"title" => $this->owner->Title,
+			"title" => Convert::raw2att($this->owner->Title),
 			"type" => "website",
 			//"image" => $this->owner->BaseHref()."themes/main/img/h/apple-touch-icon-144x144-precomposed.png",
-			"url" => $this->owner->AbsoluteLink(),
-			"site_name" => $this->owner->SiteConfig()->Title,
-			"description" => $this->owner->Title
+			"url" => Convert::raw2att($this->owner->AbsoluteLink()),
+			"site_name" => Convert::raw2att($this->owner->SiteConfig()->Title),
+			"description" => Convert::raw2att($this->owner->Title)
 		);
 		$html = "";
 		foreach($array as $key => $value){
