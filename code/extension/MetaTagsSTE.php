@@ -129,7 +129,7 @@ class MetaTagsSTE extends SiteTreeExtension {
 		$siteConfig = SiteConfig::current_site_config();
 		// if UpdateMeta checkbox is checked, update metadata based on content and title
 		// we only update this from the CMS to limit slow-downs in programatic updates
-		if($this->owner->AutomateMetatags || $siteConfig->UpdateMenuTitle){
+		if($this->owner->AutomateMetatags == 1 || $siteConfig->UpdateMenuTitle){
 			// Empty MenuTitle
 			$this->owner->MenuTitle = '';
 			// Check for Content, to prevent errors

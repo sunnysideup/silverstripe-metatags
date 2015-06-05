@@ -258,7 +258,7 @@ class MetaTagsContentControllerEXT extends Extension {
 			//"image" => $this->owner->BaseHref()."themes/main/img/h/apple-touch-icon-144x144-precomposed.png",
 			"url" => Convert::raw2att($this->owner->AbsoluteLink()),
 			"site_name" => Convert::raw2att($this->owner->SiteConfig()->Title),
-			"description" => Convert::raw2att($this->owner->Title)
+			"description" => Convert::raw2att($this->owner->MetaDescription)
 		);
 		$html = "";
 		foreach($array as $key => $value){

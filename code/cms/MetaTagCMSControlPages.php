@@ -125,17 +125,26 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 					if($record->hasMethod("canPublish") && !$record->canPublish()) {
 						return Security::permissionFailure($this);
 					}
-					foreach($this->tableArray as $table) {
-						DB::query("UPDATE \"$table\" SET \"$fieldName\" = '".$value."' WHERE \"$table\".\"ID\" = ".$recordID);
-						$urlSegmentValue = '';
-						if($fieldName == "Title") {
-							$urlSegmentValue = $record->generateURLSegment($value);
-						}
+					$record->$fieldName = $value;
+					//also update URLSegment if title is being updated.
+					$urlSegmentValue = '';
+					if($fieldName == "Title") {
+						$urlSegmentValue = $record->generateURLSegment($value);
 						if($urlSegmentValue) {
-							DB::query("UPDATE \"$table\" SET \"URLSegment\" = '".$urlSegmentValue."' WHERE \"$table\".\"ID\" = ".$recordID." AND \"URLSegment\" <> 'home'");
+							$record->URLSegment = $urlSegmentValue;
 						}
 					}
-					return  _t("MetaTagCMSControl.UPDATE", "Updated <i>".$record->Title."</i>");
+					elseif($fieldName != "AutomateMetatags") {
+						//turn off AutomateMetatags
+						$record->AutomateMetatags = 0;
+					}
+
+					$record->writeToStage("Stage");
+					$record->publish("Stage", "Live");
+					return  _t("MetaTagCMSControl.UPDATE", "Updated $fieldName to <i>".$value."</i> for <i>".$record->Title."</i>.");
+				}
+				else {
+					$error = "Page could not be found - id = $recordID";
 				}
 			}
 		}
@@ -194,10 +203,8 @@ class MetaTagCMSControlPages extends MetaTagCMSControlFiles {
 					$page->MenuTitleAutoUpdate = true;
 				}
 				$className = $this->tableArray[0];
-				$hasChildren = $className::get()
-					->filter(array("ParentID" => $this->ParentID,"ShowInSearch" => 1))
-					->exclude(array("ClassName" => 'ErrorPage'))->count();
-				if($hasChildren || 1 == 1) {
+				$hasChildren = $className::get()->filter(array("ParentID" => $page->ID,"ShowInSearch" => 1))->count();
+				if($hasChildren) {
 					$page->ChildrenLink = $this->createLevelLink($page->ID);
 				}
 

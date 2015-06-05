@@ -14,7 +14,7 @@
 			</thead>
 			<tfoot>
 				<tr class="actions">
-					<th class="batchactions"><a href="#" title="Make changes to all pages at once.">Rules and Quick Fixes</a></th>
+					<th class="batchactionsDISABLED"><a href="#" title="Make changes to all pages at once.">Rules and Quick Fixes DISABLED</a></th>
 					<th scope="col" class="title" title="The title of this image, any title edit will also update the filename of the image / file / folder">Title</th>
 					<th scope="col" class="content" title="If you want to add a bit more information about this image / file / folder" >Description</th>
 				</tr>

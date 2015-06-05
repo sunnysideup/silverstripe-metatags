@@ -91,11 +91,11 @@ class MetaTagsSiteConfigDE extends DataExtension {
 					//takes too long to load
 					//new LiteralField("ManageLinksForFiles", "<iframe src=\"$linkToManagerForFiles\" name=\"manage links for files\" width=\"100%\" height=\"90%\">you browser does not support i-frames</iframe>"),
 					new LiteralField('LinkToManagerHeaderForFiles', "<p><a href=\"$linkToManagerForFiles\" target=\"_blank\">Review and Edit</a> files in a new window ...</p>")
-				),
-				new Tab('Back Links',
-					new LiteralField('MetaTagsLinksExplanation', '<h3>Referencing Websites</h3><p>A big part of Search Engine Optimisation is getting other sites to link to your site. Below you can keep a record of these back links.</p>'),
-					new GridField('MetaTagsLinks', 'MetaTagsLinks', MetaTagsLinks::get())
 				)
+				//new Tab('Back Links',
+				//	new LiteralField('MetaTagsLinksExplanation', '<h3>Referencing Websites</h3><p>A big part of Search Engine Optimisation is getting other sites to link to your site. Below you can keep a record of these back links.</p>'),
+				//	new GridField('MetaTagsLinks', 'MetaTagsLinks', MetaTagsLinks::get())
+				//)
 			)
 		);
 		$fields->addFieldToTab("Root.Icons", $uploadField = new UploadField('Favicon', 'Icon'));

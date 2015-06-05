@@ -2,6 +2,7 @@
 
 jQuery(document).ready(
 	function() {
+		MetaTagCMSControl.initOnce();
 		MetaTagCMSControl.init();
 	}
 );
@@ -10,6 +11,49 @@ var MetaTagCMSControl = {
 	fieldName: '',
 
 	delegateRootSelector: "#MetatagOuterHolder",
+
+	initOnce: function(){
+		jQuery(MetaTagCMSControl.delegateRootSelector).on(
+			"click",
+			".batchactions a",
+			function(event) {
+				event.preventDefault();
+				jQuery(".actions ul, tr.subsequentActions").slideToggle();
+				return false;
+			}
+		);
+
+		jQuery(MetaTagCMSControl.delegateRootSelector).on(
+			"click",
+			"a.ajaxify",
+			function(event) {
+				event.preventDefault();
+				jQuery('body').addClass("loading");
+				var url = jQuery(this).attr("href");
+				jQuery.get(
+					url,
+					function(data) {
+						jQuery('tbody').html(data);
+						jQuery('.response').text("records updated ....");
+						jQuery('body').removeClass("loading");
+						MetaTagCMSControl.init();
+					},
+					"html"
+				);
+
+			}
+		);
+
+		jQuery(MetaTagCMSControl.delegateRootSelector).on(
+			"change",
+			" input, textarea",
+			function() {
+				jQuery(this).parent().removeClass("lowRes").addClass("highRes");
+				MetaTagCMSControl.fieldName = jQuery(this).attr("id");
+				jQuery('#MetaTagCMSControlForm').submit();
+			}
+		);
+	},
 
 	init: function(){
 		var options = {
@@ -32,44 +76,9 @@ var MetaTagCMSControl = {
 		// bind form using 'ajaxForm'
 		jQuery('#MetaTagCMSControlForm').ajaxForm(options);
 		//submit on change
-		jQuery(MetaTagCMSControl.delegateRootSelector).delegate(
-			'input, textarea',
-			"change",
-			function() {
-				jQuery(this).parent().removeClass("lowRes").addClass("highRes");
-				MetaTagCMSControl.fieldName = jQuery(this).attr("id");
-				jQuery('#MetaTagCMSControlForm').submit();
-			}
-		);
 		jQuery("#MetatagOuterHolder .newWindow").attr("target", "_blank");
 		jQuery("#MetatagOuterHolder .actions ul, #MetatagOuterHolder  tr.subsequentActions").hide();
-		jQuery(MetaTagCMSControl.delegateRootSelector).delegate(
-			".batchactions a",
-			"click",
-			function(event) {
-				jQuery(".actions ul, tr.subsequentActions").slideToggle();
-				event.preventDefault();
-				return false;
-			}
-		);
-		jQuery("a.ajaxify").click(
-			function(event) {
-				event.preventDefault();
-				jQuery('body').addClass("loading");
-				var url = jQuery(this).attr("href");
-				jQuery.get(
-					url,
-					function(data) {
-						jQuery('tbody').html(data);
-						jQuery('.response').text("records updated ....");
-						jQuery('body').removeClass("loading");
-						MetaTagCMSControl.init();
-					},
-					"html"
-				);
 
-			}
-		)
 	},
 
 

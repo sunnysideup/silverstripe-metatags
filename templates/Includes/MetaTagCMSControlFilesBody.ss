@@ -5,7 +5,12 @@
 		<% if ParentSegments %>
 			<% loop ParentSegments %>
 				<% if Last %>
-				<strong>$URLSegment</strong>
+				<% if ClassName = Folder %>
+				<strong><a href="/admin/assets/show/$ID/" class="newWindow">$URLSegment</a></strong>
+				<% else %>
+				<strong><a href="/admin/assets/EditForm/field/File/item/$ID/edit" class="newWindow">$URLSegment</a></strong>
+				<% end_if %>
+
 				<% else %>
 				<a href="$Link" title="File Type: $ClassName, Title: $Title  - click to open pages on this level" class="goOneUpLink" rel="TR-$ID">$FilenameSegment/</a>
 				<% end_if %>
@@ -34,7 +39,7 @@
 							<li><% if Link %><a href="$Link">$Title</a><% else %>$ClassName ($Title)<% end_if %></li>
 						<% end_loop%></ul><% end_if %>
 			<% else %>
-					<a href="$RecycleLink" class=" ajaxify">not used on the site: <img src="metatags/images/recycle.png" alt="Recycle" title="Recycle" /></a>
+					<!-- a href="$RecycleLink" class=" ajaxify" not used on the site: img src="metatags/images/recycle.png" alt="Recycle" title="Recycle"  -->
 			<% end_if %>
 					</div>
 				</div>
@@ -42,13 +47,13 @@
 
 		<td class="title">
 			<span class="highRes">
-				<textarea type="text" id="Title_{$ID}" name="Title_{$ID}" rows="2" colspan="20">$Title</textarea>
+				<textarea type="text" id="Title_{$ID}" name="Title_{$ID}" rows="2" colspan="20" disabled="disabled">$Title</textarea>
 			</span>
 		</td>
 
 		<td class="content">
 			<span>
-				<textarea rows="2" cols="20" id="Content_{$ID}" name="Content_{$ID}">$Content</textarea>
+				<textarea rows="2" cols="20" id="Content_{$ID}" name="Content_{$ID}" disabled="disabled">$Content</textarea>
 			</span>
 		</td>
 

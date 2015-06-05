@@ -63,6 +63,7 @@ class MetaTagCMSControlFiles extends Controller {
 	 ***************************************************/
 
 	function index() {
+
 		return $this->renderWith("MetaTagCMSControlFiles");
 	}
 
@@ -82,10 +83,15 @@ class MetaTagCMSControlFiles extends Controller {
 		if($fieldName = $request->param("ID")) {
 			if(in_array($fieldName, $this->updatableFields)) {
 				foreach($this->tableArray as $table) {
-					$items = $table::get()->where("BINARY \"$fieldName\" <> LOWER(\"$fieldName\")")->sort("LastEdited", "ASC")->limit(100);
+					$items = $table::get()->where("BINARY \"$fieldName\" <> LOWER(\"$fieldName\")")->sort("LastEdited", "ASC")->limit(1000);
 					if($items && $items->count()) {
-						$item->$fieldName = strtolower($item->$fieldName);
-						$item->write();
+						foreach($items as $item) {
+							$item->$fieldName = strtolower($item->$fieldName);
+							$item->write();
+							if($item instanceof Image) {
+								$item->deleteFormattedImages();
+							}
+						}
 					}
 				}
 				Session::set("MetaTagCMSControlMessage",  _t("MetaTagCMSControl.UPDATEDTOLOWERCASE", $items->count()." records updated to <i>lower case</i>, please repeat if you have more than 100 records."));
@@ -160,6 +166,7 @@ class MetaTagCMSControlFiles extends Controller {
 	}
 
 	function update(){
+		die("to be rewritten");
 		if(isset($_GET["fieldName"])) {
 			$fieldNameString = $_GET["fieldName"];
 			$fieldNameArray = explode("_", $fieldNameString);
@@ -258,8 +265,8 @@ class MetaTagCMSControlFiles extends Controller {
 				}
 				if(
 				$className::get()
-					->filter("ParentID", $file->ID)
-					->First()
+					->filter(array("ParentID" => $file->ID))
+					->Count()
 				) {
 					$file->ChildrenLink = $this->createLevelLink($file->ID);
 				}
