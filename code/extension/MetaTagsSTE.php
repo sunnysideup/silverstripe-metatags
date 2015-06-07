@@ -19,6 +19,14 @@ class MetaTagsSTE extends SiteTreeExtension {
 	);
 
 	/**
+	 * standard SS method
+	 * @var Array
+	 **/
+	private static $has_one = array(
+		'ShareOnFacebookImage' => 'Image'
+	);
+
+	/**
 	 * because we use this function you can NOT
 	 * use any statics in the file!!!
 	 * @return Array | null
@@ -46,6 +54,66 @@ class MetaTagsSTE extends SiteTreeExtension {
 		'AutomateMetatags' => true
 	);
 
+	/**
+	 * standard SS method
+	 * @var Array
+	 **/
+	public function updateSettingsFields(FieldList $fields) {
+		$fields->addFieldToTab("Root.Facebook",
+			new HeaderField(
+				_t("MetaTagsSTE.FB_HOW_THIS_PAGE_IS_SHARED", "How is this page shared on Facebook?")
+			)
+		);
+		$fields->addFieldToTab("Root.Facebook", $fieldTitle = new ReadonlyField("fb_title", _t("MetaTagsSTE.FB_TITLE", "Title"), $this->owner->Title));
+		$fields->addFieldToTab("Root.Facebook", $fieldType = new ReadonlyField("fb_type", _t("MetaTagsSTE.FB_TITLE", "Type"), "website"));
+		$fields->addFieldToTab("Root.Facebook", $fieldSiteName = new ReadonlyField("fb_type", _t("MetaTagsSTE.FB_SITE_NAME", "Site Name"), SiteConfig::current_site_config()->Title));
+		$fields->addFieldToTab("Root.Facebook", $fieldDescription = new ReadonlyField("fb_description", _t("MetaTagsSTE.FB_DESCRIPTION", "Description (from MetaDescription)"), $this->owner->MetaDescription));
+		$fields->addFieldToTab("Root.Facebook",
+			$shareOnFacebookImageField = new UploadField(
+				"fb_ShareOnFacebookImage",
+				_t("MetaTagsSTE.FB_IMAGE", "Image"),
+				$this->owner->ShareOnFacebookImage()
+			)
+		);
+		$fields->addFieldToTab("Root.Facebook",
+			$shareOnFacebookImageField = new LiteralField(
+				"fb_try_it_out",
+				'<h3><a href="https://www.facebook.com/sharer/sharer.php?u='.urlencode($this->owner->AbsoluteLink()).'">'._t("MetaTagsSTE.FB_TRY_IT_OUT", "Share on Facebook Now") .'</a></h3>',
+				$this->owner->ShareOnFacebookImage()
+			)
+		);
+		//right titles
+		$fieldTitle->setRightTitle(
+			_t(
+				"MetaTagsSTE.FB_TITLE_RIGHT",
+				"Uses the Page Title"
+			)
+		);
+		$fieldType->setRightTitle(
+			_t(
+				"MetaTagsSTE.FB_TYPE_RIGHT",
+				"Can not be changed"
+			)
+		);
+		$fieldSiteName->setRightTitle(
+			_t(
+				"MetaTagsSTE.FB_SITE_NAME_RIGHT",
+				"Can be set in the site settings"
+			)
+		);
+		$fieldDescription->setRightTitle(
+			_t(
+				"MetaTagsSTE.FB_DESCRIPTION",
+				"Description is set in the Metadata section of each page."
+			)
+		);
+		$shareOnFacebookImageField->setRightTitle(
+			_t(
+				"MetaTagsSTE.FB_HOW_TO_CHOOSE_IMAGE",
+				"If no image is set then the Facebook user can choose an image from the page - with options retrieved by Facebook."
+			)
+		);
+	}
 	/**
 	 * standard SS method
 	 * @var Array
