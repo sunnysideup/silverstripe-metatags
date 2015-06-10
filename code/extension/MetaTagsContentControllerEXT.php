@@ -171,9 +171,10 @@ class MetaTagsContentControllerEXT extends Extension {
 	 */
 	function ExtendedMetatags($includeTitle = true, $addExtraSearchEngineData = true) {
 		$this->addBasicMetatagRequirements();
-		$cacheKey = 'metatags_ExtendedMetaTags_'.abs($this->owner->ID);
+		$cacheKey = 'metatags_ExtendedMetaTags_'.abs($this->owner->ID).preg_replace( "/[^a-z0-9]/i", "", $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);
 		$cache = SS_Cache::factory($cacheKey);
-		if (!($tags = $cache->load($cacheKey)) || 1 == 1) {
+		$tags = $cache->load($cacheKey);
+		if (!$tags) {
 			$themeFolder = SSViewer::get_theme_folder() . '/';
 			$tags = "";
 			$page = $this->owner;
@@ -261,6 +262,9 @@ class MetaTagsContentControllerEXT extends Extension {
 			"description" => Convert::raw2att($this->owner->MetaDescription)
 		);
 		$html = "";
+		if($this->owner->ShareOnFacebookImageID && $image = $this->owner->ShareOnFacebookImage()) {
+			$array["image"] = Convert::raw2att($image->getAbsoluteURL());
+		}
 		foreach($array as $key => $value){
 			$html .= "
 			<meta property=\"og:$key\" content=\"$value\" />";
@@ -273,10 +277,11 @@ class MetaTagsContentControllerEXT extends Extension {
 		if(!$baseURL) {
 			$baseURL = Director::absoluteBaseURL();
 		}
-		$cacheKey = 'metatags_ExtendedMetaTags_iconsTags_'.preg_replace("/[^A-Za-z0-9 ]/", '', $baseURL);
+		$cacheKey = 'metatags_ExtendedMetaTags_iconsTags_'.preg_replace("/[^A-Za-z0-9]/", '', $baseURL);
 		$baseURL = rtrim($baseURL, "/");
 		$cache = SS_Cache::factory($cacheKey);
-		if (!($html = $cache->load($cacheKey))) {
+		$html = $cache->load($cacheKey);
+		if (!$html) {
 			$html = '';
 			$sizes = array(
 				"16",
