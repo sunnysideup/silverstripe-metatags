@@ -11,6 +11,7 @@ MetaTagsContentControllerEXT:
   use_separate_metatitle: 0
   default_css:
     - mycss
+  jquery_cdn_location: "https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.j"
   default_js:
     - 'mysite/javascript/test.js'
   viewport_setting: 'width=device-width,initial-scale=1'
