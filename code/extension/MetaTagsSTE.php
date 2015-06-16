@@ -70,11 +70,12 @@ class MetaTagsSTE extends SiteTreeExtension {
 		$fields->addFieldToTab("Root.Facebook", $fieldDescription = new ReadonlyField("fb_description", _t("MetaTagsSTE.FB_DESCRIPTION", "Description (from MetaDescription)"), $this->owner->MetaDescription));
 		$fields->addFieldToTab("Root.Facebook",
 			$shareOnFacebookImageField = new UploadField(
-				"fb_ShareOnFacebookImage",
-				_t("MetaTagsSTE.FB_IMAGE", "Image"),
-				$this->owner->ShareOnFacebookImage()
+				"ShareOnFacebookImage",
+				_t("MetaTagsSTE.FB_IMAGE", "Image")
 			)
 		);
+		$shareOnFacebookImageField->setFolderName("OpenGraphShareImages");
+		$shareOnFacebookImageField->setRightTitle("Use images that are at least 1200 x 630 pixels for the best display on high resolution devices. At the minimum, you should use images that are 600 x 315 pixels to display link page posts with larger images.");
 		$fields->addFieldToTab("Root.Facebook",
 			$shareOnFacebookImageField = new LiteralField(
 				"fb_try_it_out",
