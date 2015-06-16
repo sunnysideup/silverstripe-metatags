@@ -96,7 +96,7 @@ class MetaTagsContentControllerEXT extends Extension {
 	/**
 	 * add Jquery
 	 *
-	 */ 
+	 */
 	public function onBeforeInit() {
 		$jQueryCDNLocation = Config::inst()->get("MetaTagsContentControllerEXT", "jquery_cdn_location");
 		if($jQueryCDNLocation) {
@@ -110,12 +110,12 @@ class MetaTagsContentControllerEXT extends Extension {
 
 	/**
 	 * Puts together all the requirements.
-	 * 
+	 *
 	 * @param array $additionalJS (foo.js, bar.js)
 	 * @param array $additionalCSS (name => media type)
 	 * @param Boolean $force - run it again
 	 *
-	 */ 
+	 */
 	public function addBasicMetatagRequirements($additionalJS = array(), $additionalCSS = array(), $force = false) {
 		if(!isset(self::$_metatags_building_completed[$this->owner->dataRecord->ID]) || $force) {
 			$folderForCombinedFiles = Config::inst()->get("MetaTagsContentControllerEXT", "folder_for_combined_files");
@@ -128,14 +128,19 @@ class MetaTagsContentControllerEXT extends Extension {
 			$cssArray = Config::inst()->get("MetaTagsContentControllerEXT", "default_css");
 			$jsArray = Config::inst()->get("MetaTagsContentControllerEXT", "default_js");
 			$jsArray = array_unique(array_merge($jsArray, $additionalJS));
-			
+
 			//javascript
+			foreach($jsArray as $key => $js) {
+				if(strpos($js, "framework/thirdparty/jquery/jquery.js") !== false) {
+					unset($jsArray[$key]);
+					Requirements::clear($js);
+				}
+				else {
+					Requirements::javascript($js);
+				}
+			}
 			if(!$jQueryCDNLocation) {
 				array_unshift($jsArray, "framework/thirdparty/jquery/jquery.js");
-			}
-			
-			foreach($jsArray as $js) {
-				Requirements::javascript($js);
 			}
 			if($combineJS) {
 				Requirements::combine_files($jsFile, $jsArray);
