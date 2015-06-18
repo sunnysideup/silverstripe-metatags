@@ -132,13 +132,13 @@ class MetaTagsContentControllerEXT extends Extension {
 			//javascript
 			foreach($jsArray as $key => $js) {
 				if(strpos($js, "framework/thirdparty/jquery/jquery.js") !== false) {
-					unset($jsArray[$key]);
-					Requirements::clear($js);
+					//do nothing - included already - see above
 				}
 				else {
 					Requirements::javascript($js);
 				}
 			}
+			//put jQuery back in, if needed.
 			if(!$jQueryCDNLocation) {
 				array_unshift($jsArray, "framework/thirdparty/jquery/jquery.js");
 			}
