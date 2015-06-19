@@ -15,6 +15,9 @@ MetaTagsContentControllerEXT:
   default_js:
     - 'mysite/javascript/test.js'
   viewport_setting: 'width=device-width,initial-scale=1'
+  og_image_method_map:
+    "ProductPage": "MyProductImage"
+    "Page": "Image"
   google_font_collection:
     - Inconsolata
   folder_for_combined_files: 'cache'

@@ -64,6 +64,16 @@ class MetaTagsContentControllerEXT extends Extension {
 
 
 	/**
+	 * map Page types and methods for use in the google
+	 * open graph.
+	 * e.g.
+	 * MyProductPage: ProductImage
+	 * @var Array
+	 **/
+	private static $og_image_method_map = array();
+
+
+	/**
 	 * google fonts to be used
 	 * @var Array
 	 **/
@@ -80,12 +90,6 @@ class MetaTagsContentControllerEXT extends Extension {
 	 * @var Boolean
 	 */
 	private static $combine_js_files_into_one = false;
-
-	/**
-	 * place metatags into a cache....
-	 * @var Boolean
-	 */
-	private static $cache_metatags = true;
 
 	/**
 	 * add all the basic js and css files - call from Page::init()
@@ -261,7 +265,6 @@ class MetaTagsContentControllerEXT extends Extension {
 			<meta name="googlebot" content="'.$noopd.'all, index, follow" />
 			<meta name="rights" content="'.Convert::raw2att($siteConfig->MetaDataCopyright).'" />
 			<meta name="created" content="'.$lastEdited->Format("Ymd").'" />
-			<meta name="geo.country" content="'.$siteConfig->MetaDataCountry.'" />
 			<meta name="viewport" content="'.Config::inst()->get("MetaTagsContentControllerEXT", "viewport_setting").'" />
 				'.$page->ExtraMeta.
 				$description;
@@ -289,8 +292,27 @@ class MetaTagsContentControllerEXT extends Extension {
 			"description" => Convert::raw2att($this->owner->MetaDescription)
 		);
 		$html = "";
-		if($this->owner->ShareOnFacebookImageID && $image = $this->owner->ShareOnFacebookImage()) {
-			$array["image"] = Convert::raw2att($image->getAbsoluteURL());
+		if($this->owner->ShareOnFacebookImageID) {
+			if($image = $this->owner->ShareOnFacebookImage()) {
+				$array["image"] = Convert::raw2att($image->getAbsoluteURL());
+			}
+		}
+		else {
+			$og_image_method_map = Config::inst()->get("MetaTagsContentControllerEXT", "og_image_method_map");
+
+			if(is_array($og_image_method_map)) {
+
+				foreach($og_image_method_map as $className => $method) {
+					if($this->owner->dataRecord instanceof $className) {
+						$variable = $method."ID";
+						if($this->owner->dataRecord->$variable) {
+							if($image = $this->owner->$method()) {
+								$array["image"] = Convert::raw2att($image->getAbsoluteURL());
+							}
+						}
+					}
+				}
+			}
 		}
 		foreach($array as $key => $value){
 			$html .= "
