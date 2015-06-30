@@ -140,22 +140,17 @@ class MetaTagsSTE extends SiteTreeExtension {
 			'Root.Main.Metadata',
 			$allowField1 = new CheckboxField(
 				'AutomateMetatags',
-				_t('MetaManager.UPDATEMETA','Allow Meta (Search Engine) Fields to be updated automatically? ')
+				_t('MetaManager.UPDATEMETA','Automatically update Meta Description and Navigation Label? ')
 			)
 		);
 		$automatedFields =  $this->updatedFieldsArray();
+		$updatedFieldString = "";
 		if(count($automatedFields)) {
-			$updatedFieldString = "<p><blockquote style='padding-left: 12px;'>"
-				._t("MetaManager.UPDATED_EXTERNALLY", "the following fields will be automatically updated")
+			$updatedFieldString = ""
+				._t("MetaManager.UPDATED_EXTERNALLY", "Based on your current settings, the following fields will be automatically updated at all times")
 				.": <em>"
 				.implode("</em>, <em>", $automatedFields)
-				."</em>.</blockquote></p>";
-			$fields->addFieldsToTab('Root.Main.Metadata',
-				array(
-					$allowField2 = new LiteralField('AutomateMetatags_explanation', $updatedFieldString)
-				),
-				"MetaDescription"
-			);
+				."</em>.";
 			foreach($automatedFields as $fieldName => $fieldTitle) {
 				$oldField = $fields->dataFieldByName($fieldName);
 				if($oldField) {
@@ -177,8 +172,8 @@ class MetaTagsSTE extends SiteTreeExtension {
 						Open the Meta Tag Manager to
 						<a href=\"$linkToManager\" target=\"_blank\">Review and Edit</a>
 						the Meta Data for all pages on this site.
-						Also make sure to review the general
-						<a href=\"/admin/settings/\">settings for Search Engines</a>.
+						Also make sure to review the general settings for
+						<a href=\"/admin/settings/\">Search Engines</a>. $updatedFieldString
 					</p>
 				</blockquote>"
 			)
