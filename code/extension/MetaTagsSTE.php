@@ -120,6 +120,7 @@ class MetaTagsSTE extends SiteTreeExtension {
 	 * @var Array
 	 **/
 	public function updateCMSFields(FieldList $fields) {
+		//separate MetaTitle
 		if(Config::inst()->get("MetaTagsContentControllerEXT", "use_separate_metatitle") == 1) {
 			$fields->addFieldToTab(
 				'Root.Main.Metadata',
@@ -134,6 +135,7 @@ class MetaTagsSTE extends SiteTreeExtension {
 			);
 		}
 
+		//info about automation
 		$fields->addFieldToTab(
 			'Root.Main.Metadata',
 			$allowField1 = new CheckboxField(
@@ -143,26 +145,24 @@ class MetaTagsSTE extends SiteTreeExtension {
 		);
 		$automatedFields =  $this->updatedFieldsArray();
 		if(count($automatedFields)) {
-			$updatedFieldString = "<p><blockquote style='padding-left: 12px;'>("
+			$updatedFieldString = "<p><blockquote style='padding-left: 12px;'>"
 				._t("MetaManager.UPDATED_EXTERNALLY", "the following fields will be automatically updated")
 				.": <em>"
 				.implode("</em>, <em>", $automatedFields)
-				."</em>).</blockquote></p>";
+				."</em>.</blockquote></p>";
 			$fields->addFieldsToTab('Root.Main.Metadata',
 				array(
 					$allowField2 = new LiteralField('AutomateMetatags_explanation', $updatedFieldString)
 				),
 				"MetaDescription"
 			);
-			if($this->owner->AutomateMetatags) {
-				foreach($automatedFields as $fieldName => $fieldTitle) {
-					$oldField = $fields->dataFieldByName($fieldName);
-					if($oldField) {
-						$newField = $oldField->performReadonlyTransformation();
-						//$newField->setTitle($newField->Title());
-						$newField->setRightTitle(_t("MetaTags.AUTOMATICALLY_UPDATED", "Automatically updated when you save this page (see metadata settings)."));
-						$fields->replaceField($fieldName, $newField);
-					}
+			foreach($automatedFields as $fieldName => $fieldTitle) {
+				$oldField = $fields->dataFieldByName($fieldName);
+				if($oldField) {
+					$newField = $oldField->performReadonlyTransformation();
+					//$newField->setTitle($newField->Title());
+					$newField->setRightTitle(_t("MetaTags.AUTOMATICALLY_UPDATED", "Automatically updated when you save this page (see metadata settings)."));
+					$fields->replaceField($fieldName, $newField);
 				}
 			}
 		}
@@ -178,7 +178,7 @@ class MetaTagsSTE extends SiteTreeExtension {
 						<a href=\"$linkToManager\" target=\"_blank\">Review and Edit</a>
 						the Meta Data for all pages on this site.
 						Also make sure to review the general
-						<a href=\"/admin/show/root/\">settings for Search Engines</a>.
+						<a href=\"/admin/settings/\">settings for Search Engines</a>.
 					</p>
 				</blockquote>"
 			)
@@ -207,17 +207,17 @@ class MetaTagsSTE extends SiteTreeExtension {
 			}
 		}
 		$length = Config::inst()->get("MetaTagsContentControllerEXT", "meta_desc_length");
-		if(($siteConfig->UpdateMetaDescription  || $siteConfig->UpdateMenuTitle) && $length > 0){
+		if(($this->owner->AutomateMetatags || $siteConfig->UpdateMetaDescription) && $length > 0){
 			// Empty MetaDescription
 			// Check for Content, to prevent errors
 
 			if($this->owner->Content){
 				//added a few hacks here
-				$contentField = DBField::create_field("Text", $this->owner->Content, "MetaDescription");
+				$contentField = DBField::create_field("Text", strip_tags($this->owner->Content), "MetaDescription");
 				$flex = ceil(Config::inst()->get("MetaTagsContentControllerEXT", "meta_desc_length") / 2) + 5;
 				$summary = $contentField->Summary($length, $flex);
 				$summary = str_replace("<br />", " ", $summary);
-				$this->owner->MetaDescription = strip_tags($summary);
+				$this->owner->MetaDescription = $summary;
 			}
 		}
  	}
