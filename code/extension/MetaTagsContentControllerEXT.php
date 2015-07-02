@@ -50,6 +50,12 @@ class MetaTagsContentControllerEXT extends Extension {
 	);
 
 	/**
+	 * what should be included on every page?
+	 * @var String
+	 */
+	private static $alternative_jquery_location = "";
+
+	/**
 	 * @var String
 	 * folder where the combined css / js files will be stored
 	 * if they are combined.
@@ -122,24 +128,38 @@ class MetaTagsContentControllerEXT extends Extension {
 	 */
 	public function addBasicMetatagRequirements($additionalJS = array(), $additionalCSS = array(), $force = false) {
 		if(!isset(self::$_metatags_building_completed[$this->owner->dataRecord->ID]) || $force) {
-			$folderForCombinedFiles = Config::inst()->get("MetaTagsContentControllerEXT", "folder_for_combined_files");
-			$folderForCombinedFilesWithBase = Director::baseFolder()."/".$folderForCombinedFiles;
 			$combineJS = Config::inst()->get("MetaTagsContentControllerEXT", "combine_js_files_into_one");
 			$combineCSS = Config::inst()->get("MetaTagsContentControllerEXT", "combine_css_files_into_one");
-			$jsFile = $folderForCombinedFiles."/MetaTagAutomation.js";
-			$cssFile = $folderForCombinedFiles."/MetaTagAutomation.css";
+			if($combineJS || $combineCSS) {
+				$folderForCombinedFiles = Config::inst()->get("MetaTagsContentControllerEXT", "folder_for_combined_files");
+				$folderForCombinedFilesWithBase = Director::baseFolder()."/".$folderForCombinedFiles;
+			}
+			if($combineJS) {
+				$jsFile = $folderForCombinedFiles."/MetaTagAutomation.js";
+			}
+			if($combineCSS) {
+				$cssFile = $folderForCombinedFiles."/MetaTagAutomation.css";
+			}
 			$jQueryCDNLocation = Config::inst()->get("MetaTagsContentControllerEXT", "jquery_cdn_location");
 			$cssArray = Config::inst()->get("MetaTagsContentControllerEXT", "default_css");
 			$jsArray = Config::inst()->get("MetaTagsContentControllerEXT", "default_js");
 			$jsArray = array_unique(array_merge($jsArray, $additionalJS));
 
 			//javascript
-			foreach($jsArray as $key => $js) {
-				if(strpos($js, "framework/thirdparty/jquery/jquery.js") !== false) {
-					//do nothing - included already - see above
-				}
-				else {
-					Requirements::javascript($js);
+			if($combineJS && file_exists($folderForCombinedFilesWithBase.$jsFile) ) {
+				Requirements::javascript($jsFile);
+			}
+			else {
+				foreach($jsArray as $key => $js) {
+					if(strpos($js, "framework/thirdparty/jquery/jquery.js") !== false) {
+						//do nothing - included already - see above
+					}
+					else {
+						if(!isset($alreadyDone[$js])) {
+							Requirements::javascript($js);
+							$alreadyDone[$js] = 1;
+						}
+					}
 				}
 			}
 			//put jQuery back in, if needed.
@@ -150,27 +170,32 @@ class MetaTagsContentControllerEXT extends Extension {
 				Requirements::combine_files($jsFile, $jsArray);
 			}
 
-			// css
-			$themeFolder = SSViewer::get_theme_folder();
-			$cssArrayLocationOnly = array();
-			$expendadCSSArray = array();
-			foreach($cssArray  as $name => $media) {
-				if(strpos($name, '.css')) {
-					$expendadCSSArray[] = array("media" => $media, "location" => $name);
-				}
-				else {
-					$expendadCSSArray[] = array("media" => $media, "location" => $themeFolder.'/css/'.$name.'.css');
-				}
+			//css
+			if($combineCSS && file_exists($folderForCombinedFilesWithBase.$cssFile) ) {
+				Requirements::css($cssFile);
 			}
-			$expendadCSSArray = array_merge($expendadCSSArray, $additionalCSS);
-			foreach($expendadCSSArray as $cssArraySub) {
-				Requirements::css($cssArraySub["location"], $cssArraySub["media"]);
-				$cssArrayLocationOnly[] = $cssArraySub["location"];
-			}
-			if($combineCSS) {
-				Requirements::combine_files($cssFile,$cssArrayLocationOnly);
-			}
+			else {
 
+				$themeFolder = SSViewer::get_theme_folder();
+				$cssArrayLocationOnly = array();
+				$expendadCSSArray = array();
+				foreach($cssArray  as $name => $media) {
+					if(strpos($name, '.css')) {
+						$expendadCSSArray[] = array("media" => $media, "location" => $name);
+					}
+					else {
+						$expendadCSSArray[] = array("media" => $media, "location" => $themeFolder.'/css/'.$name.'.css');
+					}
+				}
+				$expendadCSSArray = array_merge($expendadCSSArray, $additionalCSS);
+				foreach($expendadCSSArray as $cssArraySub) {
+					Requirements::css($cssArraySub["location"], $cssArraySub["media"]);
+					$cssArrayLocationOnly[] = $cssArraySub["location"];
+				}
+				if($combineCSS) {
+					Requirements::combine_files($cssFile,$cssArrayLocationOnly);
+				}
+			}
 
 			//google font
 			$googleFontArray = Config::inst()->get('MetaTagsContentControllerEXT', 'google_font_collection');
