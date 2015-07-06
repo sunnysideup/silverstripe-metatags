@@ -152,7 +152,8 @@ class MetaTagsContentControllerEXT extends Extension {
 			else {
 				foreach($jsArray as $key => $js) {
 					if(strpos($js, "framework/thirdparty/jquery/jquery.js") !== false) {
-						//do nothing - included already - see above
+						//remove, as already included
+						unset($jsArray[$key]);
 					}
 					else {
 						if(!isset($alreadyDone[$js])) {
