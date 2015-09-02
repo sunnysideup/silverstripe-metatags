@@ -384,10 +384,15 @@ class MetaTagsContentControllerEXT extends Extension {
 				}
 				elseif($this->owner->getSiteConfig()->FaviconID) {
 					if($favicon = $this->owner->getSiteConfig()->Favicon()) {
-						$generatedImage = $favicon->setWidth($size);
-						$html .= '
+						if($favicon->exists() && $favicon instanceof Image) {
+							$generatedImage = $favicon->setWidth($size);
+							$html .= '
 <link rel="icon" type="image/png" sizes="'.$size.'x'.$size.'"  href="'.$baseURL.$generatedImage->Link().'" />
 <link rel="apple-touch-icon" type="image/png" sizes="'.$size.'x'.$size.'"  href="'.$baseURL.$generatedImage->Link().'" />';
+						}
+						else {
+							$favicon = null;
+						}
 					}
 				}
 			}
