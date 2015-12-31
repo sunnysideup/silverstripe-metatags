@@ -1,14 +1,15 @@
 <?php
 
-class MetaTagsConfigExtension extends DataExtension {
+class MetaTagsConfigExtension extends DataExtension
+{
 
     private static $db = array(
         'MetaGenerator' => 'boolean',
         'MetaMisc' => 'HTMLText',
     );
 
-    public function updateCMSFields(FieldList $fields) {
-
+    public function updateCMSFields(FieldList $fields)
+    {
         $generator = new CheckboxField('MetaGenerator', _t('MetaTags.GENERATOR.', 'Show the Generator Meta Tag'));
         $generator->setRightTitle(_t(
             'MetaTags.GENERATOR_HELP',
@@ -31,5 +32,4 @@ class MetaTagsConfigExtension extends DataExtension {
 
         return $fields;
     }
-
 }

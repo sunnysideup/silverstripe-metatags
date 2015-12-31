@@ -1,12 +1,14 @@
 <?php
 
-class MetaTagsPageExtension extends DataExtension {
+class MetaTagsPageExtension extends DataExtension
+{
 
     private static $db = array(
         'MetaTitle' => 'Varchar(70)',
     );
 
-    public function updateCMSFields(FieldList $fields) {
+    public function updateCMSFields(FieldList $fields)
+    {
         $metaData = $fields->fieldByName('Root.Main.Metadata');
 
         $metaFieldTitle = new TextField("MetaTitle", $this->owner->fieldLabel('MetaTitle'));
@@ -20,7 +22,8 @@ class MetaTagsPageExtension extends DataExtension {
         return $fields;
     }
 
-    public function updateFieldLabels(&$labels) {
+    public function updateFieldLabels(&$labels)
+    {
         $labels['MetaTitle'] = _t('MetaTags.METATITLE', "Title");
     }
 
@@ -42,5 +45,4 @@ class MetaTagsPageExtension extends DataExtension {
 
         return $tags;
     }
-
 }
