@@ -350,7 +350,11 @@ class MetaTagsContentControllerEXT extends Extension {
 
 	/**
 	 * twitter version of open graph protocol
-	 * twitter is only added if you set a handle...
+	 * twitter is only added if you set a handle in the configs:
+	 * 
+	 *     MetaTagsContentControllerEXT:
+	 *       twitter_handle: "relevant_twitter_handle"
+	 *
 	 * @return String (HTML)
 	 */
 	protected function TwitterTags(){
