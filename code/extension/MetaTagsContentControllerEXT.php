@@ -358,7 +358,7 @@ class MetaTagsContentControllerEXT extends Extension {
 	 * @return String (HTML)
 	 */
 	protected function TwitterTags(){
-		if($handle = if(Config::inst()->get("MetaTagsContentControllerEXT", "twitter_handle"))) {
+		if($handle = Config::inst()->get("MetaTagsContentControllerEXT", "twitter_handle")) {
 			$html = "";
 			$array = array(
 				"title" => Convert::raw2att($this->owner->Title),
