@@ -350,6 +350,7 @@ class MetaTagsContentControllerEXT extends Extension {
 
 	/**
 	 * twitter version of open graph protocol
+	 * twitter is only added if you set a handle...
 	 * @return String (HTML)
 	 */
 	protected function TwitterTags(){
@@ -357,9 +358,9 @@ class MetaTagsContentControllerEXT extends Extension {
 			$html = "";
 			$array = array(
 				"title" => Convert::raw2att($this->owner->Title),
-				"description" => Convert::raw2att($this->owner->MetaDescription)
+				"description" => Convert::raw2att($this->owner->MetaDescription),
+				"url" => Convert::raw2att($this->owner->AbsoluteLink())
 			);
-			
 			$array["site"] = "@".$handle;
 			if($this->owner->ShareOnFacebookImageID) {
 				if($image = $this->owner->ShareOnFacebookImage()) {
