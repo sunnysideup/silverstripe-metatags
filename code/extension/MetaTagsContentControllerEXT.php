@@ -296,6 +296,7 @@ class MetaTagsContentControllerEXT extends Extension {
 				$description;
 			}
 			$tags .= $this->OGTags();
+			$tags .= $this->TwitterTags();
 			$tags .= $this->iconTags($faviconBase, $hasBaseFolderFavicon);
 			$cache->save($tags, $cacheKey);
 		}
@@ -343,6 +344,50 @@ class MetaTagsContentControllerEXT extends Extension {
 		foreach($array as $key => $value){
 			$html .= "
 			<meta property=\"og:$key\" content=\"$value\" />";
+		}
+		return $html;
+	}
+
+	/**
+	 * twitter version of open graph protocol
+	 * @return String (HTML)
+	 */
+	protected function TwitterTags(){
+		if($handle = if(Config::inst()->get("MetaTagsContentControllerEXT", "twitter_handle"))) {
+			$html = "";
+			$array = array(
+				"title" => Convert::raw2att($this->owner->Title),
+				"description" => Convert::raw2att($this->owner->MetaDescription)
+			);
+			
+			$array["site"] = "@".$handle;
+			if($this->owner->ShareOnFacebookImageID) {
+				if($image = $this->owner->ShareOnFacebookImage()) {
+					$array["card"] = Convert::raw2att($image->getAbsoluteURL());
+				}
+			}
+
+			else {
+				$og_image_method_map = Config::inst()->get("MetaTagsContentControllerEXT", "og_image_method_map");
+
+				if(is_array($og_image_method_map)) {
+
+					foreach($og_image_method_map as $className => $method) {
+						if($this->owner->dataRecord instanceof $className) {
+							$variable = $method."ID";
+							if($this->owner->dataRecord->$variable) {
+								if($image = $this->owner->$method()) {
+									$array["card"] = Convert::raw2att($image->getAbsoluteURL());
+								}
+							}
+						}
+					}
+				}
+			}
+			foreach($array as $key => $value){
+				$html .= "
+				<meta property=\"twitter:$key\" content=\"$value\" />";
+			}
 		}
 		return $html;
 	}
