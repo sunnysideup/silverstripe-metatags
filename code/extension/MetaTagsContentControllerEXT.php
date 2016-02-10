@@ -393,8 +393,8 @@ class MetaTagsContentControllerEXT extends Extension {
 				$html .= "
 				<meta property=\"twitter:$key\" content=\"$value\" />";
 			}
+			return $html;
 		}
-		return $html;
 	}
 
 	protected function iconTags($baseURL = "", $hasBaseFolderFavicon = false){
