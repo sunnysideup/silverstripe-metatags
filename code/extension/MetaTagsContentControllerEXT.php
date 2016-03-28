@@ -249,6 +249,13 @@ class MetaTagsContentControllerEXT extends Extension {
 			//base tag
 			$base = Director::absoluteBaseURL();
 			$tags .= "<base href=\"$base\" />";
+			//these go first - for some reason ...
+			if($addExtraSearchEngineData) {
+				$tags .= '
+			<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+			<meta name="viewport" content="'.Config::inst()->get("MetaTagsContentControllerEXT", "viewport_setting").'" />';
+			}
+			
 			if($page->MetaDescription) {
 				$description = '
 			<meta name="description" content="'.Convert::raw2att($page->MetaDescription).'" />';
