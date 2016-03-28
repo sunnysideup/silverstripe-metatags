@@ -299,6 +299,9 @@ class MetaTagsContentControllerEXT extends Extension {
 			<meta name="rights" content="'.Convert::raw2att($siteConfig->MetaDataCopyright).'" />
 			<meta name="created" content="'.$lastEdited->Format("Ymd").'" />
 			<meta name="viewport" content="'.Config::inst()->get("MetaTagsContentControllerEXT", "viewport_setting").'" />
+			<!--[if lt IE 9]>
+				<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+			<![endif]-->
 				'.$page->ExtraMeta.
 				$description;
 			}
