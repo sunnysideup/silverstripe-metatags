@@ -298,7 +298,6 @@ class MetaTagsContentControllerEXT extends Extension {
 			<meta name="googlebot" content="'.$noopd.'all, index, follow" />
 			<meta name="rights" content="'.Convert::raw2att($siteConfig->MetaDataCopyright).'" />
 			<meta name="created" content="'.$lastEdited->Format("Ymd").'" />
-			<meta name="viewport" content="'.Config::inst()->get("MetaTagsContentControllerEXT", "viewport_setting").'" />
 				'.$page->ExtraMeta.
 				$description;
 			}
