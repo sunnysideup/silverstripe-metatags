@@ -27,6 +27,21 @@ class MetaTagsSTE extends SiteTreeExtension {
 	);
 
 	/**
+	 * @var string
+	 * set to empty string to stop it being copied
+	 * by default to the theme
+	 **/
+	private static $default_editor_file = "metatags/css/editor.css";
+
+
+	/**
+	 * @var string
+	 * set to empty string to stop it being copied
+	 * by default to the theme
+	 **/
+	private static $default_reset_file = "metatags/css/reset.css";
+
+	/**
 	 * because we use this function you can NOT
 	 * use any statics in the file!!!
 	 * @return Array | null
@@ -253,21 +268,26 @@ class MetaTagsSTE extends SiteTreeExtension {
 		return $newString;
 	}
 
+	/**
+	 * add default css files
+	 *
+	 */
 	function requireDefaultRecords(){
 		$folder = SSViewer::current_theme();
 		if($folder) {
-			$destinationFile = Director::baseFolder()."/themes/".$folder."/css/editor.css";
-			$baseFile = Director::baseFolder(). "/".SS_METATAGS_DIR."/css/editor.css";
-			if(!file_exists($destinationFile) && file_exists($baseFile)) {
-				copy($baseFile, $destinationFile);
+			if($file = Config::inst()->get("MetaTagsSTE", "default_editor_file")) {
+				$baseFile = Director::baseFolder(). $file;
+				$destinationFile = Director::baseFolder()."/themes/".$folder."/css/editor.css";
+				if(!file_exists($destinationFile) && file_exists($baseFile)) {
+					copy($baseFile, $destinationFile);
+				}
 			}
-		}
-		$folder = SSViewer::current_theme();
-		if($folder) {
-			$destinationFile = Director::baseFolder()."/themes/".$folder."/css/reset.css";
-			$baseFile = Director::baseFolder(). "/".SS_METATAGS_DIR."/css/reset.css";
-			if(!file_exists($destinationFile) && file_exists($baseFile)) {
-				copy($baseFile, $destinationFile);
+			if($file = Config::inst()->get("MetaTagsSTE", "default_reset_file")) {
+				$baseFile = Director::baseFolder(). $file;
+				$destinationFile = Director::baseFolder()."/themes/".$folder."/css/reset.css";
+				if(!file_exists($destinationFile) && file_exists($baseFile)) {
+					copy($baseFile, $destinationFile);
+				}
 			}
 		}
 	}

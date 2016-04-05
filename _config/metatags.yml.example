@@ -3,6 +3,8 @@
 #########################
 
 MetaTagsSTE:
+  default_editor_file: "/path/to/detault/editor/css/file.css"
+  default_reset_file: "/path/to/detault/editor/css/file.css"
 
 
 MetaTagsContentControllerEXT:
