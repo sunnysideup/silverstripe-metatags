@@ -22,6 +22,10 @@ MetaTagsContentControllerEXT:
     "ProductPage": "MyProductImage"
     "Page": "Image"
   twitter_handle: "relevant_twitter_handle"
+  favicon_sizes:
+    - 16
+    - 64
+    - 128
   google_font_collection:
     - Inconsolata
   folder_for_combined_files: 'cache'
