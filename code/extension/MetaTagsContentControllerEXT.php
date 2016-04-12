@@ -9,6 +9,35 @@
 class MetaTagsContentControllerEXT extends Extension {
 
 	/**
+	 * the twitter handle used by the site
+	 * do not include @ sign.
+	 * @var string
+	 */
+	private static $favicon_sizes = array(
+		"16",
+		"32",
+		"57",
+		"72",
+		"76",
+		"96",
+		"114",
+		"120",
+		"128",
+		"144",
+		"152",
+		"180",
+		"192",
+		"310"
+	);
+
+	/**
+	 * the twitter handle used by the site
+	 * do not include @ sign.
+	 * @var string
+	 */
+	private static $twitter_handle = 0;
+
+	/**
 	 * length of auto-generated meta descriptions in header
 	 * @var Boolean
 	 */
@@ -70,14 +99,13 @@ class MetaTagsContentControllerEXT extends Extension {
 
 
 	/**
-	 * map Page types and methods for use in the google
-	 * open graph.
-	 * e.g.
-	 * MyProductPage: ProductImage
+	 * map Page types and methods for use in the
+	 * facebook open graph.
+	 * e.g.MyProductPage: ProductImage
+	 *
 	 * @var Array
 	 **/
 	private static $og_image_method_map = array();
-
 
 	/**
 	 * google fonts to be used
@@ -255,7 +283,7 @@ class MetaTagsContentControllerEXT extends Extension {
 			<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 			<meta name="viewport" content="'.Config::inst()->get("MetaTagsContentControllerEXT", "viewport_setting").'" />';
 			}
-			
+
 			if($page->MetaDescription) {
 				$description = '
 			<meta name="description" content="'.Convert::raw2att($page->MetaDescription).'" />';
@@ -287,6 +315,14 @@ class MetaTagsContentControllerEXT extends Extension {
 				//ie only...
 				$tags .= '
 			<link rel="SHORTCUT ICON" href="'.$faviconBase.'favicon.ico" />';
+			}
+			else {
+				if(file_exists(Director::baseFolder().'favicon.ico')) {
+					$hasBaseFolderFavicon = true;
+					//ie only...
+					$tags .= '
+				<link rel="SHORTCUT ICON" href="'.$faviconBase.'favicon.ico" />';
+				}
 			}
 			if(!$page->ExtraMeta && $siteConfig->ExtraMeta) {
 				$page->ExtraMeta = $siteConfig->ExtraMeta;
@@ -360,7 +396,7 @@ class MetaTagsContentControllerEXT extends Extension {
 	/**
 	 * twitter version of open graph protocol
 	 * twitter is only added if you set a handle in the configs:
-	 * 
+	 *
 	 *     MetaTagsContentControllerEXT:
 	 *       twitter_handle: "relevant_twitter_handle"
 	 *
@@ -416,23 +452,11 @@ class MetaTagsContentControllerEXT extends Extension {
 		$cache = SS_Cache::factory($cacheKey);
 		$html = $cache->load($cacheKey);
 		if (!$html) {
+			$sizes =  Config::inst()->get("MetaTagsContentControllerEXT", "favicon_sizes");
+			if($hasBaseFolderFavicon) {
+				$sizes = array_diff($sizes, array(16));
+			}
 			$html = '';
-			$sizes = array(
-				"16",
-				"32",
-				"57",
-				"72",
-				"76",
-				"96",
-				"114",
-				"120",
-				"128",
-				"144",
-				"152",
-				"180",
-				"192",
-				"310"
-			);
 			foreach($sizes as $size) {
 				$themeFolder = SSViewer::get_theme_folder();
 				$file = "/".$themeFolder.'/icons/'.'icon-'.$size.'x'.$size.'.png';
