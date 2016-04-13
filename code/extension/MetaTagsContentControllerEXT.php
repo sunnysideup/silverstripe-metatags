@@ -454,7 +454,9 @@ class MetaTagsContentControllerEXT extends Extension {
 		if (!$html) {
 			$sizes =  Config::inst()->get("MetaTagsContentControllerEXT", "favicon_sizes");
 			if($hasBaseFolderFavicon) {
-				$sizes = array_diff($sizes, array(16));
+				if(is_array($sizes)) {
+					$sizes = array_diff($sizes, array(16));
+				}
 			}
 			$html = '';
 			foreach($sizes as $size) {
