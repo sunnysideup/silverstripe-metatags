@@ -364,7 +364,7 @@ class MetaTagsContentControllerEXT extends Extension {
 		);
 		$html = "";
 		if($shareImage = $this->shareImage()) {
-			$array["image"] = Convert::raw2att($image->getAbsoluteURL());
+			$array["image"] = Convert::raw2att($shareImage->getAbsoluteURL());
 		}
 		foreach($array as $key => $value){
 			$html .= "
