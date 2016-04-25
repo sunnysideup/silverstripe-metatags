@@ -16,17 +16,17 @@ class MetaTagsContentControllerEXT extends Extension {
 	private static $favicon_sizes = array(
 		"16",
 		"32",
-		"57",
-		"72",
-		"76",
-		"96",
-		"114",
-		"120",
+		//"57",
+		//"72",
+		//"76",
+		//"96",
+		//"114",
+		//"120",
 		"128",
 		"144",
-		"152",
-		"180",
-		"192",
+		//"152",
+		//"180",
+		//"192",
 		"310"
 	);
 
@@ -35,7 +35,7 @@ class MetaTagsContentControllerEXT extends Extension {
 	 * do not include @ sign.
 	 * @var string
 	 */
-	private static $twitter_handle = 0;
+	private static $twitter_handle = "";
 
 	/**
 	 * length of auto-generated meta descriptions in header
@@ -358,33 +358,13 @@ class MetaTagsContentControllerEXT extends Extension {
 		$array = array(
 			"title" => Convert::raw2att($this->owner->Title),
 			"type" => "website",
-			//"image" => $this->owner->BaseHref()."themes/main/img/h/apple-touch-icon-144x144-precomposed.png",
 			"url" => Convert::raw2att($this->owner->AbsoluteLink()),
 			"site_name" => Convert::raw2att($this->owner->SiteConfig()->Title),
 			"description" => Convert::raw2att($this->owner->MetaDescription)
 		);
 		$html = "";
-		if($this->owner->ShareOnFacebookImageID) {
-			if($image = $this->owner->ShareOnFacebookImage()) {
-				$array["image"] = Convert::raw2att($image->getAbsoluteURL());
-			}
-		}
-		else {
-			$og_image_method_map = Config::inst()->get("MetaTagsContentControllerEXT", "og_image_method_map");
-
-			if(is_array($og_image_method_map)) {
-
-				foreach($og_image_method_map as $className => $method) {
-					if($this->owner->dataRecord instanceof $className) {
-						$variable = $method."ID";
-						if($this->owner->dataRecord->$variable) {
-							if($image = $this->owner->$method()) {
-								$array["image"] = Convert::raw2att($image->getAbsoluteURL());
-							}
-						}
-					}
-				}
-			}
+		if($shareImage = $this->shareImage()) {
+			$array["image"] = Convert::raw2att($image->getAbsoluteURL());
 		}
 		foreach($array as $key => $value){
 			$html .= "
@@ -408,38 +388,58 @@ class MetaTagsContentControllerEXT extends Extension {
 			$array = array(
 				"title" => Convert::raw2att($this->owner->Title),
 				"description" => Convert::raw2att($this->owner->MetaDescription),
-				"url" => Convert::raw2att($this->owner->AbsoluteLink())
+				"url" => Convert::raw2att($this->owner->AbsoluteLink()),
+				"site" => "@".$handle
 			);
-			$array["site"] = "@".$handle;
-			if($this->owner->ShareOnFacebookImageID) {
-				if($image = $this->owner->ShareOnFacebookImage()) {
-					$array["card"] = Convert::raw2att($image->getAbsoluteURL());
-				}
+			if($shareImage = $this->shareImage()) {
+				$array["card"] = Convert::raw2att("summary_large_image");
+				$array["image"] = Convert::raw2att($shareImage->getAbsoluteURL());
 			}
+			else {
+				$array["card"] = Convert::raw2att("summary");
+			}
+			foreach($array as $key => $value){
+				$html .= "
+				<meta name=\"twitter:$key\" content=\"$value\" />";
+			}
+			return $html;
+		}
+	}
 
+	private $_shareImage = null;
+	/**
+	 *
+	 * @return image | null
+	 */
+	private function shareImage() {
+		if($this->_shareImage === null) {
+			$this->_shareImage = false;
+			if($this->owner->ShareOnFacebookImageID) {
+				$this->_shareImage = $this->owner->ShareOnFacebookImage();
+			}
 			else {
 				$og_image_method_map = Config::inst()->get("MetaTagsContentControllerEXT", "og_image_method_map");
-
 				if(is_array($og_image_method_map)) {
-
 					foreach($og_image_method_map as $className => $method) {
 						if($this->owner->dataRecord instanceof $className) {
 							$variable = $method."ID";
-							if($this->owner->dataRecord->$variable) {
-								if($image = $this->owner->$method()) {
-									$array["card"] = Convert::raw2att($image->getAbsoluteURL());
+							if(!empty($this->owner->dataRecord->$variable)) {
+								if($this->owner->hasMethod($method)) {
+									$this->_shareImage = $this->owner->$method();
 								}
 							}
 						}
 					}
 				}
 			}
-			foreach($array as $key => $value){
-				$html .= "
-				<meta property=\"twitter:$key\" content=\"$value\" />";
+			//clean up any stuff...
+			if($this->_shareImage && $this->_shareImage->exists()) {
 			}
-			return $html;
+			else {
+				$this->_shareImage = false;
+			}
 		}
+		return $this->_shareImage;
 	}
 
 	protected function iconTags($baseURL = "", $hasBaseFolderFavicon = false){
