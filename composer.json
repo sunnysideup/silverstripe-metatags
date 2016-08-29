@@ -1,23 +1,30 @@
 {
-	"name": "sunnysideup/metatags",
-	"type": "silverstripe-module",
-	"description": "simplify your metatags - a ton of tools to increase SEO visibility, including file name adjustments",
-	"homepage": "https://github.com/sunnysideup/silverstripe-metatags",
-	"keywords": ["metatags", "silverstripe", "search engine optimsation", "seo", "filenames", "meta tags", "meta data", "google"],
-	"license": "Sunny Side Up (BSD-3-Clause and CUSTOM)",
-	"authors":[
-		{
-			"name": "Nicolaas Francken",
-			"homepage": "https://github.com/sunnysideup",
-			"email" : "modules@sunnysideup.co.nz",
-			"role" : "lead developer"
-		}
-	],
-	"require":{
-		"silverstripe/framework": "~3.1",
-		"silverstripe/cms": "~3.1"
-	},
-	"extra": {
-		"installer-name": "metatags"
-	}
+    "name": "sunnysideup/metatags",
+    "type": "silverstripe-module",
+    "description": "simplify your metatags - a ton of tools to increase SEO visibility, including file name adjustments",
+    "keywords": [
+        "metatags",
+        "silverstripe",
+        "search engine optimsation",
+        "seo",
+        "filenames",
+        "meta tags",
+        "meta data",
+        "google"
+    ],
+    "license": "Sunny Side Up (BSD-3-Clause and CUSTOM)",
+    "authors": [
+        {
+            "name": "Nicolaas Francken",
+            "email": "modules@sunnysideup.co.nz",
+            "role": "lead developer"
+        }
+    ],
+    "require": {
+        "silverstripe/framework": "~3.1",
+        "silverstripe/cms": "~3.1"
+    },
+    "extra": {
+        "installer-name": "metatags"
+    }
 }
