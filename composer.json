@@ -3,8 +3,10 @@
     "type": "silverstripe-module",
     "description": "simplify your metatags - a ton of tools to increase SEO visibility, including file name adjustments",
     "keywords": [
+        "Silverstripe-CMS",
+        "CMS",
+        "Silverstripe",
         "metatags",
-        "silverstripe",
         "search engine optimsation",
         "seo",
         "filenames",
