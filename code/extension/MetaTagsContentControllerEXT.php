@@ -229,7 +229,7 @@ class MetaTagsContentControllerEXT extends Extension
                 $protocol = Director::protocol();
                 foreach ($googleFontArray as $font) {
                     Requirements::insertHeadTags('
-			<link href="' . $protocol . 'fonts.googleapis.com/css?family=' . urlencode($font) . '" rel="stylesheet" type="text/css" />');
+            <link href="' . $protocol . 'fonts.googleapis.com/css?family=' . urlencode($font) . '" rel="stylesheet" type="text/css" />');
                 }
             }
 
@@ -253,9 +253,20 @@ class MetaTagsContentControllerEXT extends Extension
      */
     public function ExtendedMetatags($includeTitle = true, $addExtraSearchEngineData = true)
     {
+        $base = Director::absoluteBaseURL();
+        if(!isset($_SERVER["REQUEST_URI"])) {
+            $_SERVER["REQUEST_URI"] = '';
+        }
         $this->addBasicMetatagRequirements();
-        $cacheKey = 'metatags_ExtendedMetaTags_'.abs($this->owner->ID).preg_replace("/[^a-z0-9]/i", "", $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);
-        $cache = SS_Cache::factory($cacheKey);
+        $cacheKey = 
+                'ExtendedMetaTags_'
+                .abs($this->owner->ID).'_'
+                .preg_replace(
+                    "/[^a-z0-9]/i",
+                    "_",
+                    $base.'_'.$_SERVER["REQUEST_URI"]
+                );
+        $cache = SS_Cache::factory('metatags');
         $tags = $cache->load($cacheKey);
         if (!$tags) {
             $themeFolder = SSViewer::get_theme_folder() . '/';
@@ -277,13 +288,13 @@ class MetaTagsContentControllerEXT extends Extension
             //these go first - for some reason ...
             if ($addExtraSearchEngineData) {
                 $tags .= '
-			<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-			<meta name="viewport" content="'.Config::inst()->get("MetaTagsContentControllerEXT", "viewport_setting").'" />';
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta name="viewport" content="'.Config::inst()->get("MetaTagsContentControllerEXT", "viewport_setting").'" />';
             }
 
             if ($page->MetaDescription) {
                 $description = '
-			<meta name="description" content="'.Convert::raw2att($page->MetaDescription).'" />';
+            <meta name="description" content="'.Convert::raw2att($page->MetaDescription).'" />';
                 $noopd = '';
             } else {
                 $noopd = "NOODP, ";
@@ -297,25 +308,25 @@ class MetaTagsContentControllerEXT extends Extension
             $faviconFileBase = "";
             if ($includeTitle) {
                 $titleTag = '
-			<title>'.trim(Convert::raw2att($siteConfig->PrependToMetaTitle.' '.$title.' '.$siteConfig->AppendToMetaTitle)).'</title>';
+            <title>'.trim(Convert::raw2att($siteConfig->PrependToMetaTitle.' '.$title.' '.$siteConfig->AppendToMetaTitle)).'</title>';
             } else {
                 $titleTag = '';
             }
             $tags .= '
-			<meta charset="utf-8" />'.
+            <meta charset="utf-8" />'.
                 $titleTag;
             $hasBaseFolderFavicon = false;
             if (file_exists(Director::baseFolder().'/'.$faviconFileBase.'favicon.ico')) {
                 $hasBaseFolderFavicon = true;
                 //ie only...
                 $tags .= '
-			<link rel="SHORTCUT ICON" href="'.$faviconBase.'favicon.ico" />';
+            <link rel="SHORTCUT ICON" href="'.$faviconBase.'favicon.ico" />';
             } else {
                 if (file_exists(Director::baseFolder().'favicon.ico')) {
                     $hasBaseFolderFavicon = true;
                     //ie only...
                     $tags .= '
-				<link rel="SHORTCUT ICON" href="'.$faviconBase.'favicon.ico" />';
+                <link rel="SHORTCUT ICON" href="'.$faviconBase.'favicon.ico" />';
                 }
             }
             if (!$page->ExtraMeta && $siteConfig->ExtraMeta) {
@@ -326,14 +337,14 @@ class MetaTagsContentControllerEXT extends Extension
             }
             if ($addExtraSearchEngineData) {
                 $tags .= '
-			<meta name="robots" content="'.$noopd.'all, index, follow" />
-			<meta name="googlebot" content="'.$noopd.'all, index, follow" />
-			<meta name="rights" content="'.Convert::raw2att($siteConfig->MetaDataCopyright).'" />
-			<meta name="created" content="'.$lastEdited->Format("Ymd").'" />
-			<!--[if lt IE 9]>
-				<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-			<![endif]-->
-				'.$page->ExtraMeta.
+            <meta name="robots" content="'.$noopd.'all, index, follow" />
+            <meta name="googlebot" content="'.$noopd.'all, index, follow" />
+            <meta name="rights" content="'.Convert::raw2att($siteConfig->MetaDataCopyright).'" />
+            <meta name="created" content="'.$lastEdited->Format("Ymd").'" />
+            <!--[if lt IE 9]>
+                <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+            <![endif]-->
+                '.$page->ExtraMeta.
                 $description;
             }
             $tags .= $this->OGTags();
@@ -364,7 +375,7 @@ class MetaTagsContentControllerEXT extends Extension
         }
         foreach ($array as $key => $value) {
             $html .= "
-			<meta property=\"og:$key\" content=\"$value\" />";
+            <meta property=\"og:$key\" content=\"$value\" />";
         }
         return $html;
     }
@@ -396,7 +407,7 @@ class MetaTagsContentControllerEXT extends Extension
             }
             foreach ($array as $key => $value) {
                 $html .= "
-				<meta name=\"twitter:$key\" content=\"$value\" />";
+                <meta name=\"twitter:$key\" content=\"$value\" />";
             }
             return $html;
         }
@@ -443,9 +454,15 @@ class MetaTagsContentControllerEXT extends Extension
         if (!$baseURL) {
             $baseURL = Director::absoluteBaseURL();
         }
-        $cacheKey = 'metatags_ExtendedMetaTags_iconsTags_'.preg_replace("/[^A-Za-z0-9]/", '', $baseURL);
+        $cacheKey = 
+            'iconTags_'
+            .preg_replace(
+                "/[^a-z0-9]/i",
+                '_',
+                $baseURL
+            );
         $baseURL = rtrim($baseURL, "/");
-        $cache = SS_Cache::factory($cacheKey);
+        $cache = SS_Cache::factory('metatags');
         $html = $cache->load($cacheKey);
         if (!$html) {
             $sizes =  Config::inst()->get("MetaTagsContentControllerEXT", "favicon_sizes");
