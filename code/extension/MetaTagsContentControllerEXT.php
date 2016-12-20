@@ -254,11 +254,11 @@ class MetaTagsContentControllerEXT extends Extension
     public function ExtendedMetatags($includeTitle = true, $addExtraSearchEngineData = true)
     {
         $base = Director::absoluteBaseURL();
-        if(!isset($_SERVER["REQUEST_URI"])) {
+        if (!isset($_SERVER["REQUEST_URI"])) {
             $_SERVER["REQUEST_URI"] = '';
         }
         $this->addBasicMetatagRequirements();
-        $cacheKey = 
+        $cacheKey =
                 'ExtendedMetaTags_'
                 .abs($this->owner->ID).'_'
                 .preg_replace(
@@ -454,7 +454,7 @@ class MetaTagsContentControllerEXT extends Extension
         if (!$baseURL) {
             $baseURL = Director::absoluteBaseURL();
         }
-        $cacheKey = 
+        $cacheKey =
             'iconTags_'
             .preg_replace(
                 "/[^a-z0-9]/i",
