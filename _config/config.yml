@@ -1,15 +1,8 @@
 File:
-  extensions:
-    - MetaTagFileExtension
-
+    extensions: [MetaTagFileExtension]
 SiteConfig:
-  extensions:
-    - MetaTagsSiteConfigDE
-
+    extensions: [MetaTagsSiteConfigDE]
 SiteTree:
-  extensions:
-    - MetaTagsSTE
-
+    extensions: [MetaTagsSTE]
 ContentController:
-  extensions:
-    - MetaTagsContentControllerEXT
+    extensions: [MetaTagsContentControllerEXT]
