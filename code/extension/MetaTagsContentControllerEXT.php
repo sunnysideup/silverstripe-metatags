@@ -193,7 +193,7 @@ class MetaTagsContentControllerEXT extends Extension
             }
             //put jQuery back in, if needed.
             if (!$jQueryCDNLocation) {
-                array_unshift($jsArray, "framework/thirdparty/jquery/jquery.js");
+                array_unshift($jsArray, "framework/thirdparty/jquery/jquery.min.js");
             }
             if ($combineJS) {
                 Requirements::combine_files($jsFile, $jsArray);
