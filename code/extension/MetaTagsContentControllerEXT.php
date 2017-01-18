@@ -143,7 +143,7 @@ class MetaTagsContentControllerEXT extends Extension
             Requirements::block("framework/thirdparty/jquery/jquery.js");
             Requirements::javascript($jQueryCDNLocation);
         } else {
-            Requirements::javascript("framework/thirdparty/jquery/jquery.js");
+            Requirements::javascript("framework/thirdparty/jquery/jquery.min.js");
         }
     }
 
