@@ -100,6 +100,12 @@ class MetaTagsSTE extends SiteTreeExtension
                 $this->owner->ShareOnFacebookImage()
             )
         );
+        $fields->addFieldToTab("Root.Facebook",
+            $debugFacebookSharing = new LiteralField(
+                "fb_debug_link",
+                '<h3><a href="https://developers.facebook.com/tools/debug/sharing/?q='.urlencode($this->owner->AbsoluteLink()).'" target="_blank">'._t("MetaTagsSTE.FB_DEBUGGER", "Facebook Sharing Debugger") .'</a></h3>'
+            )
+        );
         //right titles
         $fieldTitle->setRightTitle(
             _t(
@@ -186,14 +192,14 @@ class MetaTagsSTE extends SiteTreeExtension
             new LiteralField(
                 "LinkToManagerHeader",
                 "<blockquote style='padding-left: 12px;'>
-					<p>
-						Open the Meta Tag Manager to
-						<a href=\"$linkToManager\" target=\"_blank\">Review and Edit</a>
-						the Meta Data for all pages on this site.
-						Also make sure to review the general settings for
-						<a href=\"/admin/settings/\">Search Engines</a>. $updatedFieldString
-					</p>
-				</blockquote>"
+                    <p>
+                        Open the Meta Tag Manager to
+                        <a href=\"$linkToManager\" target=\"_blank\">Review and Edit</a>
+                        the Meta Data for all pages on this site.
+                        Also make sure to review the general settings for
+                        <a href=\"/admin/settings/\">Search Engines</a>. $updatedFieldString
+                    </p>
+                </blockquote>"
             )
         );
         if ($this->owner->URLSegment == RootURLController::get_default_homepage_link()) {
