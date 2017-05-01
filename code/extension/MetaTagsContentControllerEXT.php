@@ -226,12 +226,12 @@ class MetaTagsContentControllerEXT extends Extension
 
             //google font
             $googleFontArray = Config::inst()->get('MetaTagsContentControllerEXT', 'google_font_collection');
-            if ($googleFontArray && count($googleFontArray)) {
+            if (is_array($googleFontArray) && count($googleFontArray)) {
                 $protocol = Director::protocol();
-                foreach ($googleFontArray as $font) {
-                    Requirements::insertHeadTags('
-            <link href="' . $protocol . 'fonts.googleapis.com/css?family=' . urlencode($font) . '" rel="stylesheet" type="text/css" />');
-                }
+                $fonts = implode('|', $googleFontArray);
+                $fonts = str_replace(' ', '+', $fonts);
+                Requirements::insertHeadTags('
+                <link href="' . $protocol . 'fonts.googleapis.com/css?family=' . $fonts . '" rel="stylesheet" type="text/css" />');
             }
 
             //ie header...
