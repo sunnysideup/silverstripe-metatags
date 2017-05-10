@@ -286,6 +286,13 @@ class MetaTagsContentControllerEXT extends Extension
             //base tag
             $base = Director::absoluteBaseURL();
             $tags .= "<base href=\"$base\" />";
+            if($this->owner->hasMethod('CanonicalLink')) {
+                $canonicalLink = $this->owner->CanonicalLink();
+                if($canonicalLink) {
+                    $tags .= "
+            <link rel=\"canonical\" href=\"".$canonicalLink."\" />";
+                }
+            }
             //these go first - for some reason ...
             if ($addExtraSearchEngineData) {
                 $tags .= '
