@@ -47,12 +47,14 @@ class MetaTagCMSControlFiles extends Controller
         if (!Permission::checkMember($member, "CMS_ACCESS_LeftAndMain")) {
             return Security::permissionFailure($this);
         }
-        Requirements::javascript(THIRDPARTY_DIR."/jquery/jquery.js");
+        // see files for requirements...
+        // Requirements::javascript(THIRDPARTY_DIR."/jquery/jquery.js");
         //Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
         //Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
-        Requirements::javascript(THIRDPARTY_DIR."/jquery-form/jquery.form.js");
-        Requirements::javascript("metatags/javascript/MetaTagCMSControl.js");
-        Requirements::themedCSS("MetaTagCMSControl", "metatags");
+        // Requirements::javascript(THIRDPARTY_DIR."/jquery-form/jquery.form.js");
+        // Requirements::javascript("metatags/javascript/MetaTagCMSControl.js");
+        // Requirements::css("metatags/css/MetaTagCMSControl.css");
+        // Requirements::themedCSS("MetaTagCMSControl", "metatags");
         if ($parentID = intval($this->request->getVar("childrenof"))) {
             $this->ParentID = $parentID;
         }
