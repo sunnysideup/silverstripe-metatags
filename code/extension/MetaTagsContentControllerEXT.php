@@ -174,6 +174,21 @@ class MetaTagsContentControllerEXT extends Extension
             $jQueryCDNLocation = Config::inst()->get("MetaTagsContentControllerEXT", "jquery_cdn_location");
             $cssArray = Config::inst()->get("MetaTagsContentControllerEXT", "default_css");
             $jsArray = Config::inst()->get("MetaTagsContentControllerEXT", "default_js");
+            if(Director::isLive()) {
+                foreach($cssArray as $tempKey => $tempValue) {
+                    $newArray = array();
+                    if(strpos('.css', $tempKey)) {
+                        $newKey = str_replace('.css', '.min.css', $tempKey);
+                    } else {
+                        $newKey = $tempKey.'.min';
+                    }
+                    $newArray[$newKey] = $tempValue;
+                }
+                $cssArray = $newArray;
+                foreach($jsArray as $tempKey => $tempValue) {
+                    $jsArray[$tempKey] = str_replace('.js', '.min.js', $tempValue);
+                }
+            }
             $jsArray = array_unique(array_merge($jsArray, $additionalJS));
 
             //javascript
@@ -286,6 +301,13 @@ class MetaTagsContentControllerEXT extends Extension
             //base tag
             $base = Director::absoluteBaseURL();
             $tags .= "<base href=\"$base\" />";
+            if($this->owner->hasMethod('CanonicalLink')) {
+                $canonicalLink = $this->owner->CanonicalLink();
+                if($canonicalLink) {
+                    $tags .= "
+            <link rel=\"canonical\" href=\"".$canonicalLink."\" />";
+                }
+            }
             //these go first - for some reason ...
             if ($addExtraSearchEngineData) {
                 $tags .= '
