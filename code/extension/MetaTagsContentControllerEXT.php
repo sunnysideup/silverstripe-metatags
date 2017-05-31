@@ -164,31 +164,31 @@ class MetaTagsContentControllerEXT extends Extension
             if ($combineJS || $combineCSS) {
                 $folderForCombinedFiles = Config::inst()->get("MetaTagsContentControllerEXT", "folder_for_combined_files");
                 $folderForCombinedFilesWithBase = Director::baseFolder()."/".$folderForCombinedFiles;
-            }
-            if ($combineJS) {
-                $jsFile = $folderForCombinedFiles."/MetaTagAutomation.js";
-            }
-            if ($combineCSS) {
-                $cssFile = $folderForCombinedFiles."/MetaTagAutomation.css";
+                if ($combineJS) {
+                    $jsFile = $folderForCombinedFiles."/MetaTagAutomation.js";
+                }
+                if ($combineCSS) {
+                    $cssFile = $folderForCombinedFiles."/MetaTagAutomation.css";
+                }
             }
             $jQueryCDNLocation = Config::inst()->get("MetaTagsContentControllerEXT", "jquery_cdn_location");
             $cssArray = Config::inst()->get("MetaTagsContentControllerEXT", "default_css");
             $jsArray = Config::inst()->get("MetaTagsContentControllerEXT", "default_js");
-            if(Director::isLive()) {
-                foreach($cssArray as $tempKey => $tempValue) {
-                    $newArray = array();
-                    if(strpos('.css', $tempKey)) {
-                        $newKey = str_replace('.css', '.min.css', $tempKey);
-                    } else {
-                        $newKey = $tempKey.'.min';
-                    }
-                    $newArray[$newKey] = $tempValue;
-                }
-                $cssArray = $newArray;
-                foreach($jsArray as $tempKey => $tempValue) {
-                    $jsArray[$tempKey] = str_replace('.js', '.min.js', $tempValue);
-                }
-            }
+            // if(Director::isLive() && 1 == 2) {
+            //     foreach($cssArray as $tempKey => $tempValue) {
+            //         $newArray = array();
+            //         if(strpos('.css', $tempKey)) {
+            //             $newKey = str_replace('.css', '.min.css', $tempKey);
+            //         } else {
+            //             $newKey = $tempKey.'.min';
+            //         }
+            //         $newArray[$newKey] = $tempValue;
+            //     }
+            //     $cssArray = $newArray;
+            //     foreach($jsArray as $tempKey => $tempValue) {
+            //         $jsArray[$tempKey] = str_replace('.js', '.min.js', $tempValue);
+            //     }
+            // }
             $jsArray = array_unique(array_merge($jsArray, $additionalJS));
 
             //javascript
