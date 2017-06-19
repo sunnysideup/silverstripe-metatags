@@ -1,5 +1,4 @@
-File:
-    extensions: [MetaTagFileExtension]
+
 SiteConfig:
     extensions: [MetaTagsSiteConfigDE]
 SiteTree:

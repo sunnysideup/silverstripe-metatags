@@ -32,18 +32,6 @@ MetaTagsContentControllerEXT:
   combine_css_files_into_one: true
   combine_js_files_into_one: true
 
-MetaTagCMSControlPages:
-  url_segment: "metatagmanagementpages"
-  small_words_array: []
-
-MetaTagCMSControlFiles:
-  url_segment: "metatagmanagementfiles"
-  recycling_bin_name: 'ZzzeRecyclingBin'
-  records_per_page: 10
-
-MetaTagCMSFixImageLocations:
-  folders_to_ignore:
-    - myfolder
 
 #########################
 #########################
