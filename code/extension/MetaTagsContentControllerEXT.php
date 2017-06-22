@@ -516,7 +516,8 @@ class MetaTagsContentControllerEXT extends Extension
         $page = $this->owner;
         if (Config::inst()->get("MetaTagsContentControllerEXT", "use_separate_metatitle") == 1) {
             $title = $page->MetaTitle;
-        } else {
+        }
+        if (!$title) {
             $title = $page->Title;
             if (!$title) {
                 $title = $page->MenuTitle;
