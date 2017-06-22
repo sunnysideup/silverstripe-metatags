@@ -139,8 +139,9 @@ class MetaTagsContentControllerEXT extends Extension
     public function onBeforeInit()
     {
         $jQueryCDNLocation = Config::inst()->get("MetaTagsContentControllerEXT", "jquery_cdn_location");
+        Requirements::block("framework/thirdparty/jquery/jquery.js");
         if ($jQueryCDNLocation) {
-            Requirements::block("framework/thirdparty/jquery/jquery.js");
+            Requirements::block("framework/thirdparty/jquery/jquery.min.js");
             Requirements::javascript($jQueryCDNLocation);
         } else {
             Requirements::javascript("framework/thirdparty/jquery/jquery.min.js");
@@ -163,16 +164,31 @@ class MetaTagsContentControllerEXT extends Extension
             if ($combineJS || $combineCSS) {
                 $folderForCombinedFiles = Config::inst()->get("MetaTagsContentControllerEXT", "folder_for_combined_files");
                 $folderForCombinedFilesWithBase = Director::baseFolder()."/".$folderForCombinedFiles;
-            }
-            if ($combineJS) {
-                $jsFile = $folderForCombinedFiles."/MetaTagAutomation.js";
-            }
-            if ($combineCSS) {
-                $cssFile = $folderForCombinedFiles."/MetaTagAutomation.css";
+                if ($combineJS) {
+                    $jsFile = $folderForCombinedFiles."/MetaTagAutomation.js";
+                }
+                if ($combineCSS) {
+                    $cssFile = $folderForCombinedFiles."/MetaTagAutomation.css";
+                }
             }
             $jQueryCDNLocation = Config::inst()->get("MetaTagsContentControllerEXT", "jquery_cdn_location");
             $cssArray = Config::inst()->get("MetaTagsContentControllerEXT", "default_css");
             $jsArray = Config::inst()->get("MetaTagsContentControllerEXT", "default_js");
+            // if(Director::isLive() && 1 == 2) {
+            //     foreach($cssArray as $tempKey => $tempValue) {
+            //         $newArray = array();
+            //         if(strpos('.css', $tempKey)) {
+            //             $newKey = str_replace('.css', '.min.css', $tempKey);
+            //         } else {
+            //             $newKey = $tempKey.'.min';
+            //         }
+            //         $newArray[$newKey] = $tempValue;
+            //     }
+            //     $cssArray = $newArray;
+            //     foreach($jsArray as $tempKey => $tempValue) {
+            //         $jsArray[$tempKey] = str_replace('.js', '.min.js', $tempValue);
+            //     }
+            // }
             $jsArray = array_unique(array_merge($jsArray, $additionalJS));
 
             //javascript
@@ -225,12 +241,12 @@ class MetaTagsContentControllerEXT extends Extension
 
             //google font
             $googleFontArray = Config::inst()->get('MetaTagsContentControllerEXT', 'google_font_collection');
-            if ($googleFontArray && count($googleFontArray)) {
+            if (is_array($googleFontArray) && count($googleFontArray)) {
                 $protocol = Director::protocol();
-                foreach ($googleFontArray as $font) {
-                    Requirements::insertHeadTags('
-            <link href="' . $protocol . 'fonts.googleapis.com/css?family=' . urlencode($font) . '" rel="stylesheet" type="text/css" />');
-                }
+                $fonts = implode('|', $googleFontArray);
+                $fonts = str_replace(' ', '+', $fonts);
+                Requirements::insertHeadTags('
+                <link href="' . $protocol . 'fonts.googleapis.com/css?family=' . $fonts . '" rel="stylesheet" type="text/css" />');
             }
 
             //ie header...
@@ -277,6 +293,13 @@ class MetaTagsContentControllerEXT extends Extension
             //base tag
             $base = Director::absoluteBaseURL();
             $tags .= "<base href=\"$base\" />";
+            if($this->owner->hasMethod('CanonicalLink')) {
+                $canonicalLink = $this->owner->CanonicalLink();
+                if($canonicalLink) {
+                    $tags .= "
+            <link rel=\"canonical\" href=\"".$canonicalLink."\" />";
+                }
+            }
             //these go first - for some reason ...
             if ($addExtraSearchEngineData) {
                 $tags .= '
