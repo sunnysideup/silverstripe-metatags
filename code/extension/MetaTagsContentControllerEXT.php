@@ -273,15 +273,7 @@ class MetaTagsContentControllerEXT extends Extension
             $tags = "";
             $page = $this->owner;
             $siteConfig = SiteConfig::current_site_config();
-            $title = "";
-            if (Config::inst()->get("MetaTagsContentControllerEXT", "use_separate_metatitle") == 1) {
-                $title = $page->MetaTitle;
-            } else {
-                $title = $page->Title;
-                if (!$title) {
-                    $title = $page->MenuTitle;
-                }
-            }
+            $title = $this->MetaTagsMetaTitle();
             //base tag
             $base = Director::absoluteBaseURL();
             $tags .= "<base href=\"$base\" />";
@@ -362,8 +354,9 @@ class MetaTagsContentControllerEXT extends Extension
      */
     protected function OGTags()
     {
+        $title = $this->MetaTagsMetaTitle();
         $array = array(
-            "title" => Convert::raw2att($this->owner->Title),
+            "title" => Convert::raw2att($title),
             "type" => "website",
             "url" => Convert::raw2att($this->owner->AbsoluteLink()),
             "site_name" => Convert::raw2att($this->owner->SiteConfig()->Title),
@@ -516,5 +509,19 @@ class MetaTagsContentControllerEXT extends Extension
             $cache->save($html, $cacheKey);
         }
         return $html;
+    }
+
+    protected function MetaTagsMetaTitle(){
+        $title = "";
+        $page = $this->owner;
+        if (Config::inst()->get("MetaTagsContentControllerEXT", "use_separate_metatitle") == 1) {
+            $title = $page->MetaTitle;
+        } else {
+            $title = $page->Title;
+            if (!$title) {
+                $title = $page->MenuTitle;
+            }
+        }
+        return $title;
     }
 }
