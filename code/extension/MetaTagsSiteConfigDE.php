@@ -37,30 +37,28 @@ class MetaTagsSiteConfigDE extends DataExtension
 
     public function updateCMSFields(FieldList $fields)
     {
-        $linkToManagerForPages = Config::inst()->get("MetaTagCMSControlPages", "url_segment") . '/';
-        $linkToManagerForFiles = Config::inst()->get("MetaTagCMSControlFiles", "url_segment") . '/';
         $fields->addFieldToTab('Root.SearchEngines',
             new TabSet('Options',
                 new Tab('Help',
                     new LiteralField('HelpExplanation', '
-						<h3>Search Engine - How to use ...</h3>
-						<p>
-							To improve your visibility with search engines, we provide a number of tools here.
-							Improving your rankings with Search Engines can work as follows:
-						</p>
-						<ul>
-							<li> - decide on a few keywords for each page - basically the words that people would search for on Google (e.g. <i>feed elderly cat</i>))</li>
-							<li> - ensure that these words are seen in strategic places on this page</li>
-							<li> - create links to the page from <i>third-party</i> websites</li>
-						</ul>
-						<p>
-							<br />The tools provided here help you to achieve these goals by ensuring:
-						</p>
-						<ul>
-							<li> - easy addition of keywords to key field (navigation label, meta description)</li>
-							<li> - you can adjust the file image names and descriptions to match the keywords</li>
-						</ul>
-						'
+                        <h3>Search Engine - How to use ...</h3>
+                        <p>
+                            To improve your visibility with search engines, we provide a number of tools here.
+                            Improving your rankings with Search Engines can work as follows:
+                        </p>
+                        <ul>
+                            <li> - decide on a few keywords for each page - basically the words that people would search for on Google (e.g. <i>feed elderly cat</i>))</li>
+                            <li> - ensure that these words are seen in strategic places on this page</li>
+                            <li> - create links to the page from <i>third-party</i> websites</li>
+                        </ul>
+                        <p>
+                            <br />The tools provided here help you to achieve these goals by ensuring:
+                        </p>
+                        <ul>
+                            <li> - easy addition of keywords to key field (navigation label, meta description)</li>
+                            <li> - you can adjust the file image names and descriptions to match the keywords</li>
+                        </ul>
+                        '
                     )
                 ),
                 new Tab('Menus',
@@ -82,21 +80,7 @@ class MetaTagsSiteConfigDE extends DataExtension
                     new TextField('MetaDataDesign', 'Design provided by ...'),
                     new TextField('MetaDataCoding', 'Website Coding carried out by ...'),
                     new TextareaField('ExtraMeta', 'Custom Meta Tags (advanced users only)')
-                ),
-                new Tab('Pages',
-                    //takes too long to load
-                    //new LiteralField('ManageLinksForPages', "<iframe src=\"$linkToManagerForPages\" name=\"manage links for pages\" width=\"100%\" height=\"90%\">you browser does not support i-frames</iframe>"),
-                    new LiteralField('LinkToManagerHeaderForPages', "<p><a href=\"$linkToManagerForPages\" target=\"_blank\">Review and Edit</a> pages in a new window ...</p>")
-                ),
-                new Tab('Files',
-                    //takes too long to load
-                    //new LiteralField("ManageLinksForFiles", "<iframe src=\"$linkToManagerForFiles\" name=\"manage links for files\" width=\"100%\" height=\"90%\">you browser does not support i-frames</iframe>"),
-                    new LiteralField('LinkToManagerHeaderForFiles', "<p><a href=\"$linkToManagerForFiles\" target=\"_blank\">Review and Edit</a> files in a new window ...</p>")
                 )
-                //new Tab('Back Links',
-                //	new LiteralField('MetaTagsLinksExplanation', '<h3>Referencing Websites</h3><p>A big part of Search Engine Optimisation is getting other sites to link to your site. Below you can keep a record of these back links.</p>'),
-                //	new GridField('MetaTagsLinks', 'MetaTagsLinks', MetaTagsLinks::get())
-                //)
             )
         );
         $fields->addFieldToTab("Root.Icons", $uploadField = new UploadField('Favicon', 'Icon'));

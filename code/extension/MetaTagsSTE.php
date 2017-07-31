@@ -193,11 +193,9 @@ class MetaTagsSTE extends SiteTreeExtension
                 "LinkToManagerHeader",
                 "<blockquote style='padding-left: 12px;'>
                     <p>
-                        Open the Meta Tag Manager to
-                        <a href=\"$linkToManager\" target=\"_blank\">Review and Edit</a>
-                        the Meta Data for all pages on this site.
-                        Also make sure to review the general settings for
-                        <a href=\"/admin/settings/\">Search Engines</a>. $updatedFieldString
+                        Open the Search Engine Tab to review the default settings for
+                        <a href=\"/admin/settings/\">Search Engine related Meta Fields</a>.
+                        $updatedFieldString
                     </p>
                 </blockquote>"
             )
