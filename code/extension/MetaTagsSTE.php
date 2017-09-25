@@ -16,7 +16,14 @@ class MetaTagsSTE extends SiteTreeExtension
      * @var Array
      **/
     private static $db = array(
-        'AutomateMetatags' => 'Boolean(1)'
+        'AutomateMetatags' => 'Enum("Inherit,Custom,Automated", "Inherit")'
+    );
+    /**
+     * standard SS method
+     * @var Array
+     **/
+    private static $indexes = array(
+        'AutomateMetatags' => true
     );
 
     /**
@@ -75,7 +82,7 @@ class MetaTagsSTE extends SiteTreeExtension
      * @var Array
      **/
     private static $defaults = array(
-        'AutomateMetatags' => true
+        'AutomateMetatags' => 'Inherit'
     );
 
     /**
@@ -89,12 +96,12 @@ class MetaTagsSTE extends SiteTreeExtension
                 _t("MetaTagsSTE.FB_HOW_THIS_PAGE_IS_SHARED", "How is this page shared on Facebook?")
             )
         );
-        $fields->addFieldToTab("Root.Facebook", $fieldTitle = new ReadonlyField("fb_title", _t("MetaTagsSTE.FB_TITLE", "Title"), $this->owner->Title));
-        $fields->addFieldToTab("Root.Facebook", $fieldType = new ReadonlyField("fb_type", _t("MetaTagsSTE.FB_TITLE", "Type"), "website"));
-        $fields->addFieldToTab("Root.Facebook", $fieldSiteName = new ReadonlyField("fb_type", _t("MetaTagsSTE.FB_SITE_NAME", "Site Name"), SiteConfig::current_site_config()->Title));
-        $fields->addFieldToTab("Root.Facebook", $fieldDescription = new ReadonlyField("fb_description", _t("MetaTagsSTE.FB_DESCRIPTION", "Description (from MetaDescription)"), $this->owner->MetaDescription));
+        $fields->addFieldToTab("Root.Facebook", $fieldTitle = ReadonlyField::create("fb_title", _t("MetaTagsSTE.FB_TITLE", "Title"), $this->owner->Title));
+        $fields->addFieldToTab("Root.Facebook", $fieldType = ReadonlyField::create("fb_type", _t("MetaTagsSTE.FB_TITLE", "Type"), "website"));
+        $fields->addFieldToTab("Root.Facebook", $fieldSiteName = ReadonlyField::create("fb_type", _t("MetaTagsSTE.FB_SITE_NAME", "Site Name"), SiteConfig::current_site_config()->Title));
+        $fields->addFieldToTab("Root.Facebook", $fieldDescription = ReadonlyField::create("fb_description", _t("MetaTagsSTE.FB_DESCRIPTION", "Description (from MetaDescription)"), $this->owner->MetaDescription));
         $fields->addFieldToTab("Root.Facebook",
-            $shareOnFacebookImageField = new UploadField(
+            $shareOnFacebookImageField = UploadField::create(
                 "ShareOnFacebookImage",
                 _t("MetaTagsSTE.FB_IMAGE", "Image")
             )
@@ -102,14 +109,14 @@ class MetaTagsSTE extends SiteTreeExtension
         $shareOnFacebookImageField->setFolderName("OpenGraphShareImages");
         $shareOnFacebookImageField->setRightTitle("Use images that are at least 1200 x 630 pixels for the best display on high resolution devices. At the minimum, you should use images that are 600 x 315 pixels to display link page posts with larger images.");
         $fields->addFieldToTab("Root.Facebook",
-            $shareOnFacebookImageField = new LiteralField(
+            $shareOnFacebookImageField = LiteralField::create(
                 "fb_try_it_out",
                 '<h3><a href="https://www.facebook.com/sharer/sharer.php?u='.urlencode($this->owner->AbsoluteLink()).'">'._t("MetaTagsSTE.FB_TRY_IT_OUT", "Share on Facebook Now") .'</a></h3>',
                 $this->owner->ShareOnFacebookImage()
             )
         );
         $fields->addFieldToTab("Root.Facebook",
-            $debugFacebookSharing = new LiteralField(
+            $debugFacebookSharing = LiteralField::create(
                 "fb_debug_link",
                 '<h3><a href="https://developers.facebook.com/tools/debug/sharing/?q='.urlencode($this->owner->AbsoluteLink()).'" target="_blank">'._t("MetaTagsSTE.FB_DEBUGGER", "Facebook Sharing Debugger") .'</a></h3>'
             )
@@ -156,7 +163,7 @@ class MetaTagsSTE extends SiteTreeExtension
         if (Config::inst()->get("MetaTagsContentControllerEXT", "use_separate_metatitle") == 1) {
             $fields->addFieldToTab(
                 'Root.Main.Metadata',
-                $allowField0 = new TextField(
+                $allowField0 = TextField::create(
                     'MetaTitle',
                     _t('SiteTree.METATITLE', 'Meta Title')
                 ),
@@ -169,11 +176,16 @@ class MetaTagsSTE extends SiteTreeExtension
 
         //info about automation
         $fields->addFieldToTab(
-            'Root.Main.Metadata',
-            $allowField1 = new CheckboxField(
+            'Root.Main',
+            $allowField1 = OptionSetField::create(
                 'AutomateMetatags',
-                _t('MetaManager.UPDATEMETA', 'Automatically update Meta Description and Navigation Label? ')
-            )
+                _t('MetaManager.UPDATEMETA', 'Menus and Meta Data'),
+                $this->AutomateMetatagsOptions()
+            )->setDescription(
+                _t('MetatagSTE.BY_DEFAULT', '<strong><a href="/admin/settings">Default Settings</a></strong>:').
+                $this->defaultSettingDescription()
+            ),
+            'URLSegment'
         );
         $automatedFields =  $this->updatedFieldsArray();
         $updatedFieldString = "";
@@ -197,7 +209,7 @@ class MetaTagsSTE extends SiteTreeExtension
         $linkToManager = Config::inst()->get("MetaTagCMSControlPages", "url_segment") . '/';
         $fields->addFieldToTab(
             'Root.Main.Metadata',
-            new LiteralField(
+            LiteralField::create(
                 "LinkToManagerHeader",
                 "<blockquote style='padding-left: 12px;'>
                     <p>
@@ -224,7 +236,7 @@ class MetaTagsSTE extends SiteTreeExtension
         $siteConfig = SiteConfig::current_site_config();
         // if UpdateMeta checkbox is checked, update metadata based on content and title
         // we only update this from the CMS to limit slow-downs in programatic updates
-        if ($this->owner->AutomateMetatags == 1 || $siteConfig->UpdateMenuTitle) {
+        if ($this->owner->AutomateMetatags == 'Automated' || $siteConfig->UpdateMenuTitle) {
             // Empty MenuTitle
             $this->owner->MenuTitle = '';
             // Check for Content, to prevent errors
@@ -233,7 +245,7 @@ class MetaTagsSTE extends SiteTreeExtension
             }
         }
         $length = Config::inst()->get("MetaTagsContentControllerEXT", "meta_desc_length");
-        if (($this->owner->AutomateMetatags || $siteConfig->UpdateMetaDescription) && $length > 0) {
+        if (($this->owner->AutomateMetatags == 'Automated' || $siteConfig->UpdateMetaDescription) && $length > 0) {
             // Empty MetaDescription
             // Check for Content, to prevent errors
 
@@ -249,25 +261,26 @@ class MetaTagsSTE extends SiteTreeExtension
     }
 
     /**
-     * what fields are updated automatically?
+     * what fields are updated automatically for this page ...
      * @return Array
      */
     private function updatedFieldsArray()
     {
         $config = SiteConfig::current_site_config();
-        $fields = array();
-        if ($config->UpdateMenuTitle || $this->owner->AutomateMetatags) {
-            $fields['MenuTitle'] = _t('SiteTree.MENUTITLE', 'Menu Title ');
+        $fields = [];
+        if ($config->UpdateMenuTitle || $this->owner->AutomateMetatags == 'Automated') {
+            $fields['MenuTitle'] = _t('SiteTree.MENUTITLE', 'Navigation Label');
         }
-        if ($config->UpdateMetaDescription || $this->owner->AutomateMetatags) {
+        if ($config->UpdateMetaDescription || $this->owner->AutomateMetatags == 'Automated') {
             $fields['MetaDescription'] = _t('SiteTree.METADESCRIPTION', 'Meta Description');
         }
+
         return $fields;
     }
 
     public function populateDefaults()
     {
-        $this->owner->AutomateMetatags = true;
+        $this->owner->AutomateMetatags = 'Inherit';
     }
 
     private function cleanInput($string, $numberOfWords = 0)
@@ -310,5 +323,41 @@ class MetaTagsSTE extends SiteTreeExtension
                 }
             }
         }
+        DB::query('
+            UPDATE "SiteTree" SET "AutomateMetatags" = \'Inherit\'
+            WHERE "AutomateMetatags" NOT IN (\''.implode(array_keys($this->AutomateMetatagsOptions())).'\')
+        ');
+        DB::query('
+            UPDATE "SiteTree_Live" SET "AutomateMetatags" = \'Inherit\'
+            WHERE "AutomateMetatags" NOT IN (\''.implode(array_keys($this->AutomateMetatagsOptions())).'\')
+        ');
     }
+
+    private function AutomateMetatagsOptions()
+    {
+        return array(
+            'Inherit' => _t('MetaTagsSTE.INHERIT', 'Default Setting'),
+            'Custom' => _t('MetaTagsSTE.CUSTOM', 'Manually'),
+            'Automated' => _t('MetaTagsSTE.AUTOMATE', 'Automated')
+        );
+    }
+
+
+    private function defaultSettingDescription()
+    {
+        $v = [];
+        if($this->owner->UpdateMenuTitle) {
+            $v[] = _t('MetaTagsSTE.UPDATE_MENU_TITLE_ON', 'The Navigation Labels (Menu Titles) are automatically updated');
+        } else {
+            $v[] = _t('MetaTagsSTE.UPDATE_MENU_TITLE_OFF', 'The Navigation Labels (Menu Titles) are customised per page');
+        }
+        if($this->owner->UpdateMetaDescription) {
+            $v[] = _t('MetaTagsSTE.UPDATE_META_DESC_ON', 'The Meta Descriptions are automatically updated');
+
+        } else {
+            $v[] = _t('MetaTagsSTE.UPDATE_META_DESC_OFF', 'The Meta Descriptions are updated per page');
+        }
+        return '<br />- '.implode('<br />- ', $v);
+    }
+
 }
