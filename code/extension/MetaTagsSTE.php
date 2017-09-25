@@ -28,6 +28,14 @@ class MetaTagsSTE extends SiteTreeExtension
     );
 
     /**
+     * we add this to make all menus faster!
+     * @var Array
+     **/
+    private static $indexes = array(
+        'Sort' => true
+    );
+
+    /**
      * @var string
      * set to empty string to stop it being copied
      * by default to the theme
