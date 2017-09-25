@@ -282,9 +282,18 @@ class MetaTagsContentControllerEXT extends Extension
                     "_",
                     $base.'_'.$_SERVER["REQUEST_URI"]
                 );
+        if ($this->owner->hasMethod('metatagsCacheKey')) {
+            $add = $this->owner->metatagsCacheKey();
+            if ($add === false) {
+                $cacheKey = null;
+            }
+            $cacheKey .= $add;
+        }
         $cache = SS_Cache::factory('metatags');
         $tags = $cache->load($cacheKey);
-        if (!$tags) {
+        if ($tags && $cacheKey) {
+            //do nothing
+        } else {
             $themeFolder = SSViewer::get_theme_folder() . '/';
             $tags = "";
             $page = $this->owner;
@@ -293,9 +302,9 @@ class MetaTagsContentControllerEXT extends Extension
             //base tag
             $base = Director::absoluteBaseURL();
             $tags .= "<base href=\"$base\" />";
-            if($this->owner->hasMethod('CanonicalLink')) {
+            if ($this->owner->hasMethod('CanonicalLink')) {
                 $canonicalLink = $this->owner->CanonicalLink();
-                if($canonicalLink) {
+                if ($canonicalLink) {
                     $tags .= "
             <link rel=\"canonical\" href=\"".$canonicalLink."\" />";
                 }
@@ -365,7 +374,9 @@ class MetaTagsContentControllerEXT extends Extension
             $tags .= $this->OGTags();
             $tags .= $this->TwitterTags();
             $tags .= $this->iconTags($faviconBase, $hasBaseFolderFavicon);
-            $cache->save($tags, $cacheKey);
+            if ($cacheKey) {
+                $cache->save($tags, $cacheKey);
+            }
         }
         return $tags;
     }
@@ -534,7 +545,8 @@ class MetaTagsContentControllerEXT extends Extension
         return $html;
     }
 
-    protected function MetaTagsMetaTitle(){
+    protected function MetaTagsMetaTitle()
+    {
         $title = "";
         $page = $this->owner;
         if (Config::inst()->get("MetaTagsContentControllerEXT", "use_separate_metatitle") == 1) {

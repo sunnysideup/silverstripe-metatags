@@ -23,7 +23,8 @@ class MetaTagsSTE extends SiteTreeExtension
      * @var Array
      **/
     private static $indexes = array(
-        'AutomateMetatags' => true
+        'AutomateMetatags' => true,
+        'Sort' => true
     );
 
     /**
@@ -32,14 +33,6 @@ class MetaTagsSTE extends SiteTreeExtension
      **/
     private static $has_one = array(
         'ShareOnFacebookImage' => 'Image'
-    );
-
-    /**
-     * we add this to make all menus faster!
-     * @var Array
-     **/
-    private static $indexes = array(
-        'Sort' => true
     );
 
     /**
@@ -346,18 +339,16 @@ class MetaTagsSTE extends SiteTreeExtension
     private function defaultSettingDescription()
     {
         $v = [];
-        if($this->owner->UpdateMenuTitle) {
+        if ($this->owner->UpdateMenuTitle) {
             $v[] = _t('MetaTagsSTE.UPDATE_MENU_TITLE_ON', 'The Navigation Labels (Menu Titles) are automatically updated');
         } else {
             $v[] = _t('MetaTagsSTE.UPDATE_MENU_TITLE_OFF', 'The Navigation Labels (Menu Titles) are customised per page');
         }
-        if($this->owner->UpdateMetaDescription) {
+        if ($this->owner->UpdateMetaDescription) {
             $v[] = _t('MetaTagsSTE.UPDATE_META_DESC_ON', 'The Meta Descriptions are automatically updated');
-
         } else {
             $v[] = _t('MetaTagsSTE.UPDATE_META_DESC_OFF', 'The Meta Descriptions are updated per page');
         }
         return '<br />- '.implode('<br />- ', $v);
     }
-
 }
