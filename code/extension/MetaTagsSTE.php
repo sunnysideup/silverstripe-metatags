@@ -152,7 +152,7 @@ class MetaTagsSTE extends SiteTreeExtension
      **/
     public function updateCMSFields(FieldList $fields)
     {
-        //separate MetaTitle
+        //separate MetaTitle?
         if (Config::inst()->get("MetaTagsContentControllerEXT", "use_separate_metatitle") == 1) {
             $fields->addFieldToTab(
                 'Root.Main.Metadata',
@@ -167,7 +167,7 @@ class MetaTagsSTE extends SiteTreeExtension
             );
         }
 
-        //info about automation
+        //choose automation for page
         $fields->addFieldToTab(
             'Root.Main',
             $allowField1 = OptionSetField::create(
@@ -175,16 +175,18 @@ class MetaTagsSTE extends SiteTreeExtension
                 _t('MetaManager.UPDATEMETA', 'Menus and Meta Data'),
                 $this->AutomateMetatagsOptions()
             )->setDescription(
-                _t('MetatagSTE.BY_DEFAULT', '<strong><a href="/admin/settings">Default Settings</a></strong>:').
+                _t('MetatagSTE.BY_DEFAULT', '<strong><a href="/admin/settings/">Default Settings</a></strong>:').
                 $this->defaultSettingDescription()
             ),
             'URLSegment'
         );
+
+
         $automatedFields =  $this->updatedFieldsArray();
         $updatedFieldString = "";
         if (count($automatedFields)) {
             $updatedFieldString = ""
-                ._t("MetaManager.UPDATED_EXTERNALLY", "Based on your current settings, the following fields will be automatically updated at all times")
+                ._t("MetaManager.UPDATED_EXTERNALLY", "Based on your current settings, the following fields will be automatically updated:")
                 .": <em>"
                 .implode("</em>, <em>", $automatedFields)
                 ."</em>.";
@@ -261,6 +263,9 @@ class MetaTagsSTE extends SiteTreeExtension
     {
         $config = SiteConfig::current_site_config();
         $fields = [];
+        if ($this->owner->AutomateMetatags == 'Custom') {
+            return $fields;
+        }
         if ($config->UpdateMenuTitle || $this->owner->AutomateMetatags == 'Automated') {
             $fields['MenuTitle'] = _t('SiteTree.MENUTITLE', 'Navigation Label');
         }
