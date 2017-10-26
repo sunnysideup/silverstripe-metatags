@@ -40,46 +40,40 @@ class MetaTagsSiteConfigDE extends DataExtension
         $fields->addFieldToTab('Root.SearchEngines',
             new TabSet('Options',
                 new Tab('Help',
-                    new LiteralField('HelpExplanation', '
+                    LiteralField::create('HelpExplanation', '
                         <h3>Search Engine - How to use ...</h3>
                         <p>
                             To improve your visibility with search engines, we provide a number of tools here.
                             Improving your rankings with Search Engines can work as follows:
                         </p>
                         <ul>
-                            <li> - decide on a few keywords for each page - basically the words that people would search for on Google (e.g. <i>feed elderly cat</i>))</li>
-                            <li> - ensure that these words are seen in strategic places on this page</li>
-                            <li> - create links to the page from <i>third-party</i> websites</li>
-                        </ul>
-                        <p>
-                            <br />The tools provided here help you to achieve these goals by ensuring:
-                        </p>
-                        <ul>
-                            <li> - easy addition of keywords to key field (navigation label, meta description)</li>
-                            <li> - you can adjust the file image names and descriptions to match the keywords</li>
+                            <li> - decide on a few keywords for each page - basically the words that people would search for on Google (e.g. <i>feed elderly cat</i>)</li>
+                            <li> - ensure that these words are seen in strategic places on that page</li>
+                            <li> - create links to the page from <i>third-party</i> websites, and pages within your site, using those keywords.</li>
                         </ul>
                         '
                     )
                 ),
                 new Tab('Menus',
-                    new LiteralField('MenuTitleExplanation', '<h3>Menu Title</h3><p>To improve consistency, you can set the menu title to automatically match the page title for any page on the site. </p>'),
-                    new CheckboxField('UpdateMenuTitle', 'Automatically update the Menu Title / Navigation Label to match the Page Title?')
+                    LiteralField::create('MenuTitleExplanation', '<h3>Menu Title</h3><p>To improve consistency, you can set the menu title to automatically match the page title for any page on the site. </p>'),
+                    CheckboxField::create('UpdateMenuTitle', 'Automatically')->setDescription('Automatically update the Menu Title / Navigation Label to match the Page Title?')
                 ),
                 new Tab('Meta Title',
-                    new TextField('PrependToMetaTitle', 'Prepend (add in front) of Meta Title'),
-                    new TextField('AppendToMetaTitle', 'Append (add at the end) of Meta Title')
+                    LiteralField::create('MetaTitleExplanation', '<h3>&ldquo;Meta Titles&rdquo;</h3><p>These are found in the top of your browser bar and these titles are also used when you bookmark a page.</p>'),
+                    TextField::create('PrependToMetaTitle', 'Prepend')->setRightTitle('add to the front of Meta Title'),
+                    TextField::create('AppendToMetaTitle', 'Append')->setRightTitle('add at the end of Meta Title')
                 ),
                 new Tab('Meta Description',
-                    new LiteralField('MetaDescriptionExplanation', '<h3>&ldquo;Meta Description&rdquo;: Summary for Search Engines</h3><p>The Meta Description is not visible on the website itself. However, it is picked up by search engines like google.  They display it as the short blurb underneath the link to your pages. It will not get you much higher in the rankings, but it will entice people to click on your link.</p>'),
-                    new CheckboxField('UpdateMetaDescription', 'Automatically fill every meta description on every Page (using the first '.Config::inst()->get("MetaTagsContentControllerEXT", "meta_desc_length").' words of the Page Content field).')
+                    LiteralField::create('MetaDescriptionExplanation', '<h3>&ldquo;Meta Description&rdquo;: Summary for Search Engines</h3><p>The Meta Description is not visible on the website itself. However, it is picked up by search engines like google.  They display it as the short blurb underneath the link to your pages. It will not get you much higher in the rankings, but it will entice people to click on your link.</p>'),
+                    CheckboxField::create('UpdateMetaDescription', 'Automatically')->setDescription('Automatically fill every meta description on every Page (using the first '.Config::inst()->get("MetaTagsContentControllerEXT", "meta_desc_length").' words of the Page Content field).')
                 ),
                 new Tab('Other Meta Data',
-                    new LiteralField('MetaOtherExplanation', '<h3>Other &ldquo;Meta Data&rdquo;: More hidden information about the page</h3><p>You can add some other <i>hidden</i> information to your pages - which can be picked up by Search Engines and other automated readers decyphering your website.</p>'),
-                    new TextField('MetaDataCountry', 'Country'),
-                    new TextField('MetaDataCopyright', 'Content Copyright'),
-                    new TextField('MetaDataDesign', 'Design provided by ...'),
-                    new TextField('MetaDataCoding', 'Website Coding carried out by ...'),
-                    new TextareaField('ExtraMeta', 'Custom Meta Tags (advanced users only)')
+                    LiteralField::create('MetaOtherExplanation', '<h3>Other &ldquo;Meta Data&rdquo;: More hidden information about the page</h3><p>You can add some other <i>hidden</i> information to your pages - which can be picked up by Search Engines and other automated readers decyphering your website.</p>'),
+                    TextField::create('MetaDataCountry', 'Country'),
+                    TextField::create('MetaDataCopyright', 'Content Copyright'),
+                    TextField::create('MetaDataDesign', 'Design provided by ...'),
+                    TextField::create('MetaDataCoding', 'Website Coding by ...'),
+                    TextareaField::create('ExtraMeta', 'Custom Meta Tags')->setRightTitle('Careful - advanced users only')
                 )
             )
         );
