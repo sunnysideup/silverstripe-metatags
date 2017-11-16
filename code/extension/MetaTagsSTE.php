@@ -294,7 +294,7 @@ class MetaTagsSTE extends SiteTreeExtension
      */
     public function requireDefaultRecords()
     {
-        $folder = SSViewer::current_theme();
+        $folder = Config::inst()->get('SSViewer', 'theme');;
         if ($folder) {
             if ($file = Config::inst()->get("MetaTagsSTE", "default_editor_file")) {
                 $baseFile = Director::baseFolder(). $file;
