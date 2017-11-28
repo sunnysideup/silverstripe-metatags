@@ -9,8 +9,11 @@ MetaTagsSTE:
 
 MetaTagsContentControllerEXT:
   meta_desc_length: 24
-  #must be set to one to work - NOT TRUE!
-  use_separate_metatitle: 0
+  no_search_engine_instructions: true
+  no_automated_menu_title: true
+  no_automated_meta_description: true
+  use_separate_metatitle: true
+  no_additional_meta_settings: true
   default_css:
     - mycss
   jquery_cdn_location: "https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"

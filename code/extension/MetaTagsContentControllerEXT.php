@@ -39,10 +39,34 @@ class MetaTagsContentControllerEXT extends Extension
     private static $twitter_handle = "";
 
     /**
-     * length of auto-generated meta descriptions in header
-     * @var Boolean
+     * dont show users basic instructions for SEO
+     * @var bool
      */
-    private static $use_separate_metatitle = 0;
+    private static $no_search_engine_instructions = false;
+
+    /**
+     * allow user to enter a separate meta title?
+     * @var bool
+     */
+    private static $use_separate_metatitle = false;
+
+    /**
+     * stop users from automating the menu title
+     * @var bool
+     */
+    private static $no_automated_menu_title = false;
+
+    /**
+     * stop users from automating meta descriptions
+     * @var bool
+     */
+    private static $no_automated_meta_description = false;
+
+    /**
+     * stop users from automating custom meta settings (custom tags, country, date, etc...)
+     * @var bool
+     */
+    private static $no_additional_meta_settings = false;
 
     /**
      * length of auto-generated meta descriptions in header
@@ -273,10 +297,13 @@ class MetaTagsContentControllerEXT extends Extension
         if (!isset($_SERVER["REQUEST_URI"])) {
             $_SERVER["REQUEST_URI"] = '';
         }
+        $siteConfig = SiteConfig::current_site_config();
         $this->addBasicMetatagRequirements();
         $cacheKey =
                 'ExtendedMetaTags_'
                 .abs($this->owner->ID).'_'
+                .strtotime($this->owner->LastEdited).'_'
+                .strtotime($siteConfig->LastEdited).'_'
                 .preg_replace(
                     "/[^a-z0-9]/i",
                     "_",
@@ -542,6 +569,7 @@ class MetaTagsContentControllerEXT extends Extension
             }
             $cache->save($html, $cacheKey);
         }
+
         return $html;
     }
 
@@ -549,12 +577,14 @@ class MetaTagsContentControllerEXT extends Extension
     {
         $title = "";
         $page = $this->owner;
-        if (Config::inst()->get("MetaTagsContentControllerEXT", "use_separate_metatitle") == 1) {
-            $title = $page->MetaTitle;
+        if (Config::inst()->get("MetaTagsContentControllerEXT", "use_separate_metatitle")) {
+            if(!empty($page->MetaTitle)) {
+                $title = $page->MetaTitle;
+            }
         }
-        if (!$title) {
+        if (! $title) {
             $title = $page->Title;
-            if (!$title) {
+            if (! $title) {
                 $title = $page->MenuTitle;
             }
         }

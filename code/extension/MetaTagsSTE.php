@@ -57,7 +57,7 @@ class MetaTagsSTE extends SiteTreeExtension
      */
     public static function get_extra_config($class, $extension, $args)
     {
-        if (Config::inst()->get("MetaTagsContentControllerEXT", "use_separate_metatitle") == 1) {
+        if (Config::inst()->get("MetaTagsContentControllerEXT", "use_separate_metatitle")) {
             $array = array(
                 'db' => array("MetaTitle" => "Varchar(255)") + self::$db
             );
@@ -100,7 +100,7 @@ class MetaTagsSTE extends SiteTreeExtension
             )
         );
         $shareOnFacebookImageField->setFolderName("OpenGraphShareImages");
-        $shareOnFacebookImageField->setRightTitle("Use images that are at least 1200 x 630 pixels for the best display on high resolution devices. At the minimum, you should use images that are 600 x 315 pixels to display link page posts with larger images.");
+        $shareOnFacebookImageField->setRightTitle("Use images that are at least 1200 x 630 pixels for the best display on high resolution devices. At the minimum, you should use images that are 600 x 315 pixels.");
         $fields->addFieldToTab("Root.Facebook",
             $shareOnFacebookImageField = LiteralField::create(
                 "fb_try_it_out",
@@ -153,7 +153,7 @@ class MetaTagsSTE extends SiteTreeExtension
     public function updateCMSFields(FieldList $fields)
     {
         //separate MetaTitle?
-        if (Config::inst()->get("MetaTagsContentControllerEXT", "use_separate_metatitle") == 1) {
+        if (Config::inst()->get("MetaTagsContentControllerEXT", "use_separate_metatitle")) {
             $fields->addFieldToTab(
                 'Root.Main.Metadata',
                 $allowField0 = TextField::create(
@@ -175,7 +175,6 @@ class MetaTagsSTE extends SiteTreeExtension
                 _t('MetaManager.UPDATEMETA', 'Automation for this page ...'),
                 $this->AutomateMetatagsOptions()
             )->setDescription(
-                _t('MetatagSTE.WHAT_ARE_WE_AUTOMATED', 'For this page, we can update Menus and Meta (Search Engine) Content<br />').
                 _t('MetatagSTE.BY_DEFAULT', '<strong><a href="/admin/settings/">Default Settings</a></strong>:').
                 $this->defaultSettingDescription()
             ),
@@ -195,7 +194,7 @@ class MetaTagsSTE extends SiteTreeExtension
                 if ($oldField) {
                     $newField = $oldField->performReadonlyTransformation();
                     //$newField->setTitle($newField->Title());
-                    $newField->setRightTitle(_t("MetaTags.AUTOMATICALLY_UPDATED", "Automatically updated when you save this page (see Metadata settings below)."));
+                    $newField->setRightTitle(_t("MetaTags.AUTOMATICALLY_UPDATED", "Automatically updated when you save this page."));
                     $fields->replaceField($fieldName, $newField);
                 }
             }
@@ -235,10 +234,13 @@ class MetaTagsSTE extends SiteTreeExtension
                     if ($this->owner->Content) {
                         //added a few hacks here
                         $contentField = DBField::create_field("Text", strip_tags($this->owner->Content), "MetaDescription");
-                        $flex = ceil(Config::inst()->get("MetaTagsContentControllerEXT", "meta_desc_length") / 2) + 5;
-                        $summary = $contentField->Summary($length, $flex);
+                        $summary = $contentField->Summary($length);
+                        $summary = str_replace("<br>", " ", $summary);
                         $summary = str_replace("<br />", " ", $summary);
+                        $summary = str_replace(".", ". ", $summary);
                         $this->owner->MetaDescription = $summary;
+                    } else {
+                        $this->owner->MetaDescription = '';
                     }
                 }
             }
@@ -256,11 +258,19 @@ class MetaTagsSTE extends SiteTreeExtension
             return $fields;
         }
         $config = SiteConfig::current_site_config();
-        if ($config->UpdateMenuTitle || $this->owner->AutomateMetatags == 'Automated') {
-            $fields['MenuTitle'] = _t('SiteTree.MENUTITLE', 'Navigation Label');
+        if(Config::inst()->get("MetaTagsContentControllerEXT", "no_automated_menu_title")) {
+            // do nothing
+        } else {
+            if ($config->UpdateMenuTitle || $this->owner->AutomateMetatags == 'Automated') {
+                $fields['MenuTitle'] = _t('SiteTree.MENUTITLE', 'Navigation Label');
+            }
         }
-        if ($config->UpdateMetaDescription || $this->owner->AutomateMetatags == 'Automated') {
-            $fields['MetaDescription'] = _t('SiteTree.METADESCRIPTION', 'Meta Description');
+        if(Config::inst()->get("MetaTagsContentControllerEXT", "no_automated_meta_description")) {
+            //do nothing
+        } else {
+            if ($config->UpdateMetaDescription || $this->owner->AutomateMetatags == 'Automated') {
+                $fields['MetaDescription'] = _t('SiteTree.METADESCRIPTION', 'Meta Description');
+            }
         }
 
         return $fields;
@@ -335,15 +345,23 @@ class MetaTagsSTE extends SiteTreeExtension
     {
         $v = [];
         $siteConfig = SiteConfig::current_site_config();
-        if ($siteConfig->UpdateMenuTitle) {
-            $v[] = _t('MetaTagsSTE.UPDATE_MENU_TITLE_ON', 'The Navigation Labels (Menu Titles) are automatically updated');
+        if(Config::inst()->get("MetaTagsContentControllerEXT", "no_automated_menu_title")) {
+            //do nothing
         } else {
-            $v[] = _t('MetaTagsSTE.UPDATE_MENU_TITLE_OFF', 'The Navigation Labels (Menu Titles) can be customised for individual pages');
+            if ($siteConfig->UpdateMenuTitle) {
+                $v[] = _t('MetaTagsSTE.UPDATE_MENU_TITLE_ON', 'The Navigation Labels (Menu Titles) are automatically updated');
+            } else {
+                $v[] = _t('MetaTagsSTE.UPDATE_MENU_TITLE_OFF', 'The Navigation Labels (Menu Titles) can be customised for individual pages');
+            }
         }
-        if ($siteConfig->UpdateMetaDescription) {
-            $v[] = _t('MetaTagsSTE.UPDATE_META_DESC_ON', 'The Meta Descriptions are automatically updated');
+        if(Config::inst()->get("MetaTagsContentControllerEXT", "no_automated_meta_description")) {
+            //do nothing
         } else {
-            $v[] = _t('MetaTagsSTE.UPDATE_META_DESC_OFF', 'The Meta Descriptions can be customised for individual pages');
+            if($siteConfig->UpdateMetaDescription) {
+                $v[] = _t('MetaTagsSTE.UPDATE_META_DESC_ON', 'The Meta Descriptions are automatically updated');
+            } else {
+                $v[] = _t('MetaTagsSTE.UPDATE_META_DESC_OFF', 'The Meta Descriptions can be customised for individual pages');
+            }
         }
         return '<br />- '.implode('<br />- ', $v);
     }
