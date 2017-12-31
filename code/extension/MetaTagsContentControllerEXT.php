@@ -496,6 +496,21 @@ class MetaTagsContentControllerEXT extends Extension
             //clean up any stuff...
             if ($this->_shareImage && $this->_shareImage->exists()) {
             } else {
+                $hasOnes = $this->owner->hasOne();
+                foreach($hasOnes as $hasOneName => $hasOneType) {
+                    if($hasOneName !== 'ShareOnFacebookImage') {
+                        if($hasOneType === 'Image' || is_subclass_of($hasOneType, 'Image')) {
+                            $field = $hasOneName.'ID';
+                            if($this->owner->$field) {
+                                $this->_shareImage = $this->owner->$hasOneName();
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            if ($this->_shareImage && $this->_shareImage->exists()) {
+            } else {
                 $this->_shareImage = false;
             }
         }
