@@ -38,13 +38,15 @@ class MetaTagsSiteConfigDE extends DataExtension
     public function updateCMSFields(FieldList $fields)
     {
         $tabs = [];
-        if(Config::inst()->get("MetaTagsContentControllerEXT", "no_search_engine_instructions")) {
+        if (Config::inst()->get("MetaTagsContentControllerEXT", "no_search_engine_instructions")) {
             //do nothing
         } else {
             $tabs[] =
                 Tab::create(
                     'Intro',
-                    LiteralField::create('HelpExplanation', '
+                    LiteralField::create(
+                        'HelpExplanation',
+                        '
                         <h3>Search Engine Optimisation (SEO)</h3>
                         <p>
                             To improve your visibility with search engines, we provide a number of tools here.
@@ -66,17 +68,18 @@ class MetaTagsSiteConfigDE extends DataExtension
             TextField::create('AppendToMetaTitle', 'Append')->setRightTitle('add at the end of Meta Title')
         );
 
-        if(Config::inst()->get("MetaTagsContentControllerEXT", "no_automated_menu_title")) {
+        if (Config::inst()->get("MetaTagsContentControllerEXT", "no_automated_menu_title")) {
             //do nothing
         } else {
             $tabs[] =
-                Tab::create('Menus',
+                Tab::create(
+                    'Menus',
                     LiteralField::create('MenuTitleExplanation', '<h3>Menu Title</h3><p>To improve consistency, you can set the menu title to automatically match the page title for any page on the site. </p>'),
                     CheckboxField::create('UpdateMenuTitle', 'Automatically')->setDescription('Automatically update the Menu Title / Navigation Label to match the Page Title?')
                 );
         }
 
-        if(Config::inst()->get("MetaTagsContentControllerEXT", "no_automated_meta_description")) {
+        if (Config::inst()->get("MetaTagsContentControllerEXT", "no_automated_meta_description")) {
             //do nothing
         } else {
             $tabs[] =
@@ -86,7 +89,7 @@ class MetaTagsSiteConfigDE extends DataExtension
                     CheckboxField::create('UpdateMetaDescription', 'Automatically')->setDescription('Automatically fill every meta description on every Page (using the first '.Config::inst()->get("MetaTagsContentControllerEXT", "meta_desc_length").' words of the Page Content field).')
                 );
         }
-        if(Config::inst()->get("MetaTagsContentControllerEXT", "no_additional_meta_settings")) {
+        if (Config::inst()->get("MetaTagsContentControllerEXT", "no_additional_meta_settings")) {
             //do nothing ...
         } else {
             $tabs[] = Tab::create(
@@ -98,22 +101,22 @@ class MetaTagsSiteConfigDE extends DataExtension
                 TextField::create('MetaDataCoding', 'Website Coding provided by'),
                 TextareaField::create('ExtraMeta', 'Custom Meta Tags')->setRightTitle('Careful - advanced users only')
             );
-
         }
-        if(count($tabs)) {
+        if (count($tabs)) {
             $fields->addFieldToTab(
                 'Root.SearchEngines',
                 $tabSet = TabSet::create(
                     'Options'
                 )
             );
-            foreach($tabs as $tab) {
+            foreach ($tabs as $tab) {
                 $tabSet->push($tab);
             }
         }
         $fields->addFieldToTab("Root.Icons", $uploadField = UploadField::create('Favicon', 'Icon'));
         $uploadField->setAllowedExtensions(array("png"));
-        $uploadField->setRightTitle("
+        $uploadField->setRightTitle(
+            "
             Upload a 480px wide x 480px high, non-transparent PNG file.
             Ask your developer for help if unsure.
             Note for advanced users:
@@ -128,7 +131,7 @@ class MetaTagsSiteConfigDE extends DataExtension
      */
     public function onBeforeWrite()
     {
-        if(Config::inst()->get("MetaTagsContentControllerEXT", "no_additional_meta_settings")) {
+        if (Config::inst()->get("MetaTagsContentControllerEXT", "no_additional_meta_settings")) {
             $this->owner->MetaDataCountry = '';
             $this->owner->MetaDataCopyright = '';
             $this->owner->MetaDataDesign = '';

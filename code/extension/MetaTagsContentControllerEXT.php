@@ -166,8 +166,6 @@ class MetaTagsContentControllerEXT extends Extension
         if ($jQueryCDNLocation) {
             Requirements::block("framework/thirdparty/jquery/jquery.js");
             Requirements::javascript($jQueryCDNLocation);
-        } else {
-            Requirements::javascript("framework/thirdparty/jquery/jquery.js");
         }
     }
 
@@ -496,11 +494,11 @@ class MetaTagsContentControllerEXT extends Extension
             if ($this->_shareImage && $this->_shareImage->exists()) {
             } else {
                 $hasOnes = $this->owner->hasOne();
-                foreach($hasOnes as $hasOneName => $hasOneType) {
-                    if($hasOneName !== 'ShareOnFacebookImage') {
-                        if($hasOneType === 'Image' || is_subclass_of($hasOneType, 'Image')) {
+                foreach ($hasOnes as $hasOneName => $hasOneType) {
+                    if ($hasOneName !== 'ShareOnFacebookImage') {
+                        if ($hasOneType === 'Image' || is_subclass_of($hasOneType, 'Image')) {
                             $field = $hasOneName.'ID';
-                            if($this->owner->$field) {
+                            if ($this->owner->$field) {
                                 $this->_shareImage = $this->owner->$hasOneName();
                                 break;
                             }
@@ -592,7 +590,7 @@ class MetaTagsContentControllerEXT extends Extension
         $title = "";
         $page = $this->owner;
         if (Config::inst()->get("MetaTagsContentControllerEXT", "use_separate_metatitle")) {
-            if(!empty($page->MetaTitle)) {
+            if (!empty($page->MetaTitle)) {
                 $title = $page->MetaTitle;
             }
         }

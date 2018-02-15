@@ -84,7 +84,8 @@ class MetaTagsSTE extends SiteTreeExtension
      **/
     public function updateSettingsFields(FieldList $fields)
     {
-        $fields->addFieldToTab("Root.Facebook",
+        $fields->addFieldToTab(
+            "Root.Facebook",
             new HeaderField(
                 _t("MetaTagsSTE.FB_HOW_THIS_PAGE_IS_SHARED", "How is this page shared on Facebook?")
             )
@@ -93,7 +94,8 @@ class MetaTagsSTE extends SiteTreeExtension
         $fields->addFieldToTab("Root.Facebook", $fieldType = ReadonlyField::create("fb_type", _t("MetaTagsSTE.FB_TITLE", "Type"), "website"));
         $fields->addFieldToTab("Root.Facebook", $fieldSiteName = ReadonlyField::create("fb_type", _t("MetaTagsSTE.FB_SITE_NAME", "Site Name"), SiteConfig::current_site_config()->Title));
         $fields->addFieldToTab("Root.Facebook", $fieldDescription = ReadonlyField::create("fb_description", _t("MetaTagsSTE.FB_DESCRIPTION", "Description (from MetaDescription)"), $this->owner->MetaDescription));
-        $fields->addFieldToTab("Root.Facebook",
+        $fields->addFieldToTab(
+            "Root.Facebook",
             $shareOnFacebookImageField = UploadField::create(
                 "ShareOnFacebookImage",
                 _t("MetaTagsSTE.FB_IMAGE", "Image")
@@ -101,14 +103,16 @@ class MetaTagsSTE extends SiteTreeExtension
         );
         $shareOnFacebookImageField->setFolderName("OpenGraphShareImages");
         $shareOnFacebookImageField->setRightTitle("Use images that are at least 1200 x 630 pixels for the best display on high resolution devices. At the minimum, you should use images that are 600 x 315 pixels.");
-        $fields->addFieldToTab("Root.Facebook",
+        $fields->addFieldToTab(
+            "Root.Facebook",
             $shareOnFacebookImageField = LiteralField::create(
                 "fb_try_it_out",
                 '<h3><a href="https://www.facebook.com/sharer/sharer.php?u='.urlencode($this->owner->AbsoluteLink()).'">'._t("MetaTagsSTE.FB_TRY_IT_OUT", "Share on Facebook Now") .'</a></h3>',
                 $this->owner->ShareOnFacebookImage()
             )
         );
-        $fields->addFieldToTab("Root.Facebook",
+        $fields->addFieldToTab(
+            "Root.Facebook",
             $debugFacebookSharing = LiteralField::create(
                 "fb_debug_link",
                 '<h3><a href="https://developers.facebook.com/tools/debug/sharing/?q='.urlencode($this->owner->AbsoluteLink()).'" target="_blank">'._t("MetaTagsSTE.FB_DEBUGGER", "Facebook Sharing Debugger") .'</a></h3>'
@@ -258,14 +262,14 @@ class MetaTagsSTE extends SiteTreeExtension
             return $fields;
         }
         $config = SiteConfig::current_site_config();
-        if(Config::inst()->get("MetaTagsContentControllerEXT", "no_automated_menu_title")) {
+        if (Config::inst()->get("MetaTagsContentControllerEXT", "no_automated_menu_title")) {
             // do nothing
         } else {
             if ($config->UpdateMenuTitle || $this->owner->AutomateMetatags == 'Automated') {
                 $fields['MenuTitle'] = _t('SiteTree.MENUTITLE', 'Navigation Label');
             }
         }
-        if(Config::inst()->get("MetaTagsContentControllerEXT", "no_automated_meta_description")) {
+        if (Config::inst()->get("MetaTagsContentControllerEXT", "no_automated_meta_description")) {
             //do nothing
         } else {
             if ($config->UpdateMetaDescription || $this->owner->AutomateMetatags == 'Automated') {
@@ -304,7 +308,8 @@ class MetaTagsSTE extends SiteTreeExtension
      */
     public function requireDefaultRecords()
     {
-        $folder = Config::inst()->get('SSViewer', 'theme');;
+        $folder = Config::inst()->get('SSViewer', 'theme');
+        ;
         if ($folder) {
             if ($file = Config::inst()->get("MetaTagsSTE", "default_editor_file")) {
                 $baseFile = Director::baseFolder(). $file;
@@ -345,7 +350,7 @@ class MetaTagsSTE extends SiteTreeExtension
     {
         $v = [];
         $siteConfig = SiteConfig::current_site_config();
-        if(Config::inst()->get("MetaTagsContentControllerEXT", "no_automated_menu_title")) {
+        if (Config::inst()->get("MetaTagsContentControllerEXT", "no_automated_menu_title")) {
             //do nothing
         } else {
             if ($siteConfig->UpdateMenuTitle) {
@@ -354,10 +359,10 @@ class MetaTagsSTE extends SiteTreeExtension
                 $v[] = _t('MetaTagsSTE.UPDATE_MENU_TITLE_OFF', 'The Navigation Labels (Menu Titles) can be customised for individual pages');
             }
         }
-        if(Config::inst()->get("MetaTagsContentControllerEXT", "no_automated_meta_description")) {
+        if (Config::inst()->get("MetaTagsContentControllerEXT", "no_automated_meta_description")) {
             //do nothing
         } else {
-            if($siteConfig->UpdateMetaDescription) {
+            if ($siteConfig->UpdateMetaDescription) {
                 $v[] = _t('MetaTagsSTE.UPDATE_META_DESC_ON', 'The Meta Descriptions are automatically updated');
             } else {
                 $v[] = _t('MetaTagsSTE.UPDATE_META_DESC_OFF', 'The Meta Descriptions can be customised for individual pages');
