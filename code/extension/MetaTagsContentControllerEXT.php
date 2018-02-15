@@ -163,7 +163,6 @@ class MetaTagsContentControllerEXT extends Extension
     public function onBeforeInit()
     {
         $jQueryCDNLocation = Config::inst()->get("MetaTagsContentControllerEXT", "jquery_cdn_location");
-        Requirements::block("framework/thirdparty/jquery/jquery.js");
         if ($jQueryCDNLocation) {
             Requirements::block("framework/thirdparty/jquery/jquery.js");
             Requirements::javascript($jQueryCDNLocation);
