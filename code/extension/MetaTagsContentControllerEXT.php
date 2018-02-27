@@ -104,12 +104,6 @@ class MetaTagsContentControllerEXT extends Extension
     );
 
     /**
-     * what should be included on every page?
-     * @var String
-     */
-    private static $alternative_jquery_location = "";
-
-    /**
      * @var String
      * folder where the combined css / js files will be stored
      * if they are combined.
@@ -166,6 +160,8 @@ class MetaTagsContentControllerEXT extends Extension
         if ($jQueryCDNLocation) {
             Requirements::block("framework/thirdparty/jquery/jquery.js");
             Requirements::javascript($jQueryCDNLocation);
+        } else {
+            Requirements::javascript('framework/thirdparty/jquery/jquery.js');
         }
     }
 
@@ -212,6 +208,7 @@ class MetaTagsContentControllerEXT extends Extension
             // }
             $jsArray = array_unique(array_merge($jsArray, $additionalJS));
 
+
             //javascript
             if ($combineJS && file_exists($folderForCombinedFilesWithBase.$jsFile)) {
                 Requirements::javascript($jsFile);
@@ -223,6 +220,9 @@ class MetaTagsContentControllerEXT extends Extension
                     } else {
                         if (!isset($alreadyDone[$js])) {
                             Requirements::javascript($js);
+                            var_dump('bbb');
+                            var_dump('bbb'.$js);
+                            die('sdfdsf');
                             $alreadyDone[$js] = 1;
                         }
                     }
@@ -232,6 +232,7 @@ class MetaTagsContentControllerEXT extends Extension
             if (!$jQueryCDNLocation) {
                 array_unshift($jsArray, "framework/thirdparty/jquery/jquery.js");
             }
+
             if ($combineJS) {
                 Requirements::combine_files($jsFile, $jsArray);
             }
