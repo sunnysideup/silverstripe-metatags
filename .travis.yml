@@ -31,6 +31,7 @@ matrix:
     - php: 7.1
       env:
         - DB=MYSQL
+        - PHPUNIT_TEST=metatags
 
 before_script:
   - pecl channel-update pecl.php.net
