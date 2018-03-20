@@ -31,7 +31,6 @@ matrix:
     - php: 7.1
       env:
         - DB=MYSQL
-        - PHPUNIT_TEST=metatags
 
 before_script:
   - pecl channel-update pecl.php.net
@@ -52,3 +51,8 @@ notifications:
 cache:
   directories:
     - $HOME/.composer/cache/files
+
+
+script:
+  # Execute tests with no coverage.  This is the fastest option
+ - php framework/cli-script.php dev/build flush=all
