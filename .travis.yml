@@ -12,13 +12,13 @@ addons:
   apt:
     packages:
       - tidy
-  firefox: "31.0"
 
 #before_install:
   #- pip install --user codecov
 
 env:
   global:
+    - CORE_RELEASE=3.6.1
     - COMPOSER_ROOT_VERSION=3.6.1
     - DISPLAY=":99"
     - XVFBARGS=":99 -ac -screen 0 1024x768x16"
