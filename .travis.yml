@@ -8,6 +8,11 @@ cache:
   directories:
     - $HOME/.composer/cache/files
 
+# configure notifications (email, IRC, campfire etc)
+notifications:
+  email: ssuerrors@gmail.com
+
+
 addons:
   apt:
     packages:
@@ -32,6 +37,10 @@ matrix:
       env:
         - DB=MYSQL
 
+
+
+
+
 before_script:
   - pecl channel-update pecl.php.net
   - phpenv rehash
@@ -41,17 +50,6 @@ before_script:
   - git clone git://github.com/silverstripe-labs/silverstripe-travis-support.git ~/travis-support
   - php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss
   - cd ~/builds/ss
-
-
-# configure notifications (email, IRC, campfire etc)
-notifications:
-  email: ssuerrors@gmail.com
-
-
-cache:
-  directories:
-    - $HOME/.composer/cache/files
-
 
 script:
   # Execute tests with no coverage.  This is the fastest option
