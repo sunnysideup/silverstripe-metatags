@@ -44,13 +44,6 @@ before_script:
   - cd ~/builds/ss
 
 
-#Execute tests
-script:
-  # Execute tests with no coverage.  This is the fastest option
- - vendor/bin/phpunit modulechecks/tests/
- #- php framework/cli-script.php dev/build
-
-
 # configure notifications (email, IRC, campfire etc)
 notifications:
   email: ssuerrors@gmail.com
