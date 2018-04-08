@@ -220,9 +220,6 @@ class MetaTagsContentControllerEXT extends Extension
                     } else {
                         if (!isset($alreadyDone[$js])) {
                             Requirements::javascript($js);
-                            var_dump('bbb');
-                            var_dump('bbb'.$js);
-                            die('sdfdsf');
                             $alreadyDone[$js] = 1;
                         }
                     }
