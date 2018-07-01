@@ -1,5 +1,19 @@
 <?php
 
+namespace Sunnysideup\Metatags\Extension;
+
+use DataExtension;
+use FieldList;
+use Config;
+use Tab;
+use LiteralField;
+use TextField;
+use CheckboxField;
+use TextareaField;
+use TabSet;
+use UploadField;
+
+
 /**
  * adding functionality to SiteConfig
  *

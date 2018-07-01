@@ -1,4 +1,23 @@
 <?php
+
+namespace Sunnysideup\Metatags\Extension;
+
+use SiteTreeExtension;
+use Config;
+use FieldList;
+use HeaderField;
+use ReadonlyField;
+use SiteConfig;
+use UploadField;
+use LiteralField;
+use TextField;
+use OptionSetField;
+use RootURLController;
+use DBField;
+use Text;
+use Director;
+use DB;
+
 /**
 *
 * @Author Nicolaas Francken

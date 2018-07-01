@@ -1,4 +1,9 @@
 <?php
+
+namespace Sunnysideup\Metatags;
+
+
+
 /**
  * developed by www.sunnysideup.co.nz
  * authors:
