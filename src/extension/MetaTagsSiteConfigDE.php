@@ -5,7 +5,12 @@
  *
  *
  */
-class MetaTagsSiteConfigDE extends DataExtension
+class MetaTagsSiteConfigDE extends DataExtension/*
+### @@@@ START UPGRADE REQUIRED @@@@ ###
+FIND:  extends DataExtension
+NOTE: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner->ID] or consider turning the class into a trait 
+### @@@@ END UPGRADE REQUIRED @@@@ ###
+*/
 {
     private static $db = array(
         //meta title embelishments

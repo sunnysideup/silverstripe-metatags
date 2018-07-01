@@ -6,7 +6,12 @@
  *
  *
  */
-class MetaTagsContentControllerEXT extends Extension
+class MetaTagsContentControllerEXT extends Extension/*
+### @@@@ START UPGRADE REQUIRED @@@@ ###
+FIND:  extends Extension
+NOTE: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner->ID] or consider turning the class into a trait 
+### @@@@ END UPGRADE REQUIRED @@@@ ###
+*/
 {
 
     /**
@@ -238,7 +243,12 @@ class MetaTagsContentControllerEXT extends Extension
             if ($combineCSS && file_exists($folderForCombinedFilesWithBase.$cssFile)) {
                 Requirements::css($cssFile);
             } else {
-                $themeFolder = SSViewer::get_theme_folder();
+                $themeFolder = SilverStripe\View\ThemeResourceLoader::inst()->findThemedResource('UPGRADE-FIX-REQUIRED/styles.css', SilverStripe\View\SSViewer::get_themes())/*
+### @@@@ START UPGRADE REQUIRED @@@@ ###
+FIND: SSViewer::get_theme_folder()
+NOTE: Please review update and fix as required 
+### @@@@ END UPGRADE REQUIRED @@@@ ###
+*/;
                 $cssArrayLocationOnly = array();
                 $expendadCSSArray = array();
                 foreach ($cssArray  as $name => $media) {
@@ -311,12 +321,27 @@ class MetaTagsContentControllerEXT extends Extension
             }
             $cacheKey .= $add;
         }
-        $cache = SS_Cache::factory('metatags');
-        $tags = $cache->load($cacheKey);
+        $cache = SS_Injector::inst()->get(/*
+### @@@@ START UPGRADE REQUIRED @@@@ ###
+FIND: Cache::factory(
+NOTE: ADD TO TOP OF CLASS: use Psr\SimpleCache\CacheInterface; add to key: CacheInterface::class.'.' 
+### @@@@ END UPGRADE REQUIRED @@@@ ###
+*/'metatags');
+        $tags = $cache->get(/*
+### @@@@ START UPGRADE REQUIRED @@@@ ###
+FIND: $cache->load(
+NOTE: Check carefully and add some stuff to yml: https://docs.silverstripe.org/en/4/changelogs/4.0.0#cache 
+### @@@@ END UPGRADE REQUIRED @@@@ ###
+*/$cacheKey);
         if ($tags && $cacheKey) {
             //do nothing
         } else {
-            $themeFolder = SSViewer::get_theme_folder() . '/';
+            $themeFolder = SilverStripe\View\ThemeResourceLoader::inst()->findThemedResource('UPGRADE-FIX-REQUIRED/styles.css', SilverStripe\View\SSViewer::get_themes())/*
+### @@@@ START UPGRADE REQUIRED @@@@ ###
+FIND: SSViewer::get_theme_folder()
+NOTE: Please review update and fix as required 
+### @@@@ END UPGRADE REQUIRED @@@@ ###
+*/ . '/';
             $tags = "";
             $page = $this->owner;
             $siteConfig = SiteConfig::current_site_config();
@@ -397,7 +422,12 @@ class MetaTagsContentControllerEXT extends Extension
             $tags .= $this->TwitterTags();
             $tags .= $this->iconTags($faviconBase, $hasBaseFolderFavicon);
             if ($cacheKey) {
-                $cache->save($tags, $cacheKey);
+                $cache->set(/*
+### @@@@ START UPGRADE REQUIRED @@@@ ###
+FIND: $cache->save(
+NOTE: Check carefully KEY AND VALUE NEED TO BE SWAPPED: https://docs.silverstripe.org/en/4/changelogs/4.0.0#cache 
+### @@@@ END UPGRADE REQUIRED @@@@ ###
+*/$tags, $cacheKey);
             }
         }
         return $tags;
@@ -526,8 +556,18 @@ class MetaTagsContentControllerEXT extends Extension
                 $baseURL
             );
         $baseURL = rtrim($baseURL, "/");
-        $cache = SS_Cache::factory('metatags');
-        $html = $cache->load($cacheKey);
+        $cache = SS_Injector::inst()->get(/*
+### @@@@ START UPGRADE REQUIRED @@@@ ###
+FIND: Cache::factory(
+NOTE: ADD TO TOP OF CLASS: use Psr\SimpleCache\CacheInterface; add to key: CacheInterface::class.'.' 
+### @@@@ END UPGRADE REQUIRED @@@@ ###
+*/'metatags');
+        $html = $cache->get(/*
+### @@@@ START UPGRADE REQUIRED @@@@ ###
+FIND: $cache->load(
+NOTE: Check carefully and add some stuff to yml: https://docs.silverstripe.org/en/4/changelogs/4.0.0#cache 
+### @@@@ END UPGRADE REQUIRED @@@@ ###
+*/$cacheKey);
         if (!$html) {
             $sizes =  Config::inst()->get("MetaTagsContentControllerEXT", "favicon_sizes");
             if ($hasBaseFolderFavicon) {
@@ -537,7 +577,12 @@ class MetaTagsContentControllerEXT extends Extension
             }
             $html = '';
             foreach ($sizes as $size) {
-                $themeFolder = SSViewer::get_theme_folder();
+                $themeFolder = SilverStripe\View\ThemeResourceLoader::inst()->findThemedResource('UPGRADE-FIX-REQUIRED/styles.css', SilverStripe\View\SSViewer::get_themes())/*
+### @@@@ START UPGRADE REQUIRED @@@@ ###
+FIND: SSViewer::get_theme_folder()
+NOTE: Please review update and fix as required 
+### @@@@ END UPGRADE REQUIRED @@@@ ###
+*/;
                 $file = "/".$themeFolder.'/icons/'.'icon-'.$size.'x'.$size.'.png';
                 if (file_exists(Director::baseFolder().$file)) {
                     $html .= '
@@ -564,7 +609,12 @@ class MetaTagsContentControllerEXT extends Extension
                 //do nothing
             } else {
                 $faviconLink = "";
-                $themeFolder = SSViewer::get_theme_folder();
+                $themeFolder = SilverStripe\View\ThemeResourceLoader::inst()->findThemedResource('UPGRADE-FIX-REQUIRED/styles.css', SilverStripe\View\SSViewer::get_themes())/*
+### @@@@ START UPGRADE REQUIRED @@@@ ###
+FIND: SSViewer::get_theme_folder()
+NOTE: Please review update and fix as required 
+### @@@@ END UPGRADE REQUIRED @@@@ ###
+*/;
                 $faviconLocation = "/".$themeFolder.'/icons/favicon.ico';
                 if (file_exists(Director::baseFolder().$faviconLocation)) {
                     $faviconLink = $baseURL.$faviconLocation;
@@ -577,7 +627,12 @@ class MetaTagsContentControllerEXT extends Extension
 <link rel="SHORTCUT ICON" href="'.$faviconLink.'" />';
                 }
             }
-            $cache->save($html, $cacheKey);
+            $cache->set(/*
+### @@@@ START UPGRADE REQUIRED @@@@ ###
+FIND: $cache->save(
+NOTE: Check carefully KEY AND VALUE NEED TO BE SWAPPED: https://docs.silverstripe.org/en/4/changelogs/4.0.0#cache 
+### @@@@ END UPGRADE REQUIRED @@@@ ###
+*/$html, $cacheKey);
         }
 
         return $html;
