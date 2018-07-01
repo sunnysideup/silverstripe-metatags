@@ -2,21 +2,39 @@
 
 namespace Sunnysideup\Metatags\Extension;
 
-use SiteTreeExtension;
-use Config;
-use FieldList;
-use HeaderField;
-use ReadonlyField;
-use SiteConfig;
-use UploadField;
-use LiteralField;
-use TextField;
+
+
+
+
+
+
+
+
+
 use OptionSetField;
-use RootURLController;
-use DBField;
+
+
 use Text;
-use Director;
-use DB;
+
+
+use SilverStripe\Assets\Image;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Metatags\Extension\MetaTagsContentControllerEXT;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\SiteConfig\SiteConfig;
+use SilverStripe\AssetAdmin\Forms\UploadField;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\TextField;
+use SilverStripe\CMS\Controllers\RootURLController;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\View\SSViewer;
+use Sunnysideup\Metatags\Extension\MetaTagsSTE;
+use SilverStripe\Control\Director;
+use SilverStripe\ORM\DB;
+use SilverStripe\CMS\Model\SiteTreeExtension;
+
 
 /**
 *
@@ -51,7 +69,7 @@ class MetaTagsSTE extends SiteTreeExtension
      * @var Array
      **/
     private static $has_one = array(
-        'ShareOnFacebookImage' => 'Image'
+        'ShareOnFacebookImage' => Image::class
     );
 
     /**
@@ -76,7 +94,7 @@ class MetaTagsSTE extends SiteTreeExtension
      */
     public static function get_extra_config($class, $extension, $args)
     {
-        if (Config::inst()->get("MetaTagsContentControllerEXT", "use_separate_metatitle")) {
+        if (Config::inst()->get(MetaTagsContentControllerEXT::class, "use_separate_metatitle")) {
             $array = array(
                 'db' => array("MetaTitle" => "Varchar(255)") + self::$db
             );
@@ -117,7 +135,7 @@ class MetaTagsSTE extends SiteTreeExtension
             "Root.Facebook",
             $shareOnFacebookImageField = UploadField::create(
                 "ShareOnFacebookImage",
-                _t("MetaTagsSTE.FB_IMAGE", "Image")
+                _t("MetaTagsSTE.FB_IMAGE", Image::class)
             )
         );
         $shareOnFacebookImageField->setFolderName("OpenGraphShareImages");
@@ -176,7 +194,7 @@ class MetaTagsSTE extends SiteTreeExtension
     public function updateCMSFields(FieldList $fields)
     {
         //separate MetaTitle?
-        if (Config::inst()->get("MetaTagsContentControllerEXT", "use_separate_metatitle")) {
+        if (Config::inst()->get(MetaTagsContentControllerEXT::class, "use_separate_metatitle")) {
             $fields->addFieldToTab(
                 'Root.Main.Metadata',
                 $allowField0 = TextField::create(
@@ -250,7 +268,7 @@ class MetaTagsSTE extends SiteTreeExtension
                 }
             }
             if (isset($fields['MetaDescription'])) {
-                $length = Config::inst()->get("MetaTagsContentControllerEXT", "meta_desc_length");
+                $length = Config::inst()->get(MetaTagsContentControllerEXT::class, "meta_desc_length");
                 // Empty MetaDescription
                 // Check for Content, to prevent errors
                 if ($length > 0) {
@@ -281,14 +299,14 @@ class MetaTagsSTE extends SiteTreeExtension
             return $fields;
         }
         $config = SiteConfig::current_site_config();
-        if (Config::inst()->get("MetaTagsContentControllerEXT", "no_automated_menu_title")) {
+        if (Config::inst()->get(MetaTagsContentControllerEXT::class, "no_automated_menu_title")) {
             // do nothing
         } else {
             if ($config->UpdateMenuTitle || $this->owner->AutomateMetatags == 'Automated') {
                 $fields['MenuTitle'] = _t('SiteTree.MENUTITLE', 'Navigation Label');
             }
         }
-        if (Config::inst()->get("MetaTagsContentControllerEXT", "no_automated_meta_description")) {
+        if (Config::inst()->get(MetaTagsContentControllerEXT::class, "no_automated_meta_description")) {
             //do nothing
         } else {
             if ($config->UpdateMetaDescription || $this->owner->AutomateMetatags == 'Automated') {
@@ -327,17 +345,17 @@ class MetaTagsSTE extends SiteTreeExtension
      */
     public function requireDefaultRecords()
     {
-        $folder = Config::inst()->get('SSViewer', 'theme');
+        $folder = Config::inst()->get(SSViewer::class, 'theme');
         ;
         if ($folder) {
-            if ($file = Config::inst()->get("MetaTagsSTE", "default_editor_file")) {
+            if ($file = Config::inst()->get(MetaTagsSTE::class, "default_editor_file")) {
                 $baseFile = Director::baseFolder(). $file;
                 $destinationFile = Director::baseFolder()."/themes/".$folder."/css/editor.css";
                 if (!file_exists($destinationFile) && file_exists($baseFile)) {
                     copy($baseFile, $destinationFile);
                 }
             }
-            if ($file = Config::inst()->get("MetaTagsSTE", "default_reset_file")) {
+            if ($file = Config::inst()->get(MetaTagsSTE::class, "default_reset_file")) {
                 $baseFile = Director::baseFolder(). $file;
                 $destinationFile = Director::baseFolder()."/themes/".$folder."/css/reset.css";
                 if (!file_exists($destinationFile) && file_exists($baseFile)) {
@@ -369,7 +387,7 @@ class MetaTagsSTE extends SiteTreeExtension
     {
         $v = [];
         $siteConfig = SiteConfig::current_site_config();
-        if (Config::inst()->get("MetaTagsContentControllerEXT", "no_automated_menu_title")) {
+        if (Config::inst()->get(MetaTagsContentControllerEXT::class, "no_automated_menu_title")) {
             //do nothing
         } else {
             if ($siteConfig->UpdateMenuTitle) {
@@ -378,7 +396,7 @@ class MetaTagsSTE extends SiteTreeExtension
                 $v[] = _t('MetaTagsSTE.UPDATE_MENU_TITLE_OFF', 'The Navigation Labels (Menu Titles) can be customised for individual pages');
             }
         }
-        if (Config::inst()->get("MetaTagsContentControllerEXT", "no_automated_meta_description")) {
+        if (Config::inst()->get(MetaTagsContentControllerEXT::class, "no_automated_meta_description")) {
             //do nothing
         } else {
             if ($siteConfig->UpdateMetaDescription) {

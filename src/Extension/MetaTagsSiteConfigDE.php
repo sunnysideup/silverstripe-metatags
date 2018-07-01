@@ -2,16 +2,29 @@
 
 namespace Sunnysideup\Metatags\Extension;
 
-use DataExtension;
-use FieldList;
-use Config;
-use Tab;
-use LiteralField;
-use TextField;
-use CheckboxField;
-use TextareaField;
-use TabSet;
-use UploadField;
+
+
+
+
+
+
+
+
+
+
+use SilverStripe\Assets\Image;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Metatags\Extension\MetaTagsContentControllerEXT;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\Tab;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\TextareaField;
+use SilverStripe\Forms\TabSet;
+use SilverStripe\AssetAdmin\Forms\UploadField;
+use SilverStripe\ORM\DataExtension;
+
 
 
 /**
@@ -43,7 +56,7 @@ NOTE: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner
     );
 
     private static $has_one = array(
-        "Favicon" => "Image"
+        "Favicon" => Image::class
     );
 
     public function populateDefaults()
@@ -57,7 +70,7 @@ NOTE: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner
     public function updateCMSFields(FieldList $fields)
     {
         $tabs = [];
-        if (Config::inst()->get("MetaTagsContentControllerEXT", "no_search_engine_instructions")) {
+        if (Config::inst()->get(MetaTagsContentControllerEXT::class, "no_search_engine_instructions")) {
             //do nothing
         } else {
             $tabs[] =
@@ -87,7 +100,7 @@ NOTE: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner
             TextField::create('AppendToMetaTitle', 'Append')->setRightTitle('add at the end of Meta Title')
         );
 
-        if (Config::inst()->get("MetaTagsContentControllerEXT", "no_automated_menu_title")) {
+        if (Config::inst()->get(MetaTagsContentControllerEXT::class, "no_automated_menu_title")) {
             //do nothing
         } else {
             $tabs[] =
@@ -98,17 +111,17 @@ NOTE: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner
                 );
         }
 
-        if (Config::inst()->get("MetaTagsContentControllerEXT", "no_automated_meta_description")) {
+        if (Config::inst()->get(MetaTagsContentControllerEXT::class, "no_automated_meta_description")) {
             //do nothing
         } else {
             $tabs[] =
                 Tab::create(
                     'Meta Description',
                     LiteralField::create('MetaDescriptionExplanation', '<h3>&ldquo;Meta Description&rdquo;: Page Summary for Search Engines</h3><p>The Meta Description is not visible on the website itself. However, it is picked up by search engines like google.  They display it as the short blurb underneath the link to your pages. It will not get you much higher in the rankings, but it will entice people to click on your link.</p>'),
-                    CheckboxField::create('UpdateMetaDescription', 'Automatically')->setDescription('Automatically fill every meta description on every Page (using the first '.Config::inst()->get("MetaTagsContentControllerEXT", "meta_desc_length").' words of the Page Content field).')
+                    CheckboxField::create('UpdateMetaDescription', 'Automatically')->setDescription('Automatically fill every meta description on every Page (using the first '.Config::inst()->get(MetaTagsContentControllerEXT::class, "meta_desc_length").' words of the Page Content field).')
                 );
         }
-        if (Config::inst()->get("MetaTagsContentControllerEXT", "no_additional_meta_settings")) {
+        if (Config::inst()->get(MetaTagsContentControllerEXT::class, "no_additional_meta_settings")) {
             //do nothing ...
         } else {
             $tabs[] = Tab::create(
@@ -150,7 +163,7 @@ NOTE: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner
      */
     public function onBeforeWrite()
     {
-        if (Config::inst()->get("MetaTagsContentControllerEXT", "no_additional_meta_settings")) {
+        if (Config::inst()->get(MetaTagsContentControllerEXT::class, "no_additional_meta_settings")) {
             $this->owner->MetaDataCountry = '';
             $this->owner->MetaDataCopyright = '';
             $this->owner->MetaDataDesign = '';
