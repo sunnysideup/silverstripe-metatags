@@ -1,6 +1,6 @@
 {
     "name": "sunnysideup/metatags",
-    "type": "silverstripe-module",
+    "type": "silverstripe-vendormodule",
     "description": "simplify your metatags - a ton of tools to increase SEO visibility, including file name adjustments",
     "keywords": [
         "Silverstripe-CMS",
