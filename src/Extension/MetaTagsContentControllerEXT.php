@@ -1,5 +1,18 @@
 <?php
 
+namespace Sunnysideup\MetaTags\Extension;
+
+use Extension;
+use Config;
+use Requirements;
+use Director;
+use SiteConfig;
+use SS_Injector;
+use Convert;
+use SS_Datetime;
+use Image;
+
+
 /**
  * adds meta tag functionality to the Page_Controller
  *
