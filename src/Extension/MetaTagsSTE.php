@@ -16,7 +16,6 @@ use OptionSetField;
 
 use Text;
 
-
 use SilverStripe\Assets\Image;
 use SilverStripe\Core\Config\Config;
 use Sunnysideup\MetaTags\Extension\MetaTagsContentControllerEXT;
@@ -92,20 +91,20 @@ class MetaTagsSTE extends SiteTreeExtension
      * use any statics in the file!!!
      * @return Array | null
      */
-    public static function get_extra_config($class, $extension, $args)
-    {
-        if (Config::inst()->get(MetaTagsContentControllerEXT::class, "use_separate_metatitle")) {
-            $array = array(
-                'db' => array("MetaTitle" => "Varchar(255)") + self::$db
-            );
-        } else {
-            $array = array(
-                'db' => self::$db
-            );
-        }
-
-        return ((array) parent::get_extra_config($class, $extension, $args)) + $array;
-    }
+    // public static function get_extra_config($class, $extension, $args)
+    // {
+    //     if (Config::inst()->get(MetaTagsContentControllerEXT::class, "use_separate_metatitle")) {
+    //         $array = array(
+    //             'db' => array("MetaTitle" => "Varchar(255)") + self::$db
+    //         );
+    //     } else {
+    //         $array = array(
+    //             'db' => self::$db
+    //         );
+    //     }
+    //
+    //     return ((array) parent::get_extra_config($class, $extension, $args)) + $array;
+    // }
 
     /**
      * standard SS method
