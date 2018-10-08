@@ -11,7 +11,6 @@ namespace Sunnysideup\MetaTags\Extension;
 
 
 
-use OptionSetField;
 
 
 use Text;
@@ -33,6 +32,7 @@ use Sunnysideup\MetaTags\Extension\MetaTagsSTE;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\DB;
 use SilverStripe\CMS\Model\SiteTreeExtension;
+use SilverStripe\Forms\OptionsetField;
 
 
 /**
@@ -123,7 +123,8 @@ class MetaTagsSTE extends SiteTreeExtension
         $fields->addFieldToTab(
             "Root.Facebook",
             new HeaderField(
-                _t("MetaTagsSTE.FB_HOW_THIS_PAGE_IS_SHARED", "How is this page shared on Facebook?")
+                _t("MetaTagsSTE.FB_HOW_THIS_PAGE_IS_SHARED", "How is this page shared on Facebook?"),
+                ""
             )
         );
         $fields->addFieldToTab("Root.Facebook", $fieldTitle = ReadonlyField::create("fb_title", _t("MetaTagsSTE.FB_TITLE", "Title"), $this->owner->Title));
@@ -210,7 +211,7 @@ class MetaTagsSTE extends SiteTreeExtension
         //choose automation for page
         $fields->addFieldToTab(
             'Root.Main.Metadata',
-            $allowField1 = OptionSetField::create(
+            $allowField1 = OptionsetField::create(
                 'AutomateMetatags',
                 _t('MetaManager.UPDATEMETA', 'Automation for this page ...'),
                 $this->AutomateMetatagsOptions()
@@ -241,7 +242,9 @@ class MetaTagsSTE extends SiteTreeExtension
         }
         $fields->removeByName('ExtraMeta');
         $linkToManager = Config::inst()->get("MetaTagCMSControlPages", "url_segment") . '/';
-        if ($this->owner->URLSegment == RootURLController::get_default_homepage_link()) {
+        //if ($this->owner->URLSegment == RootURLController::get_default_homepage_link()) {
+        $default_homepage_link = 'home'; // HACK: get_default_homepage_link doesn't exist anymore
+        if ($this->owner->URLSegment == $default_homepage_link) {
             $fields->dataFieldByName('URLSegment')
                 ->setRightTitle("Careful! changing the URL from 'home' to anything else means that this page will no longer be the home page.");
         }
