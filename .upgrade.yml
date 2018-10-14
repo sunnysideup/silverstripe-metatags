@@ -1,0 +1,4 @@
+mappings:
+  MetaTagsContentControllerEXT: Sunnysideup\MetaTags\Extension\MetaTagsContentControllerEXT
+  MetaTagsSTE: Sunnysideup\MetaTags\Extension\MetaTagsSTE
+  MetaTagsSiteConfigDE: Sunnysideup\MetaTags\Extension\MetaTagsSiteConfigDE

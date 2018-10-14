@@ -1,12 +1,40 @@
 <?php
 
+namespace Sunnysideup\MetaTags\Extension;
+
+
+
+
+
+
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\View\SSViewer;
+use SilverStripe\View\ThemeResourceLoader;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\MetaTags\Extension\MetaTagsContentControllerEXT;
+use SilverStripe\View\Requirements;
+use SilverStripe\Control\Director;
+use SilverStripe\SiteConfig\SiteConfig;
+use SilverStripe\Core\Convert;
+use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\Assets\Image;
+use SilverStripe\Core\Extension;
+use Psr\SimpleCache\CacheInterface;
+
+
+
 /**
  * adds meta tag functionality to the Page_Controller
  *
  *
  *
  */
-class MetaTagsContentControllerEXT extends Extension
+class MetaTagsContentControllerEXT extends Extension/*
+### @@@@ START UPGRADE REQUIRED @@@@ ###
+FIND:  extends Extension
+NOTE: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner->ID] or consider turning the class into a trait
+### @@@@ END UPGRADE REQUIRED @@@@ ###
+*/
 {
 
     /**
@@ -156,12 +184,12 @@ class MetaTagsContentControllerEXT extends Extension
      */
     public function onBeforeInit()
     {
-        $jQueryCDNLocation = Config::inst()->get("MetaTagsContentControllerEXT", "jquery_cdn_location");
+        $jQueryCDNLocation = Config::inst()->get(MetaTagsContentControllerEXT::class, "jquery_cdn_location");
         if ($jQueryCDNLocation) {
-            Requirements::block("framework/thirdparty/jquery/jquery.js");
+            Requirements::block('silverstripe/admin: thirdparty/jquery-changetracker/spec/support/jquery.js');
             Requirements::javascript($jQueryCDNLocation);
         } else {
-            Requirements::javascript('framework/thirdparty/jquery/jquery.js');
+            Requirements::javascript('silverstripe/admin: thirdparty/jquery-changetracker/spec/support/jquery.js');
         }
     }
 
@@ -176,10 +204,10 @@ class MetaTagsContentControllerEXT extends Extension
     public function addBasicMetatagRequirements($additionalJS = array(), $additionalCSS = array(), $force = false)
     {
         if (!isset(self::$_metatags_building_completed[$this->owner->dataRecord->ID]) || $force) {
-            $combineJS = Config::inst()->get("MetaTagsContentControllerEXT", "combine_js_files_into_one");
-            $combineCSS = Config::inst()->get("MetaTagsContentControllerEXT", "combine_css_files_into_one");
+            $combineJS = Config::inst()->get(MetaTagsContentControllerEXT::class, "combine_js_files_into_one");
+            $combineCSS = Config::inst()->get(MetaTagsContentControllerEXT::class, "combine_css_files_into_one");
             if ($combineJS || $combineCSS) {
-                $folderForCombinedFiles = Config::inst()->get("MetaTagsContentControllerEXT", "folder_for_combined_files");
+                $folderForCombinedFiles = Config::inst()->get(MetaTagsContentControllerEXT::class, "folder_for_combined_files");
                 $folderForCombinedFilesWithBase = Director::baseFolder()."/".$folderForCombinedFiles;
                 if ($combineJS) {
                     $jsFile = $folderForCombinedFiles."/MetaTagAutomation.js";
@@ -188,9 +216,9 @@ class MetaTagsContentControllerEXT extends Extension
                     $cssFile = $folderForCombinedFiles."/MetaTagAutomation.css";
                 }
             }
-            $jQueryCDNLocation = Config::inst()->get("MetaTagsContentControllerEXT", "jquery_cdn_location");
-            $cssArray = Config::inst()->get("MetaTagsContentControllerEXT", "default_css");
-            $jsArray = Config::inst()->get("MetaTagsContentControllerEXT", "default_js");
+            $jQueryCDNLocation = Config::inst()->get(MetaTagsContentControllerEXT::class, "jquery_cdn_location");
+            $cssArray = Config::inst()->get(MetaTagsContentControllerEXT::class, "default_css");
+            $jsArray = Config::inst()->get(MetaTagsContentControllerEXT::class, "default_js");
             // if(Director::isLive() && 1 == 2) {
             //     foreach($cssArray as $tempKey => $tempValue) {
             //         $newArray = array();
@@ -238,7 +266,12 @@ class MetaTagsContentControllerEXT extends Extension
             if ($combineCSS && file_exists($folderForCombinedFilesWithBase.$cssFile)) {
                 Requirements::css($cssFile);
             } else {
-                $themeFolder = SSViewer::get_theme_folder();
+                $themeFolder = ThemeResourceLoader::inst()->findThemedResource('UPGRADE-FIX-REQUIRED/styles.css', SSViewer::get_themes())/*
+### @@@@ START UPGRADE REQUIRED @@@@ ###
+FIND: SSViewer::get_theme_folder()
+NOTE: Please review update and fix as required
+### @@@@ END UPGRADE REQUIRED @@@@ ###
+*/;
                 $cssArrayLocationOnly = array();
                 $expendadCSSArray = array();
                 foreach ($cssArray  as $name => $media) {
@@ -259,7 +292,7 @@ class MetaTagsContentControllerEXT extends Extension
             }
 
             //google font
-            $googleFontArray = Config::inst()->get('MetaTagsContentControllerEXT', 'google_font_collection');
+            $googleFontArray = Config::inst()->get(MetaTagsContentControllerEXT::class, 'google_font_collection');
             if (is_array($googleFontArray) && count($googleFontArray)) {
                 $protocol = Director::protocol();
                 $fonts = implode('|', $googleFontArray);
@@ -311,12 +344,13 @@ class MetaTagsContentControllerEXT extends Extension
             }
             $cacheKey .= $add;
         }
-        $cache = SS_Cache::factory('metatags');
-        $tags = $cache->load($cacheKey);
+        $cache = Injector::inst()->get(CacheInterface::class . '.metatags');
+        $tags = $cache->get($cacheKey);
+
         if ($tags && $cacheKey) {
             //do nothing
         } else {
-            $themeFolder = SSViewer::get_theme_folder() . '/';
+            $themeFolder = ThemeResourceLoader::inst()->findThemedResource('UPGRADE-FIX-REQUIRED/styles.css', SSViewer::get_themes()) . '/';
             $tags = "";
             $page = $this->owner;
             $siteConfig = SiteConfig::current_site_config();
@@ -335,7 +369,7 @@ class MetaTagsContentControllerEXT extends Extension
             if ($addExtraSearchEngineData) {
                 $tags .= '
             <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-            <meta name="viewport" content="'.Config::inst()->get("MetaTagsContentControllerEXT", "viewport_setting").'" />';
+            <meta name="viewport" content="'.Config::inst()->get(MetaTagsContentControllerEXT::class, "viewport_setting").'" />';
             }
 
             if ($page->MetaDescription) {
@@ -346,7 +380,7 @@ class MetaTagsContentControllerEXT extends Extension
                 $noopd = "NOODP, ";
                 $description = '';
             }
-            $lastEdited = new SS_Datetime();
+            $lastEdited = new DBDatetime();
             $lastEdited->value = $page->LastEdited;
 
             //use base url rather than / so that sites that aren't a run from the root directory can have a favicon
@@ -397,7 +431,7 @@ class MetaTagsContentControllerEXT extends Extension
             $tags .= $this->TwitterTags();
             $tags .= $this->iconTags($faviconBase, $hasBaseFolderFavicon);
             if ($cacheKey) {
-                $cache->save($tags, $cacheKey);
+                $cache->set($cacheKey, $tags);
             }
         }
         return $tags;
@@ -440,7 +474,7 @@ class MetaTagsContentControllerEXT extends Extension
      */
     protected function TwitterTags()
     {
-        if ($handle = Config::inst()->get("MetaTagsContentControllerEXT", "twitter_handle")) {
+        if ($handle = Config::inst()->get(MetaTagsContentControllerEXT::class, "twitter_handle")) {
             $html = "";
             $array = array(
                 "title" => Convert::raw2att($this->owner->Title),
@@ -474,7 +508,7 @@ class MetaTagsContentControllerEXT extends Extension
             if ($this->owner->ShareOnFacebookImageID) {
                 $this->_shareImage = $this->owner->ShareOnFacebookImage();
             } else {
-                $og_image_method_map = Config::inst()->get("MetaTagsContentControllerEXT", "og_image_method_map");
+                $og_image_method_map = Config::inst()->get(MetaTagsContentControllerEXT::class, "og_image_method_map");
                 if (is_array($og_image_method_map)) {
                     foreach ($og_image_method_map as $className => $method) {
                         if ($this->owner->dataRecord instanceof $className) {
@@ -494,7 +528,7 @@ class MetaTagsContentControllerEXT extends Extension
                 $hasOnes = $this->owner->hasOne();
                 foreach ($hasOnes as $hasOneName => $hasOneType) {
                     if ($hasOneName !== 'ShareOnFacebookImage') {
-                        if ($hasOneType === 'Image' || is_subclass_of($hasOneType, 'Image')) {
+                        if ($hasOneType === Image::class || is_subclass_of($hasOneType, Image::class)) {
                             $field = $hasOneName.'ID';
                             if ($this->owner->$field) {
                                 $this->_shareImage = $this->owner->$hasOneName();
@@ -526,10 +560,10 @@ class MetaTagsContentControllerEXT extends Extension
                 $baseURL
             );
         $baseURL = rtrim($baseURL, "/");
-        $cache = SS_Cache::factory('metatags');
-        $html = $cache->load($cacheKey);
+        $cache = $cache = Injector::inst()->get(CacheInterface::class . '.metatags');
+        $html = $cache->get($cacheKey);
         if (!$html) {
-            $sizes =  Config::inst()->get("MetaTagsContentControllerEXT", "favicon_sizes");
+            $sizes =  Config::inst()->get(MetaTagsContentControllerEXT::class, "favicon_sizes");
             if ($hasBaseFolderFavicon) {
                 if (is_array($sizes)) {
                     $sizes = array_diff($sizes, array(16));
@@ -537,7 +571,7 @@ class MetaTagsContentControllerEXT extends Extension
             }
             $html = '';
             foreach ($sizes as $size) {
-                $themeFolder = SSViewer::get_theme_folder();
+                $themeFolder = ThemeResourceLoader::inst()->findThemedResource('UPGRADE-FIX-REQUIRED/styles.css', SSViewer::get_themes());
                 $file = "/".$themeFolder.'/icons/'.'icon-'.$size.'x'.$size.'.png';
                 if (file_exists(Director::baseFolder().$file)) {
                     $html .= '
@@ -564,7 +598,7 @@ class MetaTagsContentControllerEXT extends Extension
                 //do nothing
             } else {
                 $faviconLink = "";
-                $themeFolder = SSViewer::get_theme_folder();
+                $themeFolder = ThemeResourceLoader::inst()->findThemedResource('UPGRADE-FIX-REQUIRED/styles.css', SSViewer::get_themes());
                 $faviconLocation = "/".$themeFolder.'/icons/favicon.ico';
                 if (file_exists(Director::baseFolder().$faviconLocation)) {
                     $faviconLink = $baseURL.$faviconLocation;
@@ -577,7 +611,7 @@ class MetaTagsContentControllerEXT extends Extension
 <link rel="SHORTCUT ICON" href="'.$faviconLink.'" />';
                 }
             }
-            $cache->save($html, $cacheKey);
+            $cache->set($cacheKey,$html);
         }
 
         return $html;
@@ -587,7 +621,7 @@ class MetaTagsContentControllerEXT extends Extension
     {
         $title = "";
         $page = $this->owner;
-        if (Config::inst()->get("MetaTagsContentControllerEXT", "use_separate_metatitle")) {
+        if (Config::inst()->get(MetaTagsContentControllerEXT::class, "use_separate_metatitle")) {
             if (!empty($page->MetaTitle)) {
                 $title = $page->MetaTitle;
             }

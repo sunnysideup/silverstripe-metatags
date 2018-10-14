@@ -1,6 +1,0 @@
-SiteConfig:
-    extensions: [MetaTagsSiteConfigDE]
-SiteTree:
-    extensions: [MetaTagsSTE]
-ContentController:
-    extensions: [MetaTagsContentControllerEXT]
