@@ -2,8 +2,6 @@
 
 namespace Sunnysideup\MetaTags;
 
-
-
 /**
  * developed by www.sunnysideup.co.nz
  * authors:

@@ -2,11 +2,6 @@
 
 namespace Sunnysideup\MetaTags\Extension;
 
-
-
-
-
-
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
@@ -21,15 +16,13 @@ use SilverStripe\Assets\Image;
 use SilverStripe\Core\Extension;
 use Psr\SimpleCache\CacheInterface;
 
-
-
 /**
  * adds meta tag functionality to the Page_Controller
  *
  *
  *
  */
-class MetaTagsContentControllerEXT extends Extension/*
+class MetaTagsContentControllerEXT extends Extension /*
 ### @@@@ START UPGRADE REQUIRED @@@@ ###
 FIND:  extends Extension
 NOTE: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner->ID] or consider turning the class into a trait
@@ -611,7 +604,7 @@ NOTE: Please review update and fix as required
 <link rel="SHORTCUT ICON" href="'.$faviconLink.'" />';
                 }
             }
-            $cache->set($cacheKey,$html);
+            $cache->set($cacheKey, $html);
         }
 
         return $html;

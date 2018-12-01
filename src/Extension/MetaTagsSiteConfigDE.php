@@ -2,16 +2,6 @@
 
 namespace Sunnysideup\MetaTags\Extension;
 
-
-
-
-
-
-
-
-
-
-
 use SilverStripe\Assets\Image;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Core\Config\Config;
@@ -25,17 +15,15 @@ use SilverStripe\Forms\TabSet;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\ORM\DataExtension;
 
-
-
 /**
  * adding functionality to SiteConfig
  *
  *
  */
-class MetaTagsSiteConfigDE extends DataExtension/*
+class MetaTagsSiteConfigDE extends DataExtension /*
 ### @@@@ START UPGRADE REQUIRED @@@@ ###
 FIND:  extends DataExtension
-NOTE: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner->ID] or consider turning the class into a trait 
+NOTE: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner->ID] or consider turning the class into a trait
 ### @@@@ END UPGRADE REQUIRED @@@@ ###
 */
 {

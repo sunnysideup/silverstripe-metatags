@@ -2,17 +2,6 @@
 
 namespace Sunnysideup\MetaTags\Extension;
 
-
-
-
-
-
-
-
-
-
-
-
 use Text;
 
 use SilverStripe\Assets\Image;
@@ -33,7 +22,6 @@ use SilverStripe\Control\Director;
 use SilverStripe\ORM\DB;
 use SilverStripe\CMS\Model\SiteTreeExtension;
 use SilverStripe\Forms\OptionsetField;
-
 
 /**
 *
