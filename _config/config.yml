@@ -7,3 +7,9 @@ SilverStripe\CMS\Model\SiteTree:
 SilverStripe\CMS\Controllers\ContentController:
     extensions:
         - Sunnysideup\MetaTags\Extension\MetaTagsContentControllerEXT
+
+SilverStripe\Core\Injector\Injector:
+  Psr\SimpleCache\CacheInterface.metatags:
+    factory: SilverStripe\Core\Cache\CacheFactory
+    constructor:
+      namespace: "metatags"

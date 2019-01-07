@@ -11,6 +11,7 @@ use SilverStripe\View\Requirements;
 use SilverStripe\Control\Director;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Core\Convert;
+use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Assets\Image;
 use SilverStripe\Core\Extension;
@@ -22,12 +23,7 @@ use Psr\SimpleCache\CacheInterface;
  *
  *
  */
-class MetaTagsContentControllerEXT extends Extension /*
-### @@@@ START UPGRADE REQUIRED @@@@ ###
-FIND:  extends Extension
-NOTE: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner->ID] or consider turning the class into a trait
-### @@@@ END UPGRADE REQUIRED @@@@ ###
-*/
+class MetaTagsContentControllerEXT extends Extension
 {
 
     /**
@@ -427,7 +423,8 @@ NOTE: Please review update and fix as required
                 $cache->set($cacheKey, $tags);
             }
         }
-        return $tags;
+        
+        return DBField::create_field('HTMLText', $tags);
     }
 
     /**
@@ -489,17 +486,20 @@ NOTE: Please review update and fix as required
         }
     }
 
-    private $_shareImage = null;
+    private $_shareImage = [];
     /**
      *
      * @return image | null
      */
     private function shareImage()
     {
-        if ($this->_shareImage === null) {
-            $this->_shareImage = false;
+        if (! isset($this->_shareImage[$this->owner->ID])) {
+            $this->_shareImage[$this->owner->ID] = null;
+        }
+        if ($this->_shareImage[$this->owner->ID] === null) {
+            $this->_shareImage[$this->owner->ID] = false;
             if ($this->owner->ShareOnFacebookImageID) {
-                $this->_shareImage = $this->owner->ShareOnFacebookImage();
+                $this->_shareImage[$this->owner->ID] = $this->owner->ShareOnFacebookImage();
             } else {
                 $og_image_method_map = Config::inst()->get(MetaTagsContentControllerEXT::class, "og_image_method_map");
                 if (is_array($og_image_method_map)) {
@@ -508,7 +508,7 @@ NOTE: Please review update and fix as required
                             $variable = $method."ID";
                             if (!empty($this->owner->dataRecord->$variable)) {
                                 if ($this->owner->hasMethod($method)) {
-                                    $this->_shareImage = $this->owner->$method();
+                                    $this->_shareImage[$this->owner->ID] = $this->owner->$method();
                                 }
                             }
                         }
@@ -516,7 +516,7 @@ NOTE: Please review update and fix as required
                 }
             }
             //clean up any stuff...
-            if ($this->_shareImage && $this->_shareImage->exists()) {
+            if ($this->_shareImage[$this->owner->ID] && $this->_shareImage[$this->owner->ID]->exists()) {
             } else {
                 $hasOnes = $this->owner->hasOne();
                 foreach ($hasOnes as $hasOneName => $hasOneType) {
@@ -524,19 +524,19 @@ NOTE: Please review update and fix as required
                         if ($hasOneType === Image::class || is_subclass_of($hasOneType, Image::class)) {
                             $field = $hasOneName.'ID';
                             if ($this->owner->$field) {
-                                $this->_shareImage = $this->owner->$hasOneName();
+                                $this->_shareImage[$this->owner->ID] = $this->owner->$hasOneName();
                                 break;
                             }
                         }
                     }
                 }
             }
-            if ($this->_shareImage && $this->_shareImage->exists()) {
+            if ($this->_shareImage[$this->owner->ID] && $this->_shareImage[$this->owner->ID]->exists()) {
             } else {
-                $this->_shareImage = false;
+                $this->_shareImage[$this->owner->ID] = false;
             }
         }
-        return $this->_shareImage;
+        return $this->_shareImage[$this->owner->ID];
     }
 
     protected function iconTags($baseURL = "", $hasBaseFolderFavicon = false)
