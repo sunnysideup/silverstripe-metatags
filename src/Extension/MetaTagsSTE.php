@@ -2,8 +2,6 @@
 
 namespace Sunnysideup\MetaTags\Extension;
 
-use Text;
-
 use SilverStripe\Assets\Image;
 use SilverStripe\Core\Config\Config;
 use Sunnysideup\MetaTags\Extension\MetaTagsContentControllerEXT;
@@ -319,7 +317,7 @@ class MetaTagsSTE extends SiteTreeExtension
         $newString = str_replace("&ndash;", " - ", $newString);
         $newString = strip_tags(str_replace('<', ' <', $newString));
         if ($numberOfWords) {
-            $textFieldObject = Text::create("Text", $newString);
+            $textFieldObject = DBField::create_field("Text", $newString);
             if ($textFieldObject) {
                 $newString = strip_tags($textFieldObject->LimitWordCountXML($numberOfWords));
             }

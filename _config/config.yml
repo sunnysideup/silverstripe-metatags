@@ -1,9 +1,11 @@
 SilverStripe\SiteConfig\SiteConfig:
     extensions:
         - Sunnysideup\MetaTags\Extension\MetaTagsSiteConfigDE
+
 SilverStripe\CMS\Model\SiteTree:
     extensions:
         - Sunnysideup\MetaTags\Extension\MetaTagsSTE
+
 SilverStripe\CMS\Controllers\ContentController:
     extensions:
         - Sunnysideup\MetaTags\Extension\MetaTagsContentControllerEXT

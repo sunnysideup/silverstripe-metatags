@@ -2,12 +2,12 @@
 # METATAGS
 #########################
 
-MetaTagsSTE:
+Sunnysideup\MetaTags\Extension\MetaTagsSTE:
   default_editor_file: "/path/to/detault/editor/css/file.css"
   default_reset_file: "/path/to/detault/editor/css/file.css"
 
 
-MetaTagsContentControllerEXT:
+Sunnysideup\MetaTags\Extension\MetaTagsContentControllerEXT:
   meta_desc_length: 24
   no_search_engine_instructions: true
   no_automated_menu_title: true
