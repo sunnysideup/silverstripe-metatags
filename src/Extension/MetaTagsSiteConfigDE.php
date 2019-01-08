@@ -20,12 +20,7 @@ use SilverStripe\ORM\DataExtension;
  *
  *
  */
-class MetaTagsSiteConfigDE extends DataExtension /*
-### @@@@ START UPGRADE REQUIRED @@@@ ###
-FIND:  extends DataExtension
-NOTE: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner->ID] or consider turning the class into a trait
-### @@@@ END UPGRADE REQUIRED @@@@ ###
-*/
+class MetaTagsSiteConfigDE extends DataExtension
 {
     private static $db = array(
         //meta title embelishments
@@ -49,10 +44,9 @@ NOTE: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner
 
     public function populateDefaults()
     {
-        $this->MetaDataCountry = "New Zealand";
-        $this->MetaDataCopyright = "site owner";
-        $this->MetaDataDesign = "site owner";
-        $this->MetaDataCoding = "site owner";
+        $this->owner->MetaDataCopyright = "site owner";
+        $this->owner->MetaDataDesign = "site owner";
+        $this->owner->MetaDataCoding = "site owner";
     }
 
     public function updateCMSFields(FieldList $fields)

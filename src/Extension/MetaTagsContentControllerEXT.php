@@ -175,10 +175,10 @@ class MetaTagsContentControllerEXT extends Extension
     {
         $jQueryCDNLocation = Config::inst()->get(MetaTagsContentControllerEXT::class, "jquery_cdn_location");
         if ($jQueryCDNLocation) {
-            Requirements::block('silverstripe/admin: thirdparty/jquery-changetracker/spec/support/jquery.js');
+            Requirements::block('silverstripe/admin: thirdparty/jquery/jquery.js');
             Requirements::javascript($jQueryCDNLocation);
         } else {
-            Requirements::javascript('silverstripe/admin: thirdparty/jquery-changetracker/spec/support/jquery.js');
+            Requirements::javascript('silverstripe/admin: thirdparty/jquery/jquery.js');
         }
     }
 
@@ -255,19 +255,13 @@ class MetaTagsContentControllerEXT extends Extension
             if ($combineCSS && file_exists($folderForCombinedFilesWithBase.$cssFile)) {
                 Requirements::css($cssFile);
             } else {
-                $themeFolder = ThemeResourceLoader::inst()->findThemedResource('UPGRADE-FIX-REQUIRED/styles.css', SSViewer::get_themes())/*
-### @@@@ START UPGRADE REQUIRED @@@@ ###
-FIND: SSViewer::get_theme_folder()
-NOTE: Please review update and fix as required
-### @@@@ END UPGRADE REQUIRED @@@@ ###
-*/;
                 $cssArrayLocationOnly = array();
                 $expendadCSSArray = array();
                 foreach ($cssArray  as $name => $media) {
                     if (strpos($name, '.css')) {
                         $expendadCSSArray[] = array("media" => $media, "location" => $name);
                     } else {
-                        $expendadCSSArray[] = array("media" => $media, "location" => $themeFolder.'/css/'.$name.'.css');
+                        $expendadCSSArray[] = array("media" => $media, "location" => ThemeResourceLoader::inst()->findThemedResource('css/'.$name.'.css'));
                     }
                 }
                 $expendadCSSArray = array_merge($expendadCSSArray, $additionalCSS);
@@ -339,7 +333,6 @@ NOTE: Please review update and fix as required
         if ($tags && $cacheKey) {
             //do nothing
         } else {
-            $themeFolder = ThemeResourceLoader::inst()->findThemedResource('UPGRADE-FIX-REQUIRED/styles.css', SSViewer::get_themes()) . '/';
             $tags = "";
             $page = $this->owner;
             $siteConfig = SiteConfig::current_site_config();
@@ -423,7 +416,7 @@ NOTE: Please review update and fix as required
                 $cache->set($cacheKey, $tags);
             }
         }
-        
+
         return DBField::create_field('HTMLText', $tags);
     }
 
@@ -564,8 +557,7 @@ NOTE: Please review update and fix as required
             }
             $html = '';
             foreach ($sizes as $size) {
-                $themeFolder = ThemeResourceLoader::inst()->findThemedResource('UPGRADE-FIX-REQUIRED/styles.css', SSViewer::get_themes());
-                $file = "/".$themeFolder.'/icons/'.'icon-'.$size.'x'.$size.'.png';
+                $file = ThemeResourceLoader::inst()->findThemedResource('icons/'.'icon-'.$size.'x'.$size.'.png', SSViewer::get_themes());
                 if (file_exists(Director::baseFolder().$file)) {
                     $html .= '
 <link rel="icon" type="image/png" sizes="'.$size.'x'.$size.'"  href="'.$baseURL.$file.'" />
@@ -591,8 +583,7 @@ NOTE: Please review update and fix as required
                 //do nothing
             } else {
                 $faviconLink = "";
-                $themeFolder = ThemeResourceLoader::inst()->findThemedResource('UPGRADE-FIX-REQUIRED/styles.css', SSViewer::get_themes());
-                $faviconLocation = "/".$themeFolder.'/icons/favicon.ico';
+                $faviconLocation = ThemeResourceLoader::inst()->findThemedResource('icons/favicon.ico');
                 if (file_exists(Director::baseFolder().$faviconLocation)) {
                     $faviconLink = $baseURL.$faviconLocation;
                 } elseif ($favicon) {
