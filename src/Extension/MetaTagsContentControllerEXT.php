@@ -141,13 +141,13 @@ class MetaTagsContentControllerEXT extends Extension
      *
      * @var Array
      **/
-    private static $og_image_method_map = array();
+    private static $og_image_method_map = [];
 
     /**
      * google fonts to be used
      * @var Array
      **/
-    private static $google_font_collection = array();
+    private static $google_font_collection = [];
 
     /**
      * combine css files into one?
@@ -165,7 +165,7 @@ class MetaTagsContentControllerEXT extends Extension
      * add all the basic js and css files - call from Page::init()
      * @var Array
      */
-    private static $_metatags_building_completed = array();
+    private static $_metatags_building_completed = [];
 
     /**
      * add Jquery
@@ -210,7 +210,7 @@ class MetaTagsContentControllerEXT extends Extension
             $jsArray = Config::inst()->get(MetaTagsContentControllerEXT::class, "default_js");
             // if(Director::isLive() && 1 == 2) {
             //     foreach($cssArray as $tempKey => $tempValue) {
-            //         $newArray = array();
+            //         $newArray = [];
             //         if(strpos('.css', $tempKey)) {
             //             $newKey = str_replace('.css', '.min.css', $tempKey);
             //         } else {
@@ -255,13 +255,13 @@ class MetaTagsContentControllerEXT extends Extension
             if ($combineCSS && file_exists($folderForCombinedFilesWithBase.$cssFile)) {
                 Requirements::css($cssFile);
             } else {
-                $cssArrayLocationOnly = array();
-                $expendadCSSArray = array();
+                $cssArrayLocationOnly = [];
+                $expendadCSSArray = [];
                 foreach ($cssArray  as $name => $media) {
                     if (strpos($name, '.css')) {
                         $expendadCSSArray[] = array("media" => $media, "location" => $name);
                     } else {
-                        $expendadCSSArray[] = array("media" => $media, "location" => ThemeResourceLoader::inst()->findThemedResource('client/css/'.$name.'.css'));
+                        $expendadCSSArray[] = array("media" => $media, "location" => ThemeResourceLoader::inst()->findThemedResource('css/'.$name.'.css'));
                     }
                 }
                 $expendadCSSArray = array_merge($expendadCSSArray, $additionalCSS);
