@@ -26,5 +26,9 @@
         "silverstripe/framework": "~4.0",
         "silverstripe/recipe-cms": "*"
     },
-    "extra": []
+    "extra": {
+        "expose": [
+            "client"
+        ]
+    }
 }

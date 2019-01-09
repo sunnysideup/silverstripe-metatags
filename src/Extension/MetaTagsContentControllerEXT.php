@@ -261,7 +261,7 @@ class MetaTagsContentControllerEXT extends Extension
                     if (strpos($name, '.css')) {
                         $expendadCSSArray[] = array("media" => $media, "location" => $name);
                     } else {
-                        $expendadCSSArray[] = array("media" => $media, "location" => ThemeResourceLoader::inst()->findThemedResource('css/'.$name.'.css'));
+                        $expendadCSSArray[] = array("media" => $media, "location" => ThemeResourceLoader::inst()->findThemedResource('client/css/'.$name.'.css'));
                     }
                 }
                 $expendadCSSArray = array_merge($expendadCSSArray, $additionalCSS);

@@ -62,7 +62,7 @@ class MetaTagsSTE extends SiteTreeExtension
      * set to empty string to stop it being copied
      * by default to the theme
      **/
-    private static $default_editor_file = "metatags/css/editor.css";
+    private static $default_editor_file = "metatags/client/css/editor.css";
 
 
     /**
@@ -70,7 +70,7 @@ class MetaTagsSTE extends SiteTreeExtension
      * set to empty string to stop it being copied
      * by default to the theme
      **/
-    private static $default_reset_file = "metatags/css/reset.css";
+    private static $default_reset_file = "metatags/client/css/reset.css";
 
     /**
      * because we use this function you can NOT
@@ -334,7 +334,6 @@ class MetaTagsSTE extends SiteTreeExtension
     public function requireDefaultRecords()
     {
         $folder = Config::inst()->get(SSViewer::class, 'theme');
-        ;
         if ($folder) {
             if ($file = Config::inst()->get(MetaTagsSTE::class, "default_editor_file")) {
                 $baseFile = Director::baseFolder(). $file;
