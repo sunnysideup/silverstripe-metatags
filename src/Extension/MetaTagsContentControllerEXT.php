@@ -255,22 +255,28 @@ class MetaTagsContentControllerEXT extends Extension
             if ($combineCSS && file_exists($folderForCombinedFilesWithBase.$cssFile)) {
                 Requirements::css($cssFile);
             } else {
-                $cssArrayLocationOnly = [];
-                $expendadCSSArray = [];
+                $expendedCSSArray = [];
                 foreach ($cssArray  as $name => $media) {
                     if (strpos($name, '.css')) {
-                        $expendadCSSArray[] = array("media" => $media, "location" => $name);
+                        $expendedCSSArray[] = [
+                            "location" => $name,
+                            "media" => $media
+                        ];
                     } else {
-                        $expendadCSSArray[] = array("media" => $media, "location" => ThemeResourceLoader::inst()->findThemedResource('css/'.$name.'.css'));
+                        $expendedCSSArray[] = [
+                            "location" => ThemeResourceLoader::inst()->findThemedResource('css/'.$name.'.css'),
+                            "media" => $media
+                        ];
                     }
                 }
-                $expendadCSSArray = array_merge($expendadCSSArray, $additionalCSS);
-                foreach ($expendadCSSArray as $cssArraySub) {
-                    Requirements::css($cssArraySub["location"], $cssArraySub["media"]);
-                    $cssArrayLocationOnly[] = $cssArraySub["location"];
+                $expendedCSSArray = array_merge($expendedCSSArray, $additionalCSS);
+                foreach ($expendedCSSArray as $cssArraySub) {
+                    if($cssArraySub['location']) {
+                        Requirements::css($cssArraySub["location"], $cssArraySub["media"]);
+                    }
                 }
                 if ($combineCSS) {
-                    Requirements::combine_files($cssFile, $cssArrayLocationOnly);
+                    Requirements::combine_files($cssFile, array_keys($cssArrayLocationOnly));
                 }
             }
 

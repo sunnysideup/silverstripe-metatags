@@ -78,8 +78,8 @@ class MetaTagsSiteConfigDE extends DataExtension
         $tabs[] = Tab::create(
             'Meta Title',
             LiteralField::create('MetaTitleExplanation', '<h3>&ldquo;Meta Titles&rdquo;: Bookmark and Browser Titles</h3><p>These are found at the top of your browser bar and these titles are also used when you bookmark a page.</p>'),
-            TextField::create('PrependToMetaTitle', 'Prepend')->setRightTitle('add to the front of Meta Title'),
-            TextField::create('AppendToMetaTitle', 'Append')->setRightTitle('add at the end of Meta Title')
+            TextField::create('PrependToMetaTitle', 'Prepend')->setDescription('add to the front of Meta Title'),
+            TextField::create('AppendToMetaTitle', 'Append')->setDescription('add at the end of Meta Title')
         );
 
         if (Config::inst()->get(MetaTagsContentControllerEXT::class, "no_automated_menu_title")) {
@@ -113,7 +113,7 @@ class MetaTagsSiteConfigDE extends DataExtension
                 TextField::create('MetaDataCopyright', 'Content Copyright'),
                 TextField::create('MetaDataDesign', 'Design provided by'),
                 TextField::create('MetaDataCoding', 'Website Coding provided by'),
-                TextareaField::create('ExtraMeta', 'Custom Meta Tags')->setRightTitle('Careful - advanced users only')
+                TextareaField::create('ExtraMeta', 'Custom Meta Tags')->setDescription('Careful - advanced users only')
             );
         }
         if (count($tabs)) {
@@ -129,7 +129,7 @@ class MetaTagsSiteConfigDE extends DataExtension
         }
         $fields->addFieldToTab("Root.Icons", $uploadField = UploadField::create('Favicon', 'Icon'));
         $uploadField->setAllowedExtensions(array("png"));
-        $uploadField->setRightTitle(
+        $uploadField->setDescription(
             "
             Upload a 480px wide x 480px high, non-transparent PNG file.
             Ask your developer for help if unsure.

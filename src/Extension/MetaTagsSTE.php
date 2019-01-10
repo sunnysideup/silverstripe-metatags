@@ -125,7 +125,7 @@ class MetaTagsSTE extends SiteTreeExtension
             )
         );
         $shareOnFacebookImageField->setFolderName("OpenGraphShareImages");
-        $shareOnFacebookImageField->setRightTitle("Use images that are at least 1200 x 630 pixels for the best display on high resolution devices. At the minimum, you should use images that are 600 x 315 pixels.");
+        $shareOnFacebookImageField->setDescription("Use images that are at least 1200 x 630 pixels for the best display on high resolution devices. At the minimum, you should use images that are 600 x 315 pixels.");
         $fields->addFieldToTab(
             "Root.Facebook",
             $shareOnFacebookImageField = LiteralField::create(
@@ -142,31 +142,31 @@ class MetaTagsSTE extends SiteTreeExtension
             )
         );
         //right titles
-        $fieldTitle->setRightTitle(
+        $fieldTitle->setDescription(
             _t(
                 "MetaTagsSTE.FB_TITLE_RIGHT",
                 "Uses the Page Title"
             )
         );
-        $fieldType->setRightTitle(
+        $fieldType->setDescription(
             _t(
                 "MetaTagsSTE.FB_TYPE_RIGHT",
                 "Can not be changed"
             )
         );
-        $fieldSiteName->setRightTitle(
+        $fieldSiteName->setDescription(
             _t(
                 "MetaTagsSTE.FB_SITE_NAME_RIGHT",
                 "Can be set in the site settings"
             )
         );
-        $fieldDescription->setRightTitle(
+        $fieldDescription->setDescription(
             _t(
                 "MetaTagsSTE.FB_DESCRIPTION",
                 "Description is set in the Metadata section of each page."
             )
         );
-        $shareOnFacebookImageField->setRightTitle(
+        $shareOnFacebookImageField->setDescription(
             _t(
                 "MetaTagsSTE.FB_HOW_TO_CHOOSE_IMAGE",
                 "If no image is set then the Facebook user can choose an image from the page - with options retrieved by Facebook."
@@ -189,7 +189,7 @@ class MetaTagsSTE extends SiteTreeExtension
                 ),
                 "MetaDescription"
             );
-            $allowField0->setRightTitle(
+            $allowField0->setDescription(
                 _t("SiteTree.METATITLE_EXPLANATION", "Leave this empty to use the page title")
             );
         }
@@ -221,7 +221,7 @@ class MetaTagsSTE extends SiteTreeExtension
                 if ($oldField) {
                     $newField = $oldField->performReadonlyTransformation();
                     //$newField->setTitle($newField->Title());
-                    $newField->setRightTitle(_t("MetaTags.AUTOMATICALLY_UPDATED", "Automatically updated when you save this page."));
+                    $newField->setDescription(_t("MetaTags.AUTOMATICALLY_UPDATED", "Automatically updated when you save this page."));
                     $fields->replaceField($fieldName, $newField);
                 }
             }
@@ -232,7 +232,7 @@ class MetaTagsSTE extends SiteTreeExtension
         $default_homepage_link = 'home'; // HACK: get_default_homepage_link doesn't exist anymore
         if ($this->owner->URLSegment == $default_homepage_link) {
             $fields->dataFieldByName('URLSegment')
-                ->setRightTitle("Careful! changing the URL from 'home' to anything else means that this page will no longer be the home page.");
+                ->setDescription("Careful! changing the URL from 'home' to anything else means that this page will no longer be the home page.");
         }
         return $fields;
     }
