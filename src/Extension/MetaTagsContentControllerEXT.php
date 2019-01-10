@@ -565,7 +565,7 @@ class MetaTagsContentControllerEXT extends Extension
                 } elseif ($this->owner->getSiteConfig()->FaviconID) {
                     if ($favicon = $this->owner->getSiteConfig()->Favicon()) {
                         if ($favicon->exists() && $favicon instanceof Image) {
-                            $generatedImage = $favicon->setWidth($size);
+                            $generatedImage = $favicon->ScaleWidth($size);
                             if ($generatedImage) {
                                 $html .= '
 <link rel="icon" type="image/png" sizes="'.$size.'x'.$size.'"  href="'.$baseURL.$generatedImage->Link().'" />
@@ -587,7 +587,7 @@ class MetaTagsContentControllerEXT extends Extension
                 if (file_exists(Director::baseFolder().$faviconLocation)) {
                     $faviconLink = $baseURL.$faviconLocation;
                 } elseif ($favicon) {
-                    $generatedImage = $favicon->setWidth(16);
+                    $generatedImage = $favicon->ScaleWidth(16);
                     $faviconLink = $baseURL.$generatedImage->Link();
                 }
                 if ($faviconLink) {
