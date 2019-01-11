@@ -269,14 +269,16 @@ class MetaTagsContentControllerEXT extends Extension
                         ];
                     }
                 }
+                $cssArrayLocationOnly = [];
                 $expendedCSSArray = array_merge($expendedCSSArray, $additionalCSS);
                 foreach ($expendedCSSArray as $cssArraySub) {
                     if($cssArraySub['location']) {
                         Requirements::css($cssArraySub["location"], $cssArraySub["media"]);
+                        $cssArrayLocationOnly[] = $cssArraySub["location"];
                     }
                 }
                 if ($combineCSS) {
-                    Requirements::combine_files($cssFile, array_keys($cssArrayLocationOnly));
+                    Requirements::combine_files($cssFile, $cssArrayLocationOnly);
                 }
             }
 
