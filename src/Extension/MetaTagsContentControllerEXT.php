@@ -16,14 +16,14 @@ use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Assets\Image;
 use SilverStripe\Core\Extension;
 use Psr\SimpleCache\CacheInterface;
-
+use SilverStripe\Core\Flushable;
 /**
  * adds meta tag functionality to the Page_Controller
  *
  *
  *
  */
-class MetaTagsContentControllerEXT extends Extension
+class MetaTagsContentControllerEXT extends Extension implements Flushable
 {
 
     /**
@@ -556,7 +556,9 @@ class MetaTagsContentControllerEXT extends Extension
         $baseURL = rtrim($baseURL, "/");
         $cache = $cache = Injector::inst()->get(CacheInterface::class . '.metatags');
         $html = $cache->get($cacheKey);
-        if (!$html) {
+        if ($html) {
+            //do nothing
+        } else {
             $sizes =  Config::inst()->get(MetaTagsContentControllerEXT::class, "favicon_sizes");
             if ($hasBaseFolderFavicon) {
                 if (is_array($sizes)) {
@@ -565,8 +567,12 @@ class MetaTagsContentControllerEXT extends Extension
             }
             $html = '';
             foreach ($sizes as $size) {
-                $file = ThemeResourceLoader::inst()->findThemedResource('icons/'.'icon-'.$size.'x'.$size.'.png', SSViewer::get_themes());
-                if (file_exists(Director::baseFolder().$file)) {
+                $fileName = 'icons/'.'icon-'.$size.'x'.$size.'.png';
+                $file = ThemeResourceLoader::inst()->findThemedResource(
+                    $fileName,
+                    SSViewer::get_themes()
+                );
+                if ($file && file_exists(Director::baseFolder().$file)) {
                     $html .= '
 <link rel="icon" type="image/png" sizes="'.$size.'x'.$size.'"  href="'.$baseURL.$file.'" />
 <link rel="apple-touch-icon" type="image/png" sizes="'.$size.'x'.$size.'"  href="'.$baseURL.$file.'" />';
@@ -574,7 +580,8 @@ class MetaTagsContentControllerEXT extends Extension
                     if ($favicon = $this->owner->getSiteConfig()->Favicon()) {
                         if ($favicon->exists() && $favicon instanceof Image) {
                             $generatedImage = $favicon->ScaleWidth($size);
-                            if ($generatedImage) {
+                            if ($generatedImage && $generatedImage->exists()) {
+                                echo '...'.$generatedImage->Link();
                                 $html .= '
 <link rel="icon" type="image/png" sizes="'.$size.'x'.$size.'"  href="'.$baseURL.$generatedImage->Link().'" />
 <link rel="apple-touch-icon" type="image/png" sizes="'.$size.'x'.$size.'"  href="'.$baseURL.$generatedImage->Link().'" />';
@@ -626,4 +633,11 @@ class MetaTagsContentControllerEXT extends Extension
         }
         return $title;
     }
+
+    public static function flush()
+    {
+        $cache = Injector::inst()->get(CacheInterface::class . '.metatags');
+        $cache->clear();
+    }
+
 }
