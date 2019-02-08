@@ -179,7 +179,7 @@ class MetaTagsSTE extends SiteTreeExtension
      **/
     public function updateCMSFields(FieldList $fields)
     {
-        if($fields->fieldByName('Root.Main')) {
+        if($fields->fieldByName('Root.Main.Metadata')) {
             //separate MetaTitle?
             if (Config::inst()->get(MetaTagsContentControllerEXT::class, "use_separate_metatitle")) {
                 $fields->addFieldToTab(
