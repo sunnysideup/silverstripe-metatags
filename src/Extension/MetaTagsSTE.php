@@ -179,60 +179,62 @@ class MetaTagsSTE extends SiteTreeExtension
      **/
     public function updateCMSFields(FieldList $fields)
     {
-        //separate MetaTitle?
-        if (Config::inst()->get(MetaTagsContentControllerEXT::class, "use_separate_metatitle")) {
+        if($fields->fieldByName('Root.Main')) {
+            //separate MetaTitle?
+            if (Config::inst()->get(MetaTagsContentControllerEXT::class, "use_separate_metatitle")) {
+                $fields->addFieldToTab(
+                    'Root.Main.Metadata',
+                    $allowField0 = TextField::create(
+                        'MetaTitle',
+                        _t('SiteTree.METATITLE', 'Meta Title')
+                    ),
+                    "MetaDescription"
+                );
+                $allowField0->setDescription(
+                    _t("SiteTree.METATITLE_EXPLANATION", "Leave this empty to use the page title")
+                );
+            }
+
+            //choose automation for page
             $fields->addFieldToTab(
                 'Root.Main.Metadata',
-                $allowField0 = TextField::create(
-                    'MetaTitle',
-                    _t('SiteTree.METATITLE', 'Meta Title')
+                $allowField1 = OptionsetField::create(
+                    'AutomateMetatags',
+                    _t('MetaManager.UPDATEMETA', 'Automation for this page ...'),
+                    $this->AutomateMetatagsOptions()
+                )->setDescription(
+                    _t('MetatagSTE.BY_DEFAULT', '<strong><a href="/admin/settings/">Default Settings</a></strong>:').
+                    $this->defaultSettingDescription()
                 ),
-                "MetaDescription"
+                'MetaDescription'
             );
-            $allowField0->setDescription(
-                _t("SiteTree.METATITLE_EXPLANATION", "Leave this empty to use the page title")
-            );
-        }
 
-        //choose automation for page
-        $fields->addFieldToTab(
-            'Root.Main.Metadata',
-            $allowField1 = OptionsetField::create(
-                'AutomateMetatags',
-                _t('MetaManager.UPDATEMETA', 'Automation for this page ...'),
-                $this->AutomateMetatagsOptions()
-            )->setDescription(
-                _t('MetatagSTE.BY_DEFAULT', '<strong><a href="/admin/settings/">Default Settings</a></strong>:').
-                $this->defaultSettingDescription()
-            ),
-            'MetaDescription'
-        );
-
-        $automatedFields =  $this->updatedFieldsArray();
-        $updatedFieldString = "";
-        if (count($automatedFields)) {
-            $updatedFieldString = ""
-                ._t("MetaManager.UPDATED_EXTERNALLY", "Based on your current settings, the following fields will be automatically updated:")
-                .": <em>"
-                .implode("</em>, <em>", $automatedFields)
-                ."</em>.";
-            foreach ($automatedFields as $fieldName => $fieldTitle) {
-                $oldField = $fields->dataFieldByName($fieldName);
-                if ($oldField) {
-                    $newField = $oldField->performReadonlyTransformation();
-                    //$newField->setTitle($newField->Title());
-                    $newField->setDescription(_t("MetaTags.AUTOMATICALLY_UPDATED", "Automatically updated when you save this page."));
-                    $fields->replaceField($fieldName, $newField);
+            $automatedFields =  $this->updatedFieldsArray();
+            $updatedFieldString = "";
+            if (count($automatedFields)) {
+                $updatedFieldString = ""
+                    ._t("MetaManager.UPDATED_EXTERNALLY", "Based on your current settings, the following fields will be automatically updated:")
+                    .": <em>"
+                    .implode("</em>, <em>", $automatedFields)
+                    ."</em>.";
+                foreach ($automatedFields as $fieldName => $fieldTitle) {
+                    $oldField = $fields->dataFieldByName($fieldName);
+                    if ($oldField) {
+                        $newField = $oldField->performReadonlyTransformation();
+                        //$newField->setTitle($newField->Title());
+                        $newField->setDescription(_t("MetaTags.AUTOMATICALLY_UPDATED", "Automatically updated when you save this page."));
+                        $fields->replaceField($fieldName, $newField);
+                    }
                 }
             }
+            $fields->removeByName('ExtraMeta');
         }
-        $fields->removeByName('ExtraMeta');
-        $linkToManager = Config::inst()->get("MetaTagCMSControlPages", "url_segment") . '/';
-        //if ($this->owner->URLSegment == RootURLController::get_default_homepage_link()) {
-        $default_homepage_link = 'home'; // HACK: get_default_homepage_link doesn't exist anymore
-        if ($this->owner->URLSegment == $default_homepage_link) {
+        if ($this->owner->URLSegment == Config::inst()->get('RootURLController', 'default_homepage_link')) {
             $fields->dataFieldByName('URLSegment')
-                ->setDescription("Careful! changing the URL from 'home' to anything else means that this page will no longer be the home page.");
+                ->setDescription("
+                    Careful! changing the URL from 'home'
+                    to anything else means that this page will no longer be your home page.
+                ");
         }
         return $fields;
     }
