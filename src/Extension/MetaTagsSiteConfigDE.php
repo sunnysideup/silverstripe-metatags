@@ -42,6 +42,10 @@ class MetaTagsSiteConfigDE extends DataExtension
         "Favicon" => Image::class
     );
 
+    private static $owns = [
+        'Favicon'
+    ];
+
     public function populateDefaults()
     {
         $this->owner->MetaDataCopyright = "site owner";

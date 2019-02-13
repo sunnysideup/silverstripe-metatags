@@ -40,6 +40,8 @@ class MetaTagsSTE extends SiteTreeExtension
     private static $db = array(
         'AutomateMetatags' => 'Enum("Inherit,Custom,Automated", "Inherit")'
     );
+
+
     /**
      * standard SS method
      * @var Array
@@ -56,6 +58,10 @@ class MetaTagsSTE extends SiteTreeExtension
     private static $has_one = array(
         'ShareOnFacebookImage' => Image::class
     );
+
+    private static $owns = [
+        'ShareOnFacebookImage'
+    ];
 
     /**
      * @var string
@@ -121,7 +127,7 @@ class MetaTagsSTE extends SiteTreeExtension
             "Root.Facebook",
             $shareOnFacebookImageField = UploadField::create(
                 "ShareOnFacebookImage",
-                _t("MetaTagsSTE.FB_IMAGE", Image::class)
+                _t("MetaTagsSTE.FB_IMAGE", 'Image')
             )
         );
         $shareOnFacebookImageField->setFolderName("OpenGraphShareImages");
