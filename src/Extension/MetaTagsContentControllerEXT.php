@@ -386,18 +386,12 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
             <meta charset="utf-8" />'.
                 $titleTag;
             $hasBaseFolderFavicon = false;
-            if (file_exists(Director::baseFolder().'/'.$faviconFileBase.'favicon.ico')) {
+            $baseFolderFavicon = '/'.$faviconFileBase.'favicon.ico';
+            if (file_exists(Director::baseFolder().$baseFolderFavicon)) {
                 $hasBaseFolderFavicon = true;
                 //ie only...
                 $tags .= '
-            <link rel="SHORTCUT ICON" href="'.$faviconBase.'favicon.ico" />';
-            } else {
-                if (file_exists(Director::baseFolder().'favicon.ico')) {
-                    $hasBaseFolderFavicon = true;
-                    //ie only...
-                    $tags .= '
-                <link rel="SHORTCUT ICON" href="'.$faviconBase.'favicon.ico" />';
-                }
+            <link rel="SHORTCUT ICON" href="'.$baseFolderFavicon.'" />';
             }
             if (!$page->ExtraMeta && $siteConfig->ExtraMeta) {
                 $page->ExtraMeta = $siteConfig->ExtraMeta;
@@ -581,7 +575,6 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
                         if ($favicon->exists() && $favicon instanceof Image) {
                             $generatedImage = $favicon->ScaleWidth($size);
                             if ($generatedImage && $generatedImage->exists()) {
-                                echo '...'.$generatedImage->Link();
                                 $html .= '
 <link rel="icon" type="image/png" sizes="'.$size.'x'.$size.'"  href="'.$baseURL.$generatedImage->Link().'" />
 <link rel="apple-touch-icon" type="image/png" sizes="'.$size.'x'.$size.'"  href="'.$baseURL.$generatedImage->Link().'" />';
@@ -599,7 +592,7 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
             } else {
                 $faviconLink = "";
                 $faviconLocation = ThemeResourceLoader::inst()->findThemedResource('icons/favicon.ico');
-                if (file_exists(Director::baseFolder().$faviconLocation)) {
+                if ($faviconLocation && file_exists(Director::baseFolder().$faviconLocation)) {
                     $faviconLink = $baseURL.$faviconLocation;
                 } elseif ($favicon) {
                     $generatedImage = $favicon->ScaleWidth(16);
