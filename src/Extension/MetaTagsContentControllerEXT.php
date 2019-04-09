@@ -400,9 +400,18 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
                 $siteConfig->MetaDataCopyright = $siteConfig->Title;
             }
             if ($addExtraSearchEngineData) {
-                $tags .= '
+                if($page->ShowInSearch) {
+                    $tags .= '
             <meta name="robots" content="'.$noopd.'all, index, follow" />
-            <meta name="googlebot" content="'.$noopd.'all, index, follow" />
+            <meta name="googlebot" content="'.$noopd.'all, index, follow" />';
+
+                } else {
+                $tags .= '
+            <meta name="robots" content="'.$noopd.'none, noindex, nofollow" />
+            <meta name="googlebot" content="'.$noopd.'none, noindex, nofollow" />';
+                }
+
+                $tags .= '
             <meta name="rights" content="'.Convert::raw2att($siteConfig->MetaDataCopyright).'" />
             <meta name="created" content="'.$lastEdited->Format("Ymd").'" />
             <!--[if lt IE 9]>
