@@ -406,7 +406,7 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
             <meta name="googlebot" content="'.$noopd.'all, index, follow" />';
 
                 } else {
-                $tags .= '
+                    $tags .= '
             <meta name="robots" content="'.$noopd.'none, noindex, nofollow" />
             <meta name="googlebot" content="'.$noopd.'none, noindex, nofollow" />';
                 }
