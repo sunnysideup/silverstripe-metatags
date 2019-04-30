@@ -400,15 +400,16 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
                 $siteConfig->MetaDataCopyright = $siteConfig->Title;
             }
             if ($addExtraSearchEngineData) {
+
                 if($page->ExcludeFromSearchEngines) {
                     $tags .= '
-                    <meta name="robots" content="'.$noopd.'none, noindex, nofollow" />
-                    <meta name="googlebot" content="'.$noopd.'none, noindex, nofollow" />';
+            <meta name="robots" content="'.$noopd.'none, noindex, nofollow" />
+            <meta name="googlebot" content="'.$noopd.'none, noindex, nofollow" />';
 
                 } else {
                     $tags .= '
-                    <meta name="robots" content="'.$noopd.'all, index, follow" />
-                    <meta name="googlebot" content="'.$noopd.'all, index, follow" />';
+            <meta name="robots" content="'.$noopd.'all, index, follow" />
+            <meta name="googlebot" content="'.$noopd.'all, index, follow" />';
                 }
 
                 $tags .= '
