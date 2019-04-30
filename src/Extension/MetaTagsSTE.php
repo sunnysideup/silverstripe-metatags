@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\MetaTags\Extension;
 
+use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Assets\Image;
 use SilverStripe\Core\Config\Config;
 use Sunnysideup\MetaTags\Extension\MetaTagsContentControllerEXT;
@@ -38,7 +39,8 @@ class MetaTagsSTE extends SiteTreeExtension
      * @var Array
      **/
     private static $db = array(
-        'AutomateMetatags' => 'Enum("Inherit,Custom,Automated", "Inherit")'
+        'AutomateMetatags' => 'Enum("Inherit,Custom,Automated", "Inherit")',
+        'ExcludeFromSearchEngines' => 'Boolean'
     );
 
 
@@ -48,6 +50,7 @@ class MetaTagsSTE extends SiteTreeExtension
      **/
     private static $indexes = array(
         'AutomateMetatags' => true,
+        'ExcludeFromSearchEngines' => true,
         'Sort' => true
     );
 
@@ -177,6 +180,15 @@ class MetaTagsSTE extends SiteTreeExtension
                 "MetaTagsSTE.FB_HOW_TO_CHOOSE_IMAGE",
                 "If no image is set then the Facebook user can choose an image from the page - with options retrieved by Facebook."
             )
+        );
+
+        $fields->addFieldToTab(
+            'Root.Settings',
+            CheckboxField::create(
+                'ExcludeFromSearchEngines',
+                'Hide from Google et al.'
+            ),
+            'ShowInSearch'
         );
     }
     /**
