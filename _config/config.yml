@@ -1,3 +1,8 @@
+---
+Name: metatags
+After: framework
+---
+
 SilverStripe\SiteConfig\SiteConfig:
   extensions:
     - Sunnysideup\MetaTags\Extension\MetaTagsSiteConfigDE
@@ -11,7 +16,7 @@ SilverStripe\CMS\Controllers\ContentController:
     - Sunnysideup\MetaTags\Extension\MetaTagsContentControllerEXT
 
 SilverStripe\Core\Injector\Injector:
-Psr\SimpleCache\CacheInterface.metatags:
-  factory: SilverStripe\Core\Cache\CacheFactory
-  constructor:
-    namespace: "metatags"
+  Psr\SimpleCache\CacheInterface.metatags:
+    factory: SilverStripe\Core\Cache\CacheFactory
+    constructor:
+      namespace: "metatags"
