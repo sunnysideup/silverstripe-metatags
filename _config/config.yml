@@ -1,17 +1,17 @@
 SilverStripe\SiteConfig\SiteConfig:
-    extensions:
-        - Sunnysideup\MetaTags\Extension\MetaTagsSiteConfigDE
+  extensions:
+    - Sunnysideup\MetaTags\Extension\MetaTagsSiteConfigDE
 
 SilverStripe\CMS\Model\SiteTree:
-    extensions:
-        - Sunnysideup\MetaTags\Extension\MetaTagsSTE
+  extensions:
+    - Sunnysideup\MetaTags\Extension\MetaTagsSTE
 
 SilverStripe\CMS\Controllers\ContentController:
-    extensions:
-        - Sunnysideup\MetaTags\Extension\MetaTagsContentControllerEXT
+  extensions:
+    - Sunnysideup\MetaTags\Extension\MetaTagsContentControllerEXT
 
 SilverStripe\Core\Injector\Injector:
-  Psr\SimpleCache\CacheInterface.metatags:
-    factory: SilverStripe\Core\Cache\CacheFactory
-    constructor:
-      namespace: "metatags"
+Psr\SimpleCache\CacheInterface.metatags:
+  factory: SilverStripe\Core\Cache\CacheFactory
+  constructor:
+    namespace: "metatags"
