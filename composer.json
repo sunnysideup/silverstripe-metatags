@@ -30,10 +30,5 @@
         "expose": [
             "client"
         ]
-    },
-    "autoload": {
-        "psr-4": {
-            "Sunnysideup\\MetaTags\\": "src/"
-        }
     }
 }
