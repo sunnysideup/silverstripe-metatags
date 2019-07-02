@@ -38,32 +38,32 @@ class MetaTagsSTE extends SiteTreeExtension
      * standard SS method
      * @var Array
      **/
-    private static $db = array(
+    private static $db = [
         'AutomateMetatags' => 'Enum("Inherit,Custom,Automated", "Inherit")',
-        'ExcludeFromSearchEngines' => 'Boolean'
-    );
+        'ExcludeFromSearchEngines' => 'Boolean',
+    ];
 
 
     /**
      * standard SS method
      * @var Array
      **/
-    private static $indexes = array(
+    private static $indexes = [
         'AutomateMetatags' => true,
         'ExcludeFromSearchEngines' => true,
-        'Sort' => true
-    );
+        'Sort' => true,
+    ];
 
     /**
      * standard SS method
      * @var Array
      **/
-    private static $has_one = array(
-        'ShareOnFacebookImage' => Image::class
-    );
+    private static $has_one = [
+        'ShareOnFacebookImage' => Image::class,
+    ];
 
     private static $owns = [
-        'ShareOnFacebookImage'
+        'ShareOnFacebookImage',
     ];
 
     /**
@@ -105,9 +105,9 @@ class MetaTagsSTE extends SiteTreeExtension
      * standard SS method
      * @var Array
      **/
-    private static $defaults = array(
-        'AutomateMetatags' => 'Inherit'
-    );
+    private static $defaults = [
+        'AutomateMetatags' => 'Inherit',
+    ];
 
     /**
      * standard SS method
@@ -382,11 +382,11 @@ class MetaTagsSTE extends SiteTreeExtension
 
     private function AutomateMetatagsOptions()
     {
-        return array(
+        return [
             'Inherit' => _t('MetaTagsSTE.INHERIT', 'Default Setting'),
             'Custom' => _t('MetaTagsSTE.CUSTOM', 'Manually'),
-            'Automated' => _t('MetaTagsSTE.AUTOMATE', 'Automated')
-        );
+            'Automated' => _t('MetaTagsSTE.AUTOMATE', 'Automated'),
+        ];
     }
 
 

@@ -31,7 +31,7 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
      * do not include @ sign.
      * @var string
      */
-    private static $favicon_sizes = array(
+    private static $favicon_sizes = [
         "16",
         "32",
         //"57",
@@ -45,8 +45,8 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
         //"152",
         //"180",
         //"192",
-        "310"
-    );
+        "310",
+    ];
 
     /**
      * the twitter handle used by the site
@@ -95,7 +95,7 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
      * what should be included on every page?
      * @var Array
      */
-    private static $default_css = array(
+    private static $default_css = [
         'reset' =>  null,
         'typography' => null,
         'layout' => null,
@@ -103,8 +103,8 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
         'menu' => null,
         'individualPages' => null,
         'responsive' => null,
-        'print' => 'print'
-    );
+        'print' => 'print',
+    ];
 
     /**
      * specify location for jquery CDN location
@@ -116,9 +116,9 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
      * what should be included on every page?
      * @var Array
      */
-    private static $default_js = array(
-        "framework/thirdparty/jquery/jquery.js"
-    );
+    private static $default_js = [
+        "framework/thirdparty/jquery/jquery.js",
+    ];
 
     /**
      * @var String
@@ -190,7 +190,7 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
      * @param Boolean $force - run it again
      *
      */
-    public function addBasicMetatagRequirements($additionalJS = array(), $additionalCSS = array(), $force = false)
+    public function addBasicMetatagRequirements($additionalJS = [], $additionalCSS = [], $force = false)
     {
         if (!isset(self::$_metatags_building_completed[$this->owner->dataRecord->ID]) || $force) {
             $combineJS = Config::inst()->get(MetaTagsContentControllerEXT::class, "combine_js_files_into_one");
@@ -260,12 +260,12 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
                     if (strpos($name, '.css')) {
                         $expendedCSSArray[] = [
                             "location" => $name,
-                            "media" => $media
+                            "media" => $media,
                         ];
                     } else {
                         $expendedCSSArray[] = [
                             "location" => ThemeResourceLoader::inst()->findThemedResource('css/'.$name.'.css'),
-                            "media" => $media
+                            "media" => $media,
                         ];
                     }
                 }
@@ -440,13 +440,13 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
     protected function OGTags()
     {
         $title = $this->MetaTagsMetaTitle();
-        $array = array(
+        $array = [
             "title" => Convert::raw2att($title),
             "type" => "website",
             "url" => Convert::raw2att($this->owner->AbsoluteLink()),
             "site_name" => Convert::raw2att($this->owner->SiteConfig()->Title),
-            "description" => Convert::raw2att($this->owner->MetaDescription)
-        );
+            "description" => Convert::raw2att($this->owner->MetaDescription),
+        ];
         $html = "";
         if ($shareImage = $this->shareImage()) {
             $array["image"] = Convert::raw2att($shareImage->getAbsoluteURL());
@@ -471,12 +471,12 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
     {
         if ($handle = Config::inst()->get(MetaTagsContentControllerEXT::class, "twitter_handle")) {
             $html = "";
-            $array = array(
+            $array = [
                 "title" => Convert::raw2att($this->owner->Title),
                 "description" => Convert::raw2att($this->owner->MetaDescription),
                 "url" => Convert::raw2att($this->owner->AbsoluteLink()),
-                "site" => "@".$handle
-            );
+                "site" => "@".$handle,
+            ];
             if ($shareImage = $this->shareImage()) {
                 $array["card"] = Convert::raw2att("summary_large_image");
                 $array["image"] = Convert::raw2att($shareImage->getAbsoluteURL());
@@ -566,7 +566,7 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
             $sizes =  Config::inst()->get(MetaTagsContentControllerEXT::class, "favicon_sizes");
             if ($hasBaseFolderFavicon) {
                 if (is_array($sizes)) {
-                    $sizes = array_diff($sizes, array(16));
+                    $sizes = array_diff($sizes, [16]);
                 }
             }
             $html = '';

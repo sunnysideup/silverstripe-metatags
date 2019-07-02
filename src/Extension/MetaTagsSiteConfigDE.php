@@ -22,7 +22,7 @@ use SilverStripe\ORM\DataExtension;
  */
 class MetaTagsSiteConfigDE extends DataExtension
 {
-    private static $db = array(
+    private static $db = [
         //meta title embelishments
         'PrependToMetaTitle' => 'Varchar(60)',
         'AppendToMetaTitle' => 'Varchar(60)',
@@ -35,15 +35,15 @@ class MetaTagsSiteConfigDE extends DataExtension
         'UpdateMenuTitle' => 'Boolean',
         'UpdateMetaDescription' => 'Boolean',
         // extra meta
-        'ExtraMeta' => 'HTMLText'
-    );
+        'ExtraMeta' => 'HTMLText',
+    ];
 
-    private static $has_one = array(
-        "Favicon" => Image::class
-    );
+    private static $has_one = [
+        "Favicon" => Image::class,
+    ];
 
     private static $owns = [
-        'Favicon'
+        'Favicon',
     ];
 
     public function populateDefaults()
@@ -132,7 +132,7 @@ class MetaTagsSiteConfigDE extends DataExtension
             }
         }
         $fields->addFieldToTab("Root.Icons", $uploadField = UploadField::create('Favicon', 'Icon'));
-        $uploadField->setAllowedExtensions(array("png"));
+        $uploadField->setAllowedExtensions(["png"]);
         $uploadField->setDescription(
             "
             Upload a 480px wide x 480px high, non-transparent PNG file.
