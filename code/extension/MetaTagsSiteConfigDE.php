@@ -100,15 +100,14 @@ class MetaTagsSiteConfigDE extends DataExtension
                 TextField::create('MetaDataCopyright', 'Content Copyright'),
                 TextField::create('MetaDataDesign', 'Design provided by'),
                 TextField::create('MetaDataCoding', 'Website Coding provided by'),
-                TextField::create('TwitterHandle', 'Twitter Handle')->setRightTitle('E.g. your twitter handle (e.g. BarackObama) - without the @ sign!'),
                 TextareaField::create('ExtraMeta', 'Custom Meta Tags')->setRightTitle('Careful - advanced users only')
             );
-            $tabs[] = Tab::create(
-                'Social',
-                TextField::create('TwitterHandle', 'Twitter Handle')
-                    ->setRightTitle('E.g. your twitter handle (e.g. BarackObama) - without the @ sign!')
-            );
         }
+        $tabs[] = Tab::create(
+            'Social',
+            TextField::create('TwitterHandle', 'Twitter Handle')
+            ->setRightTitle('E.g. your twitter handle (e.g. BarackObama) - without the @ sign!')
+        );
         if (count($tabs)) {
             $fields->addFieldToTab(
                 'Root.SearchEngines',
