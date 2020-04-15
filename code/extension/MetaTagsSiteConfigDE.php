@@ -100,7 +100,7 @@ class MetaTagsSiteConfigDE extends DataExtension
                 TextField::create('MetaDataCopyright', 'Content Copyright'),
                 TextField::create('MetaDataDesign', 'Design provided by'),
                 TextField::create('MetaDataCoding', 'Website Coding provided by'),
-                TextField::create('TwitterHandle', 'Twitter Handle')->setRightTitle('E.g. your twitter handle (e.g. BarackObama) - without the @ sign!'),
+
                 TextareaField::create('ExtraMeta', 'Custom Meta Tags')->setRightTitle('Careful - advanced users only')
             );
         }
@@ -116,6 +116,13 @@ class MetaTagsSiteConfigDE extends DataExtension
             }
         }
         $fields->addFieldToTab("Root.Icons", $uploadField = UploadField::create('Favicon', 'Icon'));
+        $fields->addFieldsToTab(
+            "Root.Social",
+            [
+                TextField::create('TwitterHandle', 'Twitter Handle')
+                    ->setRightTitle('E.g. your twitter handle (e.g. BarackObama) - without the @ sign!'),
+            ]
+        );
         $uploadField->setAllowedExtensions(array("png"));
         $uploadField->setRightTitle(
             "
