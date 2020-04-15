@@ -118,8 +118,12 @@ class MetaTagsSiteConfigDE extends DataExtension
                 TextField::create('MetaDataCopyright', 'Content Copyright'),
                 TextField::create('MetaDataDesign', 'Design provided by'),
                 TextField::create('MetaDataCoding', 'Website Coding provided by'),
-                TextField::create('TwitterHandle', 'Twitter Handle')->setDescription('your twitter handle (e.g. BarackObama) - without the @ sign.'),
                 TextareaField::create('ExtraMeta', 'Custom Meta Tags')->setDescription('Careful - advanced users only')
+            );
+            $tabs[] = Tab::create(
+                'Social',
+                TextField::create('TwitterHandle', 'Twitter Handle')
+                    ->setRightTitle('E.g. your twitter handle (e.g. BarackObama) - without the @ sign!')
             );
         }
         if (count($tabs)) {
@@ -143,14 +147,6 @@ class MetaTagsSiteConfigDE extends DataExtension
             Note for advanced users:
                 icons can also be loaded onto the server directly into the /themes/mytheme/icons/ folder
                 and as a favicon.ico in the root directory."
-        );
-
-        $fields->addFieldsToTab(
-            "Root.Social",
-            [
-                TextField::create('TwitterHandle', 'Twitter Handle')
-                    ->setRightTitle('E.g. your twitter handle (e.g. BarackObama) - without the @ sign!'),
-            ]
         );
 
         return $fields;
