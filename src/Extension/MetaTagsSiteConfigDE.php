@@ -36,6 +36,7 @@ class MetaTagsSiteConfigDE extends DataExtension
         'UpdateMetaDescription' => 'Boolean',
         // extra meta
         'ExtraMeta' => 'HTMLText',
+        'TwitterHandle' => 'HTMLText',
     ];
 
     private static $has_one = [
@@ -117,6 +118,7 @@ class MetaTagsSiteConfigDE extends DataExtension
                 TextField::create('MetaDataCopyright', 'Content Copyright'),
                 TextField::create('MetaDataDesign', 'Design provided by'),
                 TextField::create('MetaDataCoding', 'Website Coding provided by'),
+                TextField::create('TwitterHandle', 'Twitter Handle')->setDescription('your twitter handle (e.g. BarackObama) - without the @ sign.'),
                 TextareaField::create('ExtraMeta', 'Custom Meta Tags')->setDescription('Careful - advanced users only')
             );
         }
@@ -156,5 +158,6 @@ class MetaTagsSiteConfigDE extends DataExtension
             $this->owner->MetaDataCoding = '';
             $this->owner->ExtraMeta = '';
         }
+        $this->owner->TwitterHandle = str_replace('@', '', $this->owner->TwitterHandle);
     }
 }

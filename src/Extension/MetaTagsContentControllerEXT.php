@@ -27,8 +27,6 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
 {
 
     /**
-     * the twitter handle used by the site
-     * do not include @ sign.
      * @var string
      */
     private static $favicon_sizes = [
@@ -465,11 +463,15 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
      *     MetaTagsContentControllerEXT:
      *       twitter_handle: "relevant_twitter_handle"
      *
-     * @return String (HTML)
+     * @return string (HTML)
      */
-    protected function TwitterTags()
+    protected function TwitterTags() : string
     {
-        if ($handle = Config::inst()->get(MetaTagsContentControllerEXT::class, "twitter_handle")) {
+        $handle = $this->owner->getSiteConfig()->TwitterHandle;
+        if (! $handle) {
+            $handle = Config::inst()->get(MetaTagsContentControllerEXT::class, "twitter_handle");
+        }
+        if ($handle) {
             $html = "";
             $array = [
                 "title" => Convert::raw2att($this->owner->Title),
@@ -489,6 +491,8 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
             }
             return $html;
         }
+
+        return '';
     }
 
     private $_shareImage = [];
