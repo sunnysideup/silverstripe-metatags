@@ -134,6 +134,7 @@ class MetaTagsSiteConfigDE extends DataExtension
             }
         }
         $fields->addFieldToTab("Root.Icons", $uploadField = UploadField::create('Favicon', 'Icon'));
+
         $uploadField->setAllowedExtensions(["png"]);
         $uploadField->setDescription(
             "
@@ -143,6 +144,15 @@ class MetaTagsSiteConfigDE extends DataExtension
                 icons can also be loaded onto the server directly into the /themes/mytheme/icons/ folder
                 and as a favicon.ico in the root directory."
         );
+
+        $fields->addFieldsToTab(
+            "Root.Social",
+            [
+                TextField::create('TwitterHandle', 'Twitter Handle')
+                    ->setRightTitle('E.g. your twitter handle (e.g. BarackObama) - without the @ sign!'),
+            ]
+        );
+
         return $fields;
     }
 
