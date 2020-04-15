@@ -20,7 +20,8 @@ class MetaTagsSiteConfigDE extends DataExtension
         'UpdateMenuTitle' => 'Boolean',
         'UpdateMetaDescription' => 'Boolean',
         // extra meta
-        'ExtraMeta' => 'HTMLText'
+        'ExtraMeta' => 'HTMLText',
+        'TwitterHandle' => 'Varchar',
     );
 
     private static $has_one = array(
@@ -99,7 +100,8 @@ class MetaTagsSiteConfigDE extends DataExtension
                 TextField::create('MetaDataCopyright', 'Content Copyright'),
                 TextField::create('MetaDataDesign', 'Design provided by'),
                 TextField::create('MetaDataCoding', 'Website Coding provided by'),
-                TextareaField::create('ExtraMeta', 'Custom Meta Tags')->setRightTitle('Careful - advanced users only')
+                TextareaField::create('ExtraMeta', 'Custom Meta Tags')->setRightTitle('Careful - advanced users only'),
+                TextField::create('TwitterHandle', 'Twitter Handle')->setRightTitle('E.g. BarackObama - do not add the @ sign!')
             );
         }
         if (count($tabs)) {

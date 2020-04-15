@@ -10,8 +10,6 @@ class MetaTagsContentControllerEXT extends Extension
 {
 
     /**
-     * the twitter handle used by the site
-     * do not include @ sign.
      * @var string
      */
     private static $favicon_sizes = array(
@@ -30,13 +28,6 @@ class MetaTagsContentControllerEXT extends Extension
         //"192",
         "310"
     );
-
-    /**
-     * the twitter handle used by the site
-     * do not include @ sign.
-     * @var string
-     */
-    private static $twitter_handle = "";
 
     /**
      * dont show users basic instructions for SEO
@@ -440,7 +431,8 @@ class MetaTagsContentControllerEXT extends Extension
      */
     protected function TwitterTags()
     {
-        if ($handle = Config::inst()->get("MetaTagsContentControllerEXT", "twitter_handle")) {
+        $handle = $this->owner->getSiteConfig()->TwitterHandle;
+        if ($handle) {
             $html = "";
             $array = array(
                 "title" => Convert::raw2att($this->owner->Title),
@@ -460,6 +452,8 @@ class MetaTagsContentControllerEXT extends Extension
             }
             return $html;
         }
+
+        return '';
     }
 
     private $_shareImage = null;
