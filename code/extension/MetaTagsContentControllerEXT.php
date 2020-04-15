@@ -29,6 +29,8 @@ class MetaTagsContentControllerEXT extends Extension
         "310"
     );
 
+    private static $twitter_handle = '';
+
     /**
      * dont show users basic instructions for SEO
      * @var bool
@@ -432,6 +434,9 @@ class MetaTagsContentControllerEXT extends Extension
     protected function TwitterTags()
     {
         $handle = $this->owner->getSiteConfig()->TwitterHandle;
+        if(! $handle) {
+            $handle = Config::inst()->get("MetaTagsContentControllerEXT", "twitter_handle");
+        }
         if ($handle) {
             $html = "";
             $array = array(

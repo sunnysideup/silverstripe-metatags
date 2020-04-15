@@ -23,7 +23,8 @@ MetaTagsContentControllerEXT:
   og_image_method_map:
     "ProductPage": "MyProductImage"
     "Page": "Image"
-    favicon_sizes:
+  twitter_handle: "relevant_twitter_handle_without_@"
+  favicon_sizes:
     - 16
     - 64
     - 128

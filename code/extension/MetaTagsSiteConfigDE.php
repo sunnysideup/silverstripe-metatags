@@ -100,8 +100,8 @@ class MetaTagsSiteConfigDE extends DataExtension
                 TextField::create('MetaDataCopyright', 'Content Copyright'),
                 TextField::create('MetaDataDesign', 'Design provided by'),
                 TextField::create('MetaDataCoding', 'Website Coding provided by'),
-                TextareaField::create('ExtraMeta', 'Custom Meta Tags')->setRightTitle('Careful - advanced users only'),
-                TextField::create('TwitterHandle', 'Twitter Handle')->setRightTitle('E.g. BarackObama - do not add the @ sign!')
+                TextField::create('TwitterHandle', 'Twitter Handle')->setRightTitle('E.g. your twitter handle (e.g. BarackObama) - without the @ sign!'),
+                TextareaField::create('ExtraMeta', 'Custom Meta Tags')->setRightTitle('Careful - advanced users only')
             );
         }
         if (count($tabs)) {
@@ -140,5 +140,6 @@ class MetaTagsSiteConfigDE extends DataExtension
             $this->owner->MetaDataCoding = '';
             $this->owner->ExtraMeta = '';
         }
+        $this->owner->TwitterHandle = str_replace('@', '', $this->owner->TwitterHandle);
     }
 }
