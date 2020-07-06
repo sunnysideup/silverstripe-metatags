@@ -191,6 +191,9 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
     public function addBasicMetatagRequirements($additionalJS = [], $additionalCSS = [], $force = false)
     {
         if (!isset(self::$_metatags_building_completed[$this->owner->dataRecord->ID]) || $force) {
+            $jsFile = '';
+            $cssFile = '';
+            $folderForCombinedFilesWithBase = '';
             $combineJS = Config::inst()->get(MetaTagsContentControllerEXT::class, "combine_js_files_into_one");
             $combineCSS = Config::inst()->get(MetaTagsContentControllerEXT::class, "combine_css_files_into_one");
             if ($combineJS || $combineCSS) {
