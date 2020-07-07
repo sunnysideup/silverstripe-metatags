@@ -1,6 +1,7 @@
 ---
 Name: metatags
-After: framework
+After:
+  - '#coreconfig'
 ---
 
 SilverStripe\SiteConfig\SiteConfig:
