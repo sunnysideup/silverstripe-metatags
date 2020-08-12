@@ -39,6 +39,7 @@ class MetaTagsSTE extends SiteTreeExtension
      * @var Array
      **/
     private static $db = [
+        'MetaTitle' => 'Varchar(100)',
         'AutomateMetatags' => 'Enum("Inherit,Custom,Automated", "Inherit")',
         'ExcludeFromSearchEngines' => 'Boolean',
     ];
