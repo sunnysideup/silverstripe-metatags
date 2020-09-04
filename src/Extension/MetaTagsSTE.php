@@ -223,14 +223,8 @@ class MetaTagsSTE extends SiteTreeExtension
             );
 
             $automatedFields = $this->updatedFieldsArray();
-            $updatedFieldString = '';
             if (count($automatedFields)) {
-                $updatedFieldString = ''
-                    . _t('MetaManager.UPDATED_EXTERNALLY', 'Based on your current settings, the following fields will be automatically updated:')
-                    . ': <em>'
-                    . implode('</em>, <em>', $automatedFields)
-                    . '</em>.';
-                foreach ($automatedFields as $fieldName => $fieldTitle) {
+                foreach (array_keys($automatedFields) as $fieldName) {
                     $oldField = $fields->dataFieldByName($fieldName);
                     if ($oldField) {
                         $newField = $oldField->performReadonlyTransformation();
@@ -259,7 +253,6 @@ class MetaTagsSTE extends SiteTreeExtension
     {
         $fields = $this->updatedFieldsArray();
         if (count($fields)) {
-            $siteConfig = SiteConfig::current_site_config();
             // if UpdateMeta checkbox is checked, update metadata based on content and title
             // we only update this from the CMS to limit slow-downs in programatic updates
             if (isset($fields['MenuTitle'])) {
