@@ -221,7 +221,6 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
             // }
             $jsArray = array_unique(array_merge($jsArray, $additionalJS));
 
-
             //javascript
             if ($combineJS && file_exists($folderForCombinedFilesWithBase . $jsFile)) {
                 Requirements::javascript($jsFile);
@@ -252,7 +251,7 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
                 Requirements::css($cssFile);
             } else {
                 $expendedCSSArray = [];
-                foreach ($cssArray  as $name => $media) {
+                foreach ($cssArray as $name => $media) {
                     if (strpos($name, '.css')) {
                         $expendedCSSArray[] = [
                             'location' => $name,
