@@ -78,7 +78,7 @@ class MetaTagsSTE extends SiteTreeExtension
     /**
      * because we use this function you can NOT
      * use any statics in the file!!!
-     * @return array | null
+     * @return array|null
      */
     // public static function get_extra_config($class, $extension, $args)
     // {

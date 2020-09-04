@@ -181,7 +181,7 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
      *
      * @param array $additionalJS (foo.js, bar.js)
      * @param array $additionalCSS (name => media type)
-     * @param boolean $force - run it again
+     * @param bool $force - run it again
      */
     public function addBasicMetatagRequirements($additionalJS = [], $additionalCSS = [], $force = false)
     {
@@ -300,8 +300,8 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
      * make sure to add it at the start of your metatags
      * We leave the / closing tags here, but they are not needed
      * yet not invalid in html5
-     * @param boolean $includeTitle - include the title tag
-     * @param boolean $addExtraSearchEngineData - add extra tags describing the page
+     * @param bool $includeTitle - include the title tag
+     * @param bool $addExtraSearchEngineData - add extra tags describing the page
      * @return string (HTML)
      */
     public function ExtendedMetatags($includeTitle = true, $addExtraSearchEngineData = true)
@@ -589,7 +589,7 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
     }
 
     /**
-     * @return image | null
+     * @return image|null
      */
     private function shareImage()
     {
