@@ -120,7 +120,7 @@ class MetaTagsSiteConfigDE extends DataExtension
             $tabs[] = Tab::create(
                 'Social',
                 TextField::create('TwitterHandle', 'Twitter Handle')
-                    ->setRightTitle('E.g. your twitter handle (e.g. BarackObama) - without the @ sign!')
+                    ->setDescription('E.g. your twitter handle (e.g. BarackObama) - without the @ sign!')
             );
         }
         if (count($tabs)) {
