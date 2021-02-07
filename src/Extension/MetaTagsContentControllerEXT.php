@@ -306,35 +306,41 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
      */
     public function ExtendedMetatags($includeTitle = true, $addExtraSearchEngineData = true)
     {
+        $siteConfig = SiteConfig::current_site_config();
+        $this->addBasicMetatagRequirements();
+        $cacheKey = null;
+        $add = '';
+        $tags = '';
+        $cache = null;
         $base = Director::absoluteBaseURL();
         if (! isset($_SERVER['REQUEST_URI'])) {
             $_SERVER['REQUEST_URI'] = '';
         }
-        $siteConfig = SiteConfig::current_site_config();
-        $this->addBasicMetatagRequirements();
-        $cacheKey =
+        if ($this->owner->hasMethod('metatagsCacheKey')) {
+            $add = $this->owner->metatagsCacheKey();
+        }
+        if ($add !== false) {
+            $cacheKey =
                 'ExtendedMetaTags_'
                 . abs($this->owner->ID) . '_'
                 . strtotime($this->owner->LastEdited) . '_'
                 . strtotime($siteConfig->LastEdited) . '_'
-                . preg_replace(
-                    '/[^a-z0-9]/i',
-                    '_',
-                    $base . '_' . $_SERVER['REQUEST_URI']
-                );
-        if ($this->owner->hasMethod('metatagsCacheKey')) {
-            $add = $this->owner->metatagsCacheKey();
-            if ($add === false) {
-                $cacheKey = null;
+                . $base . '_'
+                . $_SERVER['REQUEST_URI'];
+            $cacheKey = preg_replace(
+                '/[^a-z0-9]/i',
+                '_',
+                $cacheKey
+            );
+            if($add) {
+                $cacheKey .= $add;
             }
-            $cacheKey .= $add;
         }
-        $cache = Injector::inst()->get(CacheInterface::class . '.metatags');
-        $tags = $cache->get($cacheKey);
-
-        if ($tags && $cacheKey) {
-            //do nothing
-        } else {
+        if($cacheKey) {
+            $cache = self::get_meta_tag_cache();
+            $tags = $cache->get($cacheKey);
+        }
+        if (! $tags) {
             $tags = '';
             $page = $this->owner;
             $siteConfig = SiteConfig::current_site_config();
@@ -416,7 +422,7 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
             $tags .= $this->OGTags();
             $tags .= $this->TwitterTags();
             $tags .= $this->iconTags($faviconBase, $hasBaseFolderFavicon);
-            if ($cacheKey) {
+            if ($cacheKey && $cache) {
                 $cache->set($cacheKey, $tags);
             }
         }
@@ -426,8 +432,12 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
 
     public static function flush()
     {
-        $cache = Injector::inst()->get(CacheInterface::class . '.metatags');
-        $cache->clear();
+        self::get_meta_tag_cache()->clear();
+    }
+
+    protected static function get_meta_tag_cache()
+    {
+        return Injector::inst()->get(CacheInterface::class . '.metatags');
     }
 
     /**
