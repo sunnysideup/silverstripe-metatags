@@ -63,7 +63,7 @@ a:link { -webkit-tap-highlight-color: #7dcfff; }
 button {  width: auto; overflow: visible; }
 .ie7 img { -ms-interpolation-mode: bicubic; }
 input[type="text"], input[type="password"], textarea, select {
-	border: 1px solid;  border-color: #888888 #bbbbbb #e0e0e0;background: white;
+    border: 1px solid;  border-color: #888888 #bbbbbb #e0e0e0;background: white;
 }
 input::-moz-focus-inner { border: 0; }
 
@@ -98,5 +98,5 @@ sup {bottom: 1ex; font-size: 0.5em}
 sub {top: .5ex;}
 
 a:active, a:focus, object, embed {
-	outline: 0!important;
+    outline: 0!important;
 }
