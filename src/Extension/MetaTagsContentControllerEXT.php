@@ -332,11 +332,11 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
                 '_',
                 $cacheKey
             );
-            if($add) {
+            if ($add) {
                 $cacheKey .= $add;
             }
         }
-        if($cacheKey) {
+        if ($cacheKey) {
             $cache = self::get_meta_tag_cache();
             $tags = $cache->get($cacheKey);
         }
