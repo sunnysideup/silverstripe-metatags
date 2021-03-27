@@ -1,4 +1,5 @@
 <?php
+
 i18n::include_locale_file('modules: metamanager', 'en_US');
 global $lang;
 
