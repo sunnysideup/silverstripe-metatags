@@ -518,7 +518,7 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
             );
         $baseURL = rtrim($baseURL, '/');
         $cache = Injector::inst()->get(CacheInterface::class . '.metatags');
-        $cache = $cache;
+
         $html = $cache->get($cacheKey);
         if ($html) {
             //do nothing
