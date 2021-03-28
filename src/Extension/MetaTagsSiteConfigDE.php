@@ -123,7 +123,7 @@ class MetaTagsSiteConfigDE extends DataExtension
                     ->setDescription('E.g. your twitter handle (e.g. BarackObama) - without the @ sign!')
             );
         }
-        if (count($tabs)) {
+        if (count($tabs) > 0) {
             $fields->addFieldToTab(
                 'Root.SearchEngines',
                 $tabSet = TabSet::create(

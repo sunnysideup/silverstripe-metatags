@@ -229,11 +229,9 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
                     if (strpos($js, 'framework/thirdparty/jquery/jquery.js') !== false) {
                         //remove, as already included
                         unset($jsArray[$key]);
-                    } else {
-                        if (! isset($alreadyDone[$js])) {
-                            Requirements::javascript($js);
-                            $alreadyDone[$js] = 1;
-                        }
+                    } elseif (! isset($alreadyDone[$js])) {
+                        Requirements::javascript($js);
+                        $alreadyDone[$js] = 1;
                     }
                 }
             }
@@ -328,7 +326,7 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
                 . $base . '_'
                 . $_SERVER['REQUEST_URI'];
             $cacheKey = preg_replace(
-                '/[^a-z0-9]/i',
+                '#[^a-z0-9]#i',
                 '_',
                 $cacheKey
             );
@@ -347,7 +345,7 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
             $title = $this->MetaTagsMetaTitle();
             //base tag
             $base = Director::absoluteBaseURL();
-            $tags .= "<base href=\"${base}\" />";
+            $tags .= "<base href=\"{$base}\" />";
             if ($this->owner->hasMethod('CanonicalLink')) {
                 $canonicalLink = $this->owner->CanonicalLink();
                 if ($canonicalLink) {
@@ -456,12 +454,12 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
             'description' => Convert::raw2att($this->owner->MetaDescription),
         ];
         $html = '';
-        if ($shareImage = $this->shareImage()) {
+        if (($shareImage = $this->shareImage()) !== null) {
             $array['image'] = Convert::raw2att($shareImage->getAbsoluteURL());
         }
         foreach ($array as $key => $value) {
             $html .= "
-            <meta property=\"og:${key}\" content=\"${value}\" />";
+            <meta property=\"og:{$key}\" content=\"{$value}\" />";
         }
         return $html;
     }
@@ -489,7 +487,7 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
                 'url' => Convert::raw2att($this->owner->AbsoluteLink()),
                 'site' => '@' . $handle,
             ];
-            if ($shareImage = $this->shareImage()) {
+            if (($shareImage = $this->shareImage()) !== null) {
                 $array['card'] = Convert::raw2att('summary_large_image');
                 $array['image'] = Convert::raw2att($shareImage->getAbsoluteURL());
             } else {
@@ -497,7 +495,7 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
             }
             foreach ($array as $key => $value) {
                 $html .= "
-                <meta name=\"twitter:${key}\" content=\"${value}\" />";
+                <meta name=\"twitter:{$key}\" content=\"{$value}\" />";
             }
             return $html;
         }
@@ -514,12 +512,13 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
         $cacheKey =
             'iconTags_'
             . preg_replace(
-                '/[^a-z0-9]/i',
+                '#[^a-z0-9]#i',
                 '_',
                 $baseURL
             );
         $baseURL = rtrim($baseURL, '/');
-        $cache = $cache = Injector::inst()->get(CacheInterface::class . '.metatags');
+        $cache = Injector::inst()->get(CacheInterface::class . '.metatags');
+        $cache = $cache;
         $html = $cache->get($cacheKey);
         if ($html) {
             //do nothing
@@ -569,7 +568,7 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
                     $generatedImage = $favicon->ScaleWidth(16);
                     $faviconLink = $baseURL . $generatedImage->Link();
                 }
-                if ($faviconLink) {
+                if ($faviconLink !== '') {
                     $html .= '
 <link rel="SHORTCUT ICON" href="' . $faviconLink . '" />';
                 }
