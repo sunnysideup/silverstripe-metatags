@@ -454,7 +454,8 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
             'description' => Convert::raw2att($this->owner->MetaDescription),
         ];
         $html = '';
-        if (($shareImage = $this->shareImage()) !== null) {
+        if (($shareImage = $this->shareImage()) instanceof Image) {
+            var_dump($shareImage);
             $array['image'] = Convert::raw2att($shareImage->getAbsoluteURL());
         }
         foreach ($array as $key => $value) {
@@ -487,7 +488,8 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
                 'url' => Convert::raw2att($this->owner->AbsoluteLink()),
                 'site' => '@' . $handle,
             ];
-            if (($shareImage = $this->shareImage()) !== null) {
+            $shareImage = $this->shareImage();
+            if ($shareImage && $shareImage->exists()) {
                 $array['card'] = Convert::raw2att('summary_large_image');
                 $array['image'] = Convert::raw2att($shareImage->getAbsoluteURL());
             } else {
