@@ -454,8 +454,8 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
             'description' => Convert::raw2att($this->owner->MetaDescription),
         ];
         $html = '';
-        if (($shareImage = $this->shareImage()) instanceof Image) {
-            var_dump($shareImage);
+        $shareImage = $this->shareImage();
+        if ($shareImage && $shareImage->exists()) {
             $array['image'] = Convert::raw2att($shareImage->getAbsoluteURL());
         }
         foreach ($array as $key => $value) {
