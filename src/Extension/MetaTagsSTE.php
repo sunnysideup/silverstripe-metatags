@@ -86,7 +86,6 @@ class MetaTagsSTE extends SiteTreeExtension
 
     /**
      * standard SS method
-     * @var array
      **/
     public function updateSettingsFields(FieldList $fields)
     {
@@ -169,7 +168,6 @@ class MetaTagsSTE extends SiteTreeExtension
 
     /**
      * standard SS method
-     * @var array
      **/
     public function updateCMSFields(FieldList $fields)
     {
@@ -224,7 +222,6 @@ class MetaTagsSTE extends SiteTreeExtension
                     to anything else means that this page will no longer be your home page.
                 ");
         }
-        return $fields;
     }
 
     /**
