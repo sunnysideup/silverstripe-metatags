@@ -145,8 +145,6 @@ class MetaTagsSiteConfigDE extends DataExtension
                 icons can also be loaded onto the server directly into the /themes/mytheme/icons/ folder
                 and as a favicon.ico in the root directory.'
         );
-
-        return $fields;
     }
 
     /**

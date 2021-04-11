@@ -76,27 +76,6 @@ class MetaTagsSTE extends SiteTreeExtension
     private static $default_reset_file = 'metatags/client/css/reset.css';
 
     /**
-     * because we use this function you can NOT
-     * use any statics in the file!!!
-     *
-     * @return null|array
-     */
-    // public static function get_extra_config($class, $extension, $args)
-    // {
-    //     if (Config::inst()->get(MetaTagsContentControllerEXT::class, "use_separate_metatitle")) {
-    //         $array = array(
-    //             'db' => array("MetaTitle" => "Varchar(255)") + self::$db
-    //         );
-    //     } else {
-    //         $array = array(
-    //             'db' => self::$db
-    //         );
-    //     }
-    //
-    //     return ((array) parent::get_extra_config($class, $extension, $args)) + $array;
-    // }
-
-    /**
      * standard SS method.
      *
      * @var array
@@ -107,8 +86,6 @@ class MetaTagsSTE extends SiteTreeExtension
 
     /**
      * standard SS method.
-     *
-     * @var array
      */
     public function updateSettingsFields(FieldList $fields)
     {
@@ -191,8 +168,6 @@ class MetaTagsSTE extends SiteTreeExtension
 
     /**
      * standard SS method.
-     *
-     * @var array
      */
     public function updateCMSFields(FieldList $fields)
     {
@@ -248,8 +223,6 @@ class MetaTagsSTE extends SiteTreeExtension
                 ")
             ;
         }
-
-        return $fields;
     }
 
     /**

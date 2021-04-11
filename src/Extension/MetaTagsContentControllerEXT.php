@@ -10,7 +10,6 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Extension;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\View\Requirements;
@@ -384,8 +383,6 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
                 $noopd = 'NOODP, ';
                 $description = '';
             }
-            $lastEdited = new DBDatetime();
-            $lastEdited->value = $page->LastEdited;
 
             //use base url rather than / so that sites that aren't a run from the root directory can have a favicon
             $faviconBase = $base;
@@ -426,7 +423,7 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
 
                 $tags .= '
             <meta name="rights" content="' . Convert::raw2att($siteConfig->MetaDataCopyright) . '" />
-            <meta name="created" content="' . $lastEdited->Format('Ymd') . '" />
+            <meta name="created" content="' . date('Ymd', strtotime($page->LastEdited)) . '" />
             <!--[if lt IE 9]>
                 <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
             <![endif]-->
@@ -472,7 +469,8 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
             'description' => Convert::raw2att($this->owner->MetaDescription),
         ];
         $html = '';
-        if (($shareImage = $this->shareImage()) !== null) {
+        $shareImage = $this->shareImage();
+        if ($shareImage && $shareImage->exists()) {
             $array['image'] = Convert::raw2att($shareImage->getAbsoluteURL());
         }
         foreach ($array as $key => $value) {
@@ -506,7 +504,8 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
                 'url' => Convert::raw2att($this->owner->AbsoluteLink()),
                 'site' => '@' . $handle,
             ];
-            if (($shareImage = $this->shareImage()) !== null) {
+            $shareImage = $this->shareImage();
+            if ($shareImage && $shareImage->exists()) {
                 $array['card'] = Convert::raw2att('summary_large_image');
                 $array['image'] = Convert::raw2att($shareImage->getAbsoluteURL());
             } else {
