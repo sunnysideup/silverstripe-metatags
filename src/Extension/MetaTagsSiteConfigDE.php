@@ -15,7 +15,7 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataExtension;
 
 /**
- * adding functionality to SiteConfig
+ * adding functionality to SiteConfig.
  */
 class MetaTagsSiteConfigDE extends DataExtension
 {

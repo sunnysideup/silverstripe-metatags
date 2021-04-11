@@ -18,7 +18,7 @@ use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
 
 /**
- * adds meta tag functionality to the Page_Controller
+ * adds meta tag functionality to the Page_Controller.
  */
 class MetaTagsContentControllerEXT extends Extension implements Flushable
 {
@@ -45,48 +45,56 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
     /**
      * the twitter handle used by the site
      * do not include @ sign.
+     *
      * @var string
      */
     private static $twitter_handle = '';
 
     /**
-     * dont show users basic instructions for SEO
+     * dont show users basic instructions for SEO.
+     *
      * @var bool
      */
     private static $no_search_engine_instructions = false;
 
     /**
      * allow user to enter a separate meta title?
+     *
      * @var bool
      */
     private static $use_separate_metatitle = false;
 
     /**
-     * stop users from automating the menu title
+     * stop users from automating the menu title.
+     *
      * @var bool
      */
     private static $no_automated_menu_title = false;
 
     /**
-     * stop users from automating meta descriptions
+     * stop users from automating meta descriptions.
+     *
      * @var bool
      */
     private static $no_automated_meta_description = false;
 
     /**
-     * stop users from automating custom meta settings (custom tags, country, date, etc...)
+     * stop users from automating custom meta settings (custom tags, country, date, etc...).
+     *
      * @var bool
      */
     private static $no_additional_meta_settings = false;
 
     /**
-     * length of auto-generated meta descriptions in header
+     * length of auto-generated meta descriptions in header.
+     *
      * @var int
      */
     private static $meta_desc_length = 24;
 
     /**
      * what should be included on every page?
+     *
      * @var array
      */
     private static $default_css = [
@@ -101,13 +109,15 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
     ];
 
     /**
-     * specify location for jquery CDN location
+     * specify location for jquery CDN location.
+     *
      * @var array
      */
     private static $jquery_cdn_location = '';
 
     /**
      * what should be included on every page?
+     *
      * @var array
      */
     private static $default_js = [
@@ -116,46 +126,50 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
 
     /**
      * @var string
-     * folder where the combined css / js files will be stored
-     * if they are combined.
+     *             folder where the combined css / js files will be stored
+     *             if they are combined
      */
     private static $folder_for_combined_files = 'assets';
 
     /**
      * @var string
-     * viewport setting
+     *             viewport setting
      */
     private static $viewport_setting = 'width=device-width,initial-scale=1';
 
     /**
      * map Page types and methods for use in the
      * facebook open graph.
-     * e.g.MyProductPage: ProductImage
+     * e.g.MyProductPage: ProductImage.
      *
      * @var array
-     **/
+     */
     private static $og_image_method_map = [];
 
     /**
-     * google fonts to be used
+     * google fonts to be used.
+     *
      * @var array
-     **/
+     */
     private static $google_font_collection = [];
 
     /**
      * combine css files into one?
-     * @var boolean
+     *
+     * @var bool
      */
     private static $combine_css_files_into_one = false;
 
     /**
      * combine js files into one?
-     * @var boolean
+     *
+     * @var bool
      */
     private static $combine_js_files_into_one = false;
 
     /**
-     * add all the basic js and css files - call from Page::init()
+     * add all the basic js and css files - call from Page::init().
+     *
      * @var array
      */
     private static $_metatags_building_completed = [];
@@ -163,7 +177,7 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
     private $_shareImage = [];
 
     /**
-     * add Jquery
+     * add Jquery.
      */
     public function onBeforeInit()
     {
@@ -179,9 +193,9 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
     /**
      * Puts together all the requirements.
      *
-     * @param array $additionalJS (foo.js, bar.js)
+     * @param array $additionalJS  (foo.js, bar.js)
      * @param array $additionalCSS (name => media type)
-     * @param bool $force - run it again
+     * @param bool  $force         - run it again
      */
     public function addBasicMetatagRequirements($additionalJS = [], $additionalCSS = [], $force = false)
     {
@@ -226,7 +240,7 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
                 Requirements::javascript($jsFile);
             } else {
                 foreach ($jsArray as $key => $js) {
-                    if (strpos($js, 'framework/thirdparty/jquery/jquery.js') !== false) {
+                    if (false !== strpos($js, 'framework/thirdparty/jquery/jquery.js')) {
                         //remove, as already included
                         unset($jsArray[$key]);
                     } elseif (! isset($alreadyDone[$js])) {
@@ -286,7 +300,7 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
             }
 
             //ie header...
-            if (isset($_SERVER['HTTP_USER_AGENT']) && (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false)) {
+            if (isset($_SERVER['HTTP_USER_AGENT']) && (false !== strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE'))) {
                 header('X-UA-Compatible: IE=edge,chrome=1');
             }
             self::$_metatags_building_completed[$this->owner->dataRecord->ID] = true;
@@ -297,9 +311,11 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
      * this function will add more metatags to your template -
      * make sure to add it at the start of your metatags
      * We leave the / closing tags here, but they are not needed
-     * yet not invalid in html5
-     * @param bool $includeTitle - include the title tag
+     * yet not invalid in html5.
+     *
+     * @param bool $includeTitle             - include the title tag
      * @param bool $addExtraSearchEngineData - add extra tags describing the page
+     *
      * @return string (HTML)
      */
     public function ExtendedMetatags($includeTitle = true, $addExtraSearchEngineData = true)
@@ -317,7 +333,7 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
         if ($this->owner->hasMethod('metatagsCacheKey')) {
             $add = $this->owner->metatagsCacheKey();
         }
-        if ($add !== false) {
+        if (false !== $add) {
             $cacheKey =
                 'ExtendedMetaTags_'
                 . abs($this->owner->ID) . '_'
@@ -439,8 +455,10 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
     }
 
     /**
-     * open graph protocol
+     * open graph protocol.
+     *
      * @see: http://ogp.me/
+     *
      * @return string (HTML)
      */
     protected function OGTags()
@@ -461,12 +479,13 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
             $html .= "
             <meta property=\"og:{$key}\" content=\"{$value}\" />";
         }
+
         return $html;
     }
 
     /**
      * twitter version of open graph protocol
-     * twitter is only added if you set a handle in the configs:
+     * twitter is only added if you set a handle in the configs:.
      *
      *     MetaTagsContentControllerEXT:
      *       twitter_handle: "relevant_twitter_handle"
@@ -497,6 +516,7 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
                 $html .= "
                 <meta name=\"twitter:{$key}\" content=\"{$value}\" />";
             }
+
             return $html;
         }
 
@@ -568,7 +588,7 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
                     $generatedImage = $favicon->ScaleWidth(16);
                     $faviconLink = $baseURL . $generatedImage->Link();
                 }
-                if ($faviconLink !== '') {
+                if ('' !== $faviconLink) {
                     $html .= '
 <link rel="SHORTCUT ICON" href="' . $faviconLink . '" />';
                 }
@@ -594,18 +614,19 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
                 $title = $page->MenuTitle;
             }
         }
+
         return $title;
     }
 
     /**
-     * @return image|null
+     * @return null|image
      */
     private function shareImage()
     {
         if (! isset($this->_shareImage[$this->owner->ID])) {
             $this->_shareImage[$this->owner->ID] = null;
         }
-        if ($this->_shareImage[$this->owner->ID] === null) {
+        if (null === $this->_shareImage[$this->owner->ID]) {
             $this->_shareImage[$this->owner->ID] = false;
             if ($this->owner->ShareOnFacebookImageID) {
                 $this->_shareImage[$this->owner->ID] = $this->owner->ShareOnFacebookImage();
@@ -629,11 +650,12 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
             } else {
                 $hasOnes = $this->owner->hasOne();
                 foreach ($hasOnes as $hasOneName => $hasOneType) {
-                    if ($hasOneName !== 'ShareOnFacebookImage') {
-                        if ($hasOneType === Image::class || is_subclass_of($hasOneType, Image::class)) {
+                    if ('ShareOnFacebookImage' !== $hasOneName) {
+                        if (Image::class === $hasOneType || is_subclass_of($hasOneType, Image::class)) {
                             $field = $hasOneName . 'ID';
                             if ($this->owner->{$field}) {
                                 $this->_shareImage[$this->owner->ID] = $this->owner->{$hasOneName}();
+
                                 break;
                             }
                         }
@@ -645,6 +667,7 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
                 $this->_shareImage[$this->owner->ID] = false;
             }
         }
+
         return $this->_shareImage[$this->owner->ID];
     }
 }

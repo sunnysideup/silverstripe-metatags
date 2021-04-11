@@ -23,17 +23,14 @@ use SilverStripe\View\SSViewer;
 /**
  * @Author Nicolaas Francken
  * adding meta tag functionality to the SiteTree Model Classes.
- *
- *
- *
- **/
-
+ */
 class MetaTagsSTE extends SiteTreeExtension
 {
     /**
-     * standard SS method
+     * standard SS method.
+     *
      * @var array
-     **/
+     */
     private static $db = [
         'MetaTitle' => 'Varchar(100)',
         'AutomateMetatags' => 'Enum("Inherit,Custom,Automated", "Inherit")',
@@ -41,9 +38,10 @@ class MetaTagsSTE extends SiteTreeExtension
     ];
 
     /**
-     * standard SS method
+     * standard SS method.
+     *
      * @var array
-     **/
+     */
     private static $indexes = [
         'AutomateMetatags' => true,
         'ExcludeFromSearchEngines' => true,
@@ -51,9 +49,10 @@ class MetaTagsSTE extends SiteTreeExtension
     ];
 
     /**
-     * standard SS method
+     * standard SS method.
+     *
      * @var array
-     **/
+     */
     private static $has_one = [
         'ShareOnFacebookImage' => Image::class,
     ];
@@ -64,22 +63,23 @@ class MetaTagsSTE extends SiteTreeExtension
 
     /**
      * @var string
-     * set to empty string to stop it being copied
-     * by default to the theme
-     **/
+     *             set to empty string to stop it being copied
+     *             by default to the theme
+     */
     private static $default_editor_file = 'metatags/client/css/editor.css';
 
     /**
      * @var string
-     * set to empty string to stop it being copied
-     * by default to the theme
-     **/
+     *             set to empty string to stop it being copied
+     *             by default to the theme
+     */
     private static $default_reset_file = 'metatags/client/css/reset.css';
 
     /**
      * because we use this function you can NOT
      * use any statics in the file!!!
-     * @return array|null
+     *
+     * @return null|array
      */
     // public static function get_extra_config($class, $extension, $args)
     // {
@@ -97,17 +97,19 @@ class MetaTagsSTE extends SiteTreeExtension
     // }
 
     /**
-     * standard SS method
+     * standard SS method.
+     *
      * @var array
-     **/
+     */
     private static $defaults = [
         'AutomateMetatags' => 'Inherit',
     ];
 
     /**
-     * standard SS method
+     * standard SS method.
+     *
      * @var array
-     **/
+     */
     public function updateSettingsFields(FieldList $fields)
     {
         $fields->addFieldToTab(
@@ -188,9 +190,10 @@ class MetaTagsSTE extends SiteTreeExtension
     }
 
     /**
-     * standard SS method
+     * standard SS method.
+     *
      * @var array
-     **/
+     */
     public function updateCMSFields(FieldList $fields)
     {
         if ($fields->fieldByName('Root.Main.Metadata')) {
@@ -242,13 +245,15 @@ class MetaTagsSTE extends SiteTreeExtension
                 ->setDescription("
                     Careful! changing the URL from 'home'
                     to anything else means that this page will no longer be your home page.
-                ");
+                ")
+            ;
         }
+
         return $fields;
     }
 
     /**
-     * Update Metadata fields function
+     * Update Metadata fields function.
      */
     public function onBeforeWrite()
     {
@@ -291,7 +296,7 @@ class MetaTagsSTE extends SiteTreeExtension
     }
 
     /**
-     * add default css files
+     * add default css files.
      */
     public function requireDefaultRecords()
     {
@@ -324,26 +329,27 @@ class MetaTagsSTE extends SiteTreeExtension
 
     /**
      * what fields are updated automatically for this page ...
+     *
      * @return array
      */
     private function updatedFieldsArray()
     {
         $fields = [];
-        if ($this->owner->AutomateMetatags === 'Custom') {
+        if ('Custom' === $this->owner->AutomateMetatags) {
             return $fields;
         }
         $config = SiteConfig::current_site_config();
         if (Config::inst()->get(MetaTagsContentControllerEXT::class, 'no_automated_menu_title')) {
             // do nothing
         } else {
-            if ($config->UpdateMenuTitle || $this->owner->AutomateMetatags === 'Automated') {
+            if ($config->UpdateMenuTitle || 'Automated' === $this->owner->AutomateMetatags) {
                 $fields['MenuTitle'] = _t('SiteTree.MENUTITLE', 'Navigation Label');
             }
         }
         if (Config::inst()->get(MetaTagsContentControllerEXT::class, 'no_automated_meta_description')) {
             //do nothing
         } else {
-            if ($config->UpdateMetaDescription || $this->owner->AutomateMetatags === 'Automated') {
+            if ($config->UpdateMetaDescription || 'Automated' === $this->owner->AutomateMetatags) {
                 $fields['MetaDescription'] = _t('SiteTree.METADESCRIPTION', 'Meta Description');
             }
         }
@@ -364,6 +370,7 @@ class MetaTagsSTE extends SiteTreeExtension
             }
         }
         $newString = html_entity_decode($newString, ENT_QUOTES);
+
         return html_entity_decode($newString, ENT_QUOTES);
     }
 
@@ -398,6 +405,7 @@ class MetaTagsSTE extends SiteTreeExtension
                 $v[] = _t('MetaTagsSTE.UPDATE_META_DESC_OFF', 'The Meta Descriptions can be customised for individual pages');
             }
         }
+
         return '<br />- ' . implode('<br />- ', $v);
     }
 }
