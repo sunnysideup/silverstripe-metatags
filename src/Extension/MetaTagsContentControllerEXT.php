@@ -22,7 +22,7 @@ use SilverStripe\View\ThemeResourceLoader;
 class MetaTagsContentControllerEXT extends Extension implements Flushable
 {
     /**
-     * @var string
+     * @var array
      */
     private static $favicon_sizes = [
         '16',
@@ -110,7 +110,7 @@ class MetaTagsContentControllerEXT extends Extension implements Flushable
     /**
      * specify location for jquery CDN location.
      *
-     * @var array
+     * @var string
      */
     private static $jquery_cdn_location = '';
 
