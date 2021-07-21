@@ -328,7 +328,6 @@ class MetatagsApie implements Flushable
                 }
             }
             if (! $hasBaseFolderFavicon) {
-                $faviconLink = '';
                 $faviconLocation = ThemeResourceLoader::inst()->findThemedResource('icons/favicon.ico');
                 if ($faviconLocation) {
                     //do nothing
@@ -344,7 +343,7 @@ class MetatagsApie implements Flushable
             $cache->set($cacheKey, serialize($icons));
         }
 
-        $this->metatags += $icons;
+        $this->metatags = array_merge($this->metatags, $icons);
     }
 
     /**
@@ -371,7 +370,7 @@ class MetatagsApie implements Flushable
     }
 
     /**
-     * @return null|image
+     * @return null|Image
      */
     protected function shareImage() :?Image
     {
@@ -379,19 +378,12 @@ class MetatagsApie implements Flushable
             $this->shareImageCache[$this->page->ID] = null;
         }
         if (null === $this->shareImageCache[$this->page->ID]) {
-            $this->shareImageCache[$this->page->ID] = false;
-            if ($this->page->ShareOnFacebookImageID) {
-                $this->shareImageCache[$this->page->ID] = $this->page->ShareOnFacebookImage();
-            } else {
+            $this->addToShareImageCache('ShareOnFacebookImage');
+            if (! $this->shareImageCache[$this->page->ID]) {
                 $og_image_method_map = Config::inst()->get(self::class, 'og_image_method_map');
-                if (is_array($og_image_method_map)) {
-                    foreach ($og_image_method_map as $className => $method) {
-                        if ($this->page instanceof $className) {
-                            if($this->addToShareImageCache($method)) {
-                                break;
-                            }
-                        }
-                    }
+                $method = $og_image_method_map[$this->page->ClassName] ?? 'ERROR';
+                if($method) {
+                    $this->addToShareImageCache($method);
                 }
             }
             if (! $this->shareImageCache[$this->page->ID]) {
@@ -402,17 +394,13 @@ class MetatagsApie implements Flushable
                             if($this->addToShareImageCache($hasOneName)) {
                                 break;
                             }
-
                         }
                     }
                 }
             }
-            if (! $this->shareImageCache[$this->page->ID]) {
-                $this->shareImageCache[$this->page->ID] = false;
-            }
         }
-
-        return $this->shareImageCache[$this->page->ID];
+        //make sure to return NULL or Image
+        return $this->shareImageCache[$this->page->ID] ?:null;
     }
 
     protected function addToShareImageCache(string $methodName) : bool
@@ -421,12 +409,16 @@ class MetatagsApie implements Flushable
         if (isset($this->page->{$field})) {
             if($this->page->hasMethod($methodName)) {
                 $this->shareImageCache[$this->page->ID] = $this->page->{$methodName}();
-                if($this->shareImageCache[$this->page->ID] && $this->shareImageCache[$this->page->ID]->exists()) {
+                if(
+                    $this->shareImageCache[$this->page->ID] &&
+                    $this->shareImageCache[$this->page->ID]->exists() &&
+                    $this->shareImageCache[$this->page->ID] instanceof Image
+                ) {
                     return true;
                 }
             }
         }
-        unset($this->shareImageCache[$this->page->ID]);
+        $this->shareImageCache[$this->page->ID] = false;
         return false;
     }
 
