@@ -19,6 +19,11 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\View\SSViewer;
+use SilverStripe\Core\Extension;
+use SilverStripe\Core\Flushable;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\View\Requirements;
+use Sunnysideup\MetaTags\Api\MetatagsApi;
 
 /**
  * @Author Nicolaas Francken
@@ -26,6 +31,9 @@ use SilverStripe\View\SSViewer;
  */
 class MetaTagsSTE extends SiteTreeExtension
 {
+
+    private static $metatag_builder_class = MetatagsApi::class;
+
     /**
      * standard SS method.
      *
@@ -351,6 +359,15 @@ class MetaTagsSTE extends SiteTreeExtension
             'Custom' => _t('MetaTagsSTE.CUSTOM', 'Manually'),
             'Automated' => _t('MetaTagsSTE.AUTOMATE', 'Automated'),
         ];
+    }
+
+    public function MetaComponents(&$tags)
+    {
+        $provider = Config::inst()->get(self::class, 'metatag_builder_class');
+        $builder = Injector::inst()->get($provider, false, [$this->owner]);
+        $tags = array_merge($tags, $builder->getMetatags());
+
+        return $tags;
     }
 
     private function defaultSettingDescription()

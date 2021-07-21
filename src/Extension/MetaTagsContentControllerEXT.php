@@ -14,7 +14,7 @@ use Sunnysideup\MetaTags\Api\MetatagsApi;
  */
 class MetaTagsContentControllerEXT extends Extension
 {
-    private static $metatag_builder_class = MetatagsApi::class;
+
 
     /**
      * this function will add more metatags to your template -
@@ -27,13 +27,13 @@ class MetaTagsContentControllerEXT extends Extension
      *
      * @return string (HTML)
      */
-    public function ExtendedMetatags(?bool $includeTitle = true, ?bool $addExtraSearchEngineData = true)
+    public function ExtendedMetatags(?bool $includeTitle = true)
     {
-        $builder = Injector::inst()->get($this->Config()->get(self::class, 'metatag_builder_class'));
-        $tags = $builder->getMetatags($this->owner->dataRecord);
-
-        return DBField::create_field('HTMLText', $this->renderWith('asdf'));
+        $this->addBasicMetatagRequirements();
+        return $this->Metatags($includeTitle);
     }
+
+
 
     /**
      * Puts together all the requirements.

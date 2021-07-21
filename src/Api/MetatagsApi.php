@@ -91,50 +91,48 @@ class MetatagsApi implements Flushable
     {
         $this->page = $page;
         $this->baseUrl = Director::absoluteBaseURL();
-        $this->siteConfig = Director::absoluteBaseURL();
+        $this->siteConfig = SiteConfig::current_site_config();
     }
 
-    public function getMetatagsArray(): array
+    public function getMetatags(): array
     {
         if (empty($this->metatags)) {
             $cacheKey = $this->getCacheKey();
             $cache = self::get_meta_tag_cache();
-            $this->siteConfig = SiteConfig::current_site_config();
+
             //useful later on
 
             if ($cacheKey) {
                 $this->metatags = unserialize($cache->get($cacheKey));
             }
             if (empty($this->metatags)) {
-                $this->metatags = [];
-                $title = $this->MetaTagsMetaTitle();
                 //base tag
-                $this->addToMetatags('base', ['href' => $this->baseUrl]);
-                $this->addToMetatags('meta', ['charset' => 'utf-8']);
+                $this->addToMetatags('baseTag', 'base', ['href' => $this->baseUrl]);
                 $titleArray = [
                     $this->siteConfig->PrependToMetaTitle,
-                    $title,
+                    $this->MetaTagsMetaTitle(),
                     $this->siteConfig->AppendToMetaTitle,
                 ];
                 $content = trim(implode(' ', array_filter($titleArray)));
-                $this->addToMetatags('title', [], false, Convert::raw2att($content));
-                $this->addToMetatags('meta', ['name' => 'title', 'content' => Convert::raw2att($content)]);
+                $this->addToMetatags('title', 'title', [], false, Convert::raw2att($content));
+                $this->addToMetatags('metaTitle', 'meta', ['name' => 'title', 'content' => Convert::raw2att($content)]);
 
                 if ($this->page->hasMethod('CanonicalLink')) {
                     $canonicalLink = $this->page->CanonicalLink();
                     if ($canonicalLink) {
-                        $this->addToMetatags('link', ['rel' => 'canonical', 'href' => $canonicalLink]);
+                        $this->addToMetatags('canonical', 'link', ['rel' => 'canonical', 'href' => $canonicalLink]);
                     }
                 }
                 //these go first - for some reason ...
-                $this->addToMetatags('meta', ['http-equiv' => 'X-UA-Compatible', 'name' => 'IE=edge']);
-                $this->addToMetatags('meta', ['name' => 'viewport', 'content' => Config::inst()->get(self::class, 'viewport_setting')]);
+                $this->addToMetatags('ie', 'meta', ['http-equiv' => 'X-UA-Compatible', 'name' => 'IE=edge']);
+                $this->addToMetatags('viewport', 'meta', ['name' => 'viewport', 'content' => Config::inst()->get(self::class, 'viewport_setting')]);
 
                 if ($this->page->MetaDescription) {
-                    $this->addToMetatags('meta', ['name' => 'description', 'content' => Convert::raw2att($this->page->MetaDescription)]);
+                    $this->addToMetatags('description', 'meta', ['name' => 'description', 'content' => Convert::raw2att($this->page->MetaDescription)]);
 
                     $noopd = '';
                 } else {
+                    unset($this->metatags['description']);
                     $noopd = 'NOODP, ';
                 }
 
@@ -144,7 +142,7 @@ class MetatagsApi implements Flushable
                 $faviconFileName = 'favicon.ico';
                 $faviconLocation = Controller::join_links($this->baseUrl, $publicDir, $faviconFileName);
                 if (file_exists($faviconLocation)) {
-                    $this->addToMetatags('link', ['rel' => 'SHORTCUT ICON', 'href' => $faviconFileName]);
+                    $this->addToMetatags('favicon', 'link', ['rel' => 'SHORTCUT ICON', 'href' => $faviconFileName]);
                     $hasBaseFolderFavicon = true;
                     //ie only...
                 }
@@ -155,13 +153,15 @@ class MetatagsApi implements Flushable
                     $this->siteConfig->MetaDataCopyright = $this->siteConfig->Title;
                 }
                 $botsValue = $this->page->ExcludeFromSearchEngines ? $noopd . 'none, noindex, nofollow' : $noopd . 'all, index, follow';
-                $this->addToMetatags('meta', ['name' => 'robots', 'content' => $botsValue]);
-                $this->addToMetatags('meta', ['name' => 'googlebot', 'content' => $botsValue]);
-                $this->addToMetatags('meta', ['name' => 'rights', 'content' => Convert::raw2att($this->siteConfig->MetaDataCopyright)]);
-                $this->addToMetatags('meta', ['name' => 'created', 'content' => date('Ymd', strtotime($this->page->LastEdited))]);
-                $this->metatags[] = [
-                    'RawHTML' => $this->page->ExtraMeta,
-                ];
+                $this->addToMetatags('robots', 'meta', ['name' => 'robots', 'content' => $botsValue]);
+                $this->addToMetatags('googlebot', 'meta', ['name' => 'googlebot', 'content' => $botsValue]);
+                $this->addToMetatags('rights', 'meta', ['name' => 'rights', 'content' => Convert::raw2att($this->siteConfig->MetaDataCopyright)]);
+                $this->addToMetatags('created', 'meta', ['name' => 'created', 'content' => date('Ymd', strtotime($this->page->LastEdited))]);
+                if($this->page->ExtraMeta) {
+                    $this->metatags[] = [
+                        'html' => $this->page->ExtraMeta,
+                    ];
+                }
                 $this->addOGTags();
                 $this->addTwitterTags();
                 $this->addIconTags($hasBaseFolderFavicon);
@@ -181,7 +181,6 @@ class MetatagsApi implements Flushable
 
     protected function getCacheKey(): string
     {
-        $this->siteConfig = SiteConfig::current_site_config();
         $add = null;
         $cacheKey = '';
         if ($this->page->hasMethod('metatagsCacheKey')) {
@@ -196,7 +195,7 @@ class MetatagsApi implements Flushable
                 . abs($this->page->ID) . '_'
                 . strtotime($this->page->LastEdited) . '_'
                 . strtotime($this->siteConfig->LastEdited) . '_'
-                . $this->this->baseUrl . '_'
+                . $this->baseUrl . '_'
                 . Versioned::get_stage()
                 . $_SERVER['REQUEST_URI'];
             $cacheKey = preg_replace(
@@ -225,7 +224,6 @@ class MetatagsApi implements Flushable
      */
     protected function addOGTags()
     {
-        $this->siteConfig = SiteConfig::current_site_config();
         $array = [
             'title' => Convert::raw2att($this->MetaTagsMetaTitle()),
             'type' => 'website',
@@ -238,7 +236,9 @@ class MetatagsApi implements Flushable
             $array['image'] = Convert::raw2att($shareImage->getAbsoluteURL());
         }
         foreach ($array as $key => $value) {
-            $this->addToMetatags('meta', ['property' => 'og:' . $key, 'content' => $value]);
+            if($value) {
+                $this->addToMetatags('og'.$key, 'meta', ['property' => 'og:' . $key, 'content' => $value]);
+            }
         }
     }
 
@@ -251,7 +251,6 @@ class MetatagsApi implements Flushable
      */
     protected function addTwitterTags()
     {
-        $this->siteConfig = SiteConfig::current_site_config();
         $handle = $this->siteConfig->TwitterHandle;
         if (! $handle) {
             $handle = Config::inst()->get(self::class, 'twitter_handle');
@@ -271,23 +270,15 @@ class MetatagsApi implements Flushable
                 $array['card'] = Convert::raw2att('summary');
             }
             foreach ($array as $key => $value) {
-                $this->addToMetatags('meta', ['name' => 'twitter:' . $key, 'content' => $value]);
+                if($value) {
+                    $this->addToMetatags('twitter'.$key, 'meta', ['name' => 'twitter:' . $key, 'content' => $value]);
+                }
             }
         }
     }
 
     protected function addIconTags(?bool $hasBaseFolderFavicon = false)
     {
-        $favicon = null;
-        $cacheKey =
-            'iconTags_'
-            . preg_replace(
-                '#[^a-z0-9]#i',
-                '_',
-                $this->baseURL
-            );
-        $baseURL = rtrim($this->baseURL, '/');
-        $cache = self::get_meta_tag_cache();
         $faviconImage = false;
         if ($this->siteConfig->FaviconID) {
             $faviconImage = $this->siteConfig->Favicon();
@@ -296,49 +287,45 @@ class MetatagsApi implements Flushable
                 $faviconImage = false;
             }
         }
-        $icons = unserialize($cache->get($cacheKey));
-        if (empty($icons)) {
-            $sizes = Config::inst()->get(self::class, 'favicon_sizes');
-            if ($hasBaseFolderFavicon) {
-                if (is_array($sizes)) {
-                    $sizes = array_diff($sizes, [16]);
-                }
+        $sizes = Config::inst()->get(self::class, 'favicon_sizes');
+        if ($hasBaseFolderFavicon) {
+            if (is_array($sizes)) {
+                $sizes = array_diff($sizes, [16]);
             }
-            foreach ($sizes as $size) {
-                $fileName = 'icons/' . 'icon-' . $size . 'x' . $size . '.png';
-                $file = ThemeResourceLoader::inst()->findThemedResource(
-                    $fileName
-                );
-                if ($file) {
-                    $sizes = $size . 'x' . $size . '"  href="' . Controller::join_links($baseURL, $file);
-                    $this->addToMetatags('link', ['name' => 'icon', 'type' => 'image/png', 'sizes' => $sizes]);
-                    $this->addToMetatags('link', ['name' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes]);
-                } else {
-                    if ($faviconImage) {
-                        $generatedImage = $faviconImage->ScaleWidth($size);
-                        $sizes = $size . 'x' . $size . '"  href="' . $baseURL . $generatedImage->Link();
-                        $this->addToMetatags('link', ['name' => 'icon', 'type' => 'image/png', 'sizes' => $sizes]);
-                        $this->addToMetatags('link', ['name' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes]);
-                    }
-                }
-            }
-            if (! $hasBaseFolderFavicon) {
-                $faviconLocation = ThemeResourceLoader::inst()->findThemedResource('icons/favicon.ico');
-                if ($faviconLocation) {
-                    //do nothing
-                } elseif ($faviconImage) {
-                    $generatedImage = $faviconImage->ScaleWidth(16);
-                    $faviconLocation = $generatedImage->Link();
-                }
-                $faviconLink = Controller::join_links($baseURL, $faviconLocation);
-                if ($faviconLink) {
-                    $this->addToMetatags('link', ['rel' => 'SHORTCUT ICON', 'href' => $faviconLink]);
-                }
-            }
-            $cache->set($cacheKey, serialize($icons));
         }
-
-        $this->metatags = array_merge($this->metatags, $icons);
+        foreach ($sizes as $size) {
+            $fileName = 'icons/' . 'icon-' . $size . 'x' . $size . '.png';
+            $file = ThemeResourceLoader::inst()->findThemedResource(
+                $fileName
+            );
+            if ($file) {
+                $sizes = $size . 'x' . $size;
+                $href = Controller::join_links($this->baseURL, $file);
+                $this->addToMetatags('icon'.$size, 'link', ['name' => 'icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
+                $this->addToMetatags('iconApple'.$size, 'link', ['name' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
+            } else {
+                if ($faviconImage) {
+                    $generatedImage = $faviconImage->ScaleWidth($size);
+                    $sizes = $size . 'x' . $size;
+                    $href = Controller::join_links($this->baseURL, $generatedImage->Link());
+                    $this->addToMetatags('icon'.$size, 'link', ['name' => 'icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
+                    $this->addToMetatags('iconApple'.$size, 'link', ['name' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes]);
+                }
+            }
+        }
+        if (! $hasBaseFolderFavicon) {
+            $faviconLocation = ThemeResourceLoader::inst()->findThemedResource('icons/favicon.ico');
+            if ($faviconLocation) {
+                //do nothing
+            } elseif ($faviconImage) {
+                $generatedImage = $faviconImage->ScaleWidth(16);
+                $faviconLocation = $generatedImage->Link();
+            }
+            $faviconLink = Controller::join_links($this->baseURL, $faviconLocation);
+            if ($faviconLink) {
+                $this->addToMetatags('favicon','link', ['rel' => 'SHORTCUT ICON', 'href' => $faviconLink]);
+            }
+        }
     }
 
     /**
@@ -415,14 +402,14 @@ class MetatagsApi implements Flushable
         return false;
     }
 
-    protected function addToMetatags(string $tag, ?array $attributes = [], $selfClosing = true, ?string $content = '')
+    protected function addToMetatags(string $name, string $tag, ?array $attributes = [], $selfClosing = true, ?string $content = '')
     {
-        $this->metatags[] = [
-            'Tag' => $tag,
-            'Attributes' => $attributes,
-            'SelfClosing' => $selfClosing,
-            'Content' => $content,
-            'RawHTML' => '',
+        $this->metatags[$name] = [
+            'tag' => $tag,
+            'attributes' => $attributes,
+            'selfclosing' => $selfClosing,
+            'content' => $content,
+            'html' => '',
         ];
     }
 }
