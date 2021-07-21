@@ -8,6 +8,7 @@ use SilverStripe\CMS\Controllers\RootURLController;
 use SilverStripe\CMS\Model\SiteTreeExtension;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
@@ -19,10 +20,6 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\View\SSViewer;
-use SilverStripe\Core\Extension;
-use SilverStripe\Core\Flushable;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\View\Requirements;
 use Sunnysideup\MetaTags\Api\MetatagsApi;
 
 /**
@@ -31,7 +28,6 @@ use Sunnysideup\MetaTags\Api\MetatagsApi;
  */
 class MetaTagsSTE extends SiteTreeExtension
 {
-
     private static $metatag_builder_class = MetatagsApi::class;
 
     /**
@@ -309,6 +305,15 @@ class MetaTagsSTE extends SiteTreeExtension
         ');
     }
 
+    public function MetaComponents(&$tags)
+    {
+        $provider = Config::inst()->get(self::class, 'metatag_builder_class');
+        $builder = Injector::inst()->get($provider, false, [$this->owner]);
+        $tags = array_merge($tags, $builder->getMetatags());
+
+        return $tags;
+    }
+
     /**
      * what fields are updated automatically for this page ...
      *
@@ -359,15 +364,6 @@ class MetaTagsSTE extends SiteTreeExtension
             'Custom' => _t('MetaTagsSTE.CUSTOM', 'Manually'),
             'Automated' => _t('MetaTagsSTE.AUTOMATE', 'Automated'),
         ];
-    }
-
-    public function MetaComponents(&$tags)
-    {
-        $provider = Config::inst()->get(self::class, 'metatag_builder_class');
-        $builder = Injector::inst()->get($provider, false, [$this->owner]);
-        $tags = array_merge($tags, $builder->getMetatags());
-
-        return $tags;
     }
 
     private function defaultSettingDescription()

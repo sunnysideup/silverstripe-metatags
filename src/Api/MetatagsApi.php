@@ -157,7 +157,7 @@ class MetatagsApi implements Flushable
                 $this->addToMetatags('googlebot', 'meta', ['name' => 'googlebot', 'content' => $botsValue]);
                 $this->addToMetatags('rights', 'meta', ['name' => 'rights', 'content' => Convert::raw2att($this->siteConfig->MetaDataCopyright)]);
                 $this->addToMetatags('created', 'meta', ['name' => 'created', 'content' => date('Ymd', strtotime($this->page->LastEdited))]);
-                if($this->page->ExtraMeta) {
+                if ($this->page->ExtraMeta) {
                     $this->metatags[] = [
                         'html' => $this->page->ExtraMeta,
                     ];
@@ -220,7 +220,6 @@ class MetatagsApi implements Flushable
      * open graph protocol.
      *
      * @see: http://ogp.me/
-     *
      */
     protected function addOGTags()
     {
@@ -236,8 +235,8 @@ class MetatagsApi implements Flushable
             $array['image'] = Convert::raw2att($shareImage->getAbsoluteURL());
         }
         foreach ($array as $key => $value) {
-            if($value) {
-                $this->addToMetatags('og'.$key, 'meta', ['property' => 'og:' . $key, 'content' => $value]);
+            if ($value) {
+                $this->addToMetatags('og' . $key, 'meta', ['property' => 'og:' . $key, 'content' => $value]);
             }
         }
     }
@@ -270,8 +269,8 @@ class MetatagsApi implements Flushable
                 $array['card'] = Convert::raw2att('summary');
             }
             foreach ($array as $key => $value) {
-                if($value) {
-                    $this->addToMetatags('twitter'.$key, 'meta', ['name' => 'twitter:' . $key, 'content' => $value]);
+                if ($value) {
+                    $this->addToMetatags('twitter' . $key, 'meta', ['name' => 'twitter:' . $key, 'content' => $value]);
                 }
             }
         }
@@ -301,16 +300,14 @@ class MetatagsApi implements Flushable
             if ($file) {
                 $sizes = $size . 'x' . $size;
                 $href = Controller::join_links($this->baseURL, $file);
-                $this->addToMetatags('icon'.$size, 'link', ['name' => 'icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
-                $this->addToMetatags('iconApple'.$size, 'link', ['name' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
-            } else {
-                if ($faviconImage) {
-                    $generatedImage = $faviconImage->ScaleWidth($size);
-                    $sizes = $size . 'x' . $size;
-                    $href = Controller::join_links($this->baseURL, $generatedImage->Link());
-                    $this->addToMetatags('icon'.$size, 'link', ['name' => 'icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
-                    $this->addToMetatags('iconApple'.$size, 'link', ['name' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes]);
-                }
+                $this->addToMetatags('icon' . $size, 'link', ['name' => 'icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
+                $this->addToMetatags('iconApple' . $size, 'link', ['name' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
+            } elseif ($faviconImage) {
+                $generatedImage = $faviconImage->ScaleWidth($size);
+                $sizes = $size . 'x' . $size;
+                $href = Controller::join_links($this->baseURL, $generatedImage->Link());
+                $this->addToMetatags('icon' . $size, 'link', ['name' => 'icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
+                $this->addToMetatags('iconApple' . $size, 'link', ['name' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes]);
             }
         }
         if (! $hasBaseFolderFavicon) {
@@ -323,7 +320,7 @@ class MetatagsApi implements Flushable
             }
             $faviconLink = Controller::join_links($this->baseURL, $faviconLocation);
             if ($faviconLink) {
-                $this->addToMetatags('favicon','link', ['rel' => 'SHORTCUT ICON', 'href' => $faviconLink]);
+                $this->addToMetatags('favicon', 'link', ['rel' => 'SHORTCUT ICON', 'href' => $faviconLink]);
             }
         }
     }

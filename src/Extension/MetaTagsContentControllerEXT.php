@@ -3,19 +3,13 @@
 namespace Sunnysideup\MetaTags\Extension;
 
 use SilverStripe\Core\Extension;
-use SilverStripe\Core\Flushable;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\View\Requirements;
-use Sunnysideup\MetaTags\Api\MetatagsApi;
 
 /**
  * adds meta tag functionality to the Page_Controller.
  */
 class MetaTagsContentControllerEXT extends Extension
 {
-
-
     /**
      * this function will add more metatags to your template -
      * make sure to add it at the start of your metatags
@@ -30,10 +24,9 @@ class MetaTagsContentControllerEXT extends Extension
     public function ExtendedMetatags(?bool $includeTitle = true)
     {
         $this->addBasicMetatagRequirements();
+
         return $this->Metatags($includeTitle);
     }
-
-
 
     /**
      * Puts together all the requirements.
