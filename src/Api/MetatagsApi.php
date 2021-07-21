@@ -334,18 +334,18 @@ class MetatagsApi implements Flushable
             $this->metatagMetaTitle = '';
             if (Config::inst()->get(self::class, 'use_separate_metatitle')) {
                 if (! empty($this->page->MetaTitle)) {
-                    $this->metatagMetaTitle = $this->page->MetaTitle;
+                    (string) $this->metatagMetaTitle = $this->page->MetaTitle;
                 }
             }
             if (! $this->metatagMetaTitle) {
-                $this->metatagMetaTitle = $this->page->Title;
+                $this->metatagMetaTitle = (string) $this->page->Title;
                 if (! $this->metatagMetaTitle) {
-                    $this->metatagMetaTitle = $this->page->MenuTitle;
+                    (string) $this->metatagMetaTitle = $this->page->MenuTitle;
                 }
             }
         }
 
-        return $this->metatagMetaTitle;
+        return (string) $this->metatagMetaTitle;
     }
 
     protected function shareImage(): ?Image
