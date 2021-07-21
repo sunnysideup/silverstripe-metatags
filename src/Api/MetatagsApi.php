@@ -1,42 +1,41 @@
 <?php
+
 namespace Sunnysideup\MetaTags\Api;
 
-use SilverStripe\Core\Extensible;
-use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Core\Config\Configurable;
-
-use SilverStripe\Control\Controller;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Assets\Image;
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
-use SilverStripe\Core\Extension;
+use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Flushable;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\SiteConfig\SiteConfig;
-use SilverStripe\View\Requirements;
-use SilverStripe\View\SSViewer;
+use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\ThemeResourceLoader;
 
-use SilverStripe\Versioned\Versioned;
 class MetatagsApie implements Flushable
 {
     use Extensible;
     use Injectable;
     use Configurable;
+    public $this;
+    public $baseURL;
 
-    protected $page = null;
+    protected $page;
+
     protected $baseUrl = '';
-    protected $siteConfig = null;
 
-    public function __construct($page)
-    {
-        $this->page = $page;
-        $this->baseUrl = Director::absoluteBaseURL();
-        $this->siteConfig = Director::absoluteBaseURL();
-    }
+    protected $siteConfig;
+
+    protected $metatags = [];
+
+    protected $shareImageCache = [];
+
+    protected $metatagMetaTitle = [];
 
     /**
      * @var array
@@ -88,15 +87,16 @@ class MetatagsApie implements Flushable
      */
     private static $og_image_method_map = [];
 
-    protected $metatags = [];
-
-    protected $shareImageCache = [];
-
-    protected $metatagMetaTitle = [];
-
-    public function getMetatagsArray() : array
+    public function __construct($page)
     {
-        if(empty($this->metatags)) {
+        $this->page = $page;
+        $this->baseUrl = Director::absoluteBaseURL();
+        $this->siteConfig = Director::absoluteBaseURL();
+    }
+
+    public function getMetatagsArray(): array
+    {
+        if (empty($this->metatags)) {
             $cacheKey = $this->getCacheKey();
             $cache = self::get_meta_tag_cache();
             $this->siteConfig = SiteConfig::current_site_config();
@@ -109,29 +109,29 @@ class MetatagsApie implements Flushable
                 $this->metatags = [];
                 $title = $this->MetaTagsMetaTitle();
                 //base tag
-                $this->addToMetatags('base',['href' => $base,]);
-                $this->addToMetatags('meta',['charset' => 'utf-8',]);
+                $this->addToMetatags('base', ['href' => $base]);
+                $this->addToMetatags('meta', ['charset' => 'utf-8']);
                 $titleArray = [
                     $this->siteConfig->PrependToMetaTitle,
                     $title,
                     $this->siteConfig->AppendToMetaTitle,
                 ];
                 $content = trim(implode(' ', array_filter($titleArray)));
-                $this->addToMetatags('title',[], false, Convert::raw2att($content));
-                $this->addToMetatags('meta',['name' => 'title','content' => Convert::raw2att($content),]);
+                $this->addToMetatags('title', [], false, Convert::raw2att($content));
+                $this->addToMetatags('meta', ['name' => 'title', 'content' => Convert::raw2att($content)]);
 
                 if ($this->page->hasMethod('CanonicalLink')) {
                     $canonicalLink = $this->page->CanonicalLink();
                     if ($canonicalLink) {
-                        $this->addToMetatags('link',['rel' => 'canonical','href' => $canonicalLink,]);
+                        $this->addToMetatags('link', ['rel' => 'canonical', 'href' => $canonicalLink]);
                     }
                 }
                 //these go first - for some reason ...
-                $this->addToMetatags('meta',['http-equiv' => 'X-UA-Compatible','name' => 'IE=edge',]);
-                $this->addToMetatags('meta',['name' => 'viewport','content' => Config::inst()->get(self::class, 'viewport_setting'),]);
+                $this->addToMetatags('meta', ['http-equiv' => 'X-UA-Compatible', 'name' => 'IE=edge']);
+                $this->addToMetatags('meta', ['name' => 'viewport', 'content' => Config::inst()->get(self::class, 'viewport_setting')]);
 
                 if ($this->page->MetaDescription) {
-                    $this->addToMetatags('meta',['name' => 'description','content' => Convert::raw2att($this->page->MetaDescription),]);
+                    $this->addToMetatags('meta', ['name' => 'description', 'content' => Convert::raw2att($this->page->MetaDescription)]);
 
                     $noopd = '';
                 } else {
@@ -142,9 +142,9 @@ class MetatagsApie implements Flushable
                 $hasBaseFolderFavicon = false;
                 $publicDir = PUBLIC_DIR;
                 $faviconFileName = 'favicon.ico';
-                $faviconLocation = Controller::join_links($this->baseUrl , $publicDir , $faviconFileName);
+                $faviconLocation = Controller::join_links($this->baseUrl, $publicDir, $faviconFileName);
                 if (file_exists($faviconLocation)) {
-                    $this->addToMetatags('link',['rel' => 'SHORTCUT ICON','href' => $faviconFileName,]);
+                    $this->addToMetatags('link', ['rel' => 'SHORTCUT ICON', 'href' => $faviconFileName]);
                     $hasBaseFolderFavicon = true;
                     //ie only...
                 }
@@ -154,30 +154,32 @@ class MetatagsApie implements Flushable
                 if (! $this->siteConfig->MetaDataCopyright) {
                     $this->siteConfig->MetaDataCopyright = $this->siteConfig->Title;
                 }
-                if ($this->page->ExcludeFromSearchEngines) {
-                    $botsValue = $noopd . 'none, noindex, nofollow';
-                } else {
-                    $botsValue = $noopd . 'all, index, follow';
-                }
-                $this->addToMetatags('meta',['name' => 'robots','content' => $botsValue,]);
-                $this->addToMetatags('meta',['name' => 'googlebot','content' => $botsValue,]);
-                $this->addToMetatags('meta',['name' => 'rights','content' => Convert::raw2att($this->siteConfig->MetaDataCopyright),]);
-                $this->addToMetatags('meta',['name' => 'created','content' => date('Ymd', strtotime($this->page->LastEdited)),]);
+                $botsValue = $this->page->ExcludeFromSearchEngines ? $noopd . 'none, noindex, nofollow' : $noopd . 'all, index, follow';
+                $this->addToMetatags('meta', ['name' => 'robots', 'content' => $botsValue]);
+                $this->addToMetatags('meta', ['name' => 'googlebot', 'content' => $botsValue]);
+                $this->addToMetatags('meta', ['name' => 'rights', 'content' => Convert::raw2att($this->siteConfig->MetaDataCopyright)]);
+                $this->addToMetatags('meta', ['name' => 'created', 'content' => date('Ymd', strtotime($this->page->LastEdited))]);
                 $this->metatags[] = [
                     'RawHTML' => $this->page->ExtraMeta,
                 ];
                 $this->addOGTags();
                 $this->addTwitterTags();
-                $this->addIconTags($faviconBase, $hasBaseFolderFavicon);
+                $this->addIconTags($faviconBase);
                 if ($cacheKey && $cache) {
                     $cache->set($cacheKey, serialize($this->metatags));
                 }
             }
         }
+
         return $this->metatags;
     }
 
-    protected function getCacheKey() : string
+    public static function flush()
+    {
+        self::get_meta_tag_cache()->clear();
+    }
+
+    protected function getCacheKey(): string
     {
         $this->siteConfig = SiteConfig::current_site_config();
         $add = null;
@@ -206,12 +208,8 @@ class MetatagsApie implements Flushable
                 $cacheKey .= $add;
             }
         }
-        return $cacheKey;
-    }
 
-    public static function flush()
-    {
-        self::get_meta_tag_cache()->clear();
+        return $cacheKey;
     }
 
     protected static function get_meta_tag_cache()
@@ -241,7 +239,7 @@ class MetatagsApie implements Flushable
             $array['image'] = Convert::raw2att($shareImage->getAbsoluteURL());
         }
         foreach ($array as $key => $value) {
-            $this->addToMetatags('meta',['property' => 'og:'.$key, 'content' => $value,]);
+            $this->addToMetatags('meta', ['property' => 'og:' . $key, 'content' => $value]);
         }
     }
 
@@ -251,7 +249,6 @@ class MetatagsApie implements Flushable
      *
      *     MetaTagsContentControllerEXT:
      *       twitter_handle: "relevant_twitter_handle"
-     *
      */
     protected function addTwitterTags()
     {
@@ -275,7 +272,7 @@ class MetatagsApie implements Flushable
                 $array['card'] = Convert::raw2att('summary');
             }
             foreach ($array as $key => $value) {
-                $this->addToMetatags('meta',['name' => 'twitter:'.$key, 'content' => $value,]);
+                $this->addToMetatags('meta', ['name' => 'twitter:' . $key, 'content' => $value]);
             }
         }
     }
@@ -307,11 +304,11 @@ class MetatagsApie implements Flushable
                     $fileName
                 );
                 if ($file) {
-                    $sizes = $size . 'x' . $size . '"  href="' . Controller::join_links($baseURL , $file);
-                    $this->addToMetatags('link',['name' => 'icon', 'type' => 'image/png', 'sizes' => $sizes,]);
-                    $this->addToMetatags('link',['name' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes,]);
-                } else{
-                    if(! isset($faviconImage)) {
+                    $sizes = $size . 'x' . $size . '"  href="' . Controller::join_links($baseURL, $file);
+                    $this->addToMetatags('link', ['name' => 'icon', 'type' => 'image/png', 'sizes' => $sizes]);
+                    $this->addToMetatags('link', ['name' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes]);
+                } else {
+                    if (! isset($faviconImage)) {
                         $faviconImage = false;
                         if ($this->siteConfig->FaviconID) {
                             $faviconImage = $this->siteConfig->Favicon();
@@ -321,8 +318,8 @@ class MetatagsApie implements Flushable
                         $generatedImage = $faviconImage->ScaleWidth($size);
                         if ($generatedImage && $generatedImage->exists()) {
                             $sizes = $size . 'x' . $size . '"  href="' . $baseURL . $generatedImage->Link();
-                            $this->addToMetatags('link',['name' => 'icon', 'type' => 'image/png', 'sizes' => $sizes,]);
-                            $this->addToMetatags('link',['name' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes,]);
+                            $this->addToMetatags('link', ['name' => 'icon', 'type' => 'image/png', 'sizes' => $sizes]);
+                            $this->addToMetatags('link', ['name' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes]);
                         }
                     }
                 }
@@ -337,7 +334,7 @@ class MetatagsApie implements Flushable
                 }
                 $faviconLink = Controller::join_links($baseURL, $faviconLocation);
                 if ($faviconLink) {
-                    $this->addToMetatags('link',['rel' => 'SHORTCUT ICON', 'href' => $faviconLink,]);
+                    $this->addToMetatags('link', ['rel' => 'SHORTCUT ICON', 'href' => $faviconLink]);
                 }
             }
             $cache->set($cacheKey, serialize($icons));
@@ -347,12 +344,11 @@ class MetatagsApie implements Flushable
     }
 
     /**
-     * create Meta Tag Title
-     * @return string
+     * create Meta Tag Title.
      */
-    protected function MetaTagsMetaTitle() : string
+    protected function MetaTagsMetaTitle(): string
     {
-        if(! $this->metatagMetaTitle) {
+        if (! $this->metatagMetaTitle) {
             $this->metatagMetaTitle = '';
             if (Config::inst()->get(self::class, 'use_separate_metatitle')) {
                 if (! empty($this->page->MetaTitle)) {
@@ -361,18 +357,16 @@ class MetatagsApie implements Flushable
             }
             if (! $this->metatagMetaTitle) {
                 $this->metatagMetaTitle = $this->page->Title;
-                if (! $this->metatagMetaTitle ) {
+                if (! $this->metatagMetaTitle) {
                     $this->metatagMetaTitle = $this->page->MenuTitle;
                 }
             }
         }
+
         return $this->metatagMetaTitle;
     }
 
-    /**
-     * @return null|Image
-     */
-    protected function shareImage() :?Image
+    protected function shareImage(): ?Image
     {
         if (! isset($this->shareImageCache[$this->page->ID])) {
             $this->shareImageCache[$this->page->ID] = null;
@@ -382,7 +376,7 @@ class MetatagsApie implements Flushable
             if (! $this->shareImageCache[$this->page->ID]) {
                 $og_image_method_map = Config::inst()->get(self::class, 'og_image_method_map');
                 $method = $og_image_method_map[$this->page->ClassName] ?? 'ERROR';
-                if($method) {
+                if ($method) {
                     $this->addToShareImageCache($method);
                 }
             }
@@ -391,7 +385,7 @@ class MetatagsApie implements Flushable
                 foreach ($hasOnes as $hasOneName => $hasOneType) {
                     if ('ShareOnFacebookImage' !== $hasOneName) {
                         if (Image::class === $hasOneType || is_subclass_of($hasOneType, Image::class)) {
-                            if($this->addToShareImageCache($hasOneName)) {
+                            if ($this->addToShareImageCache($hasOneName)) {
                                 break;
                             }
                         }
@@ -400,16 +394,16 @@ class MetatagsApie implements Flushable
             }
         }
         //make sure to return NULL or Image
-        return $this->shareImageCache[$this->page->ID] ?:null;
+        return $this->shareImageCache[$this->page->ID] ?: null;
     }
 
-    protected function addToShareImageCache(string $methodName) : bool
+    protected function addToShareImageCache(string $methodName): bool
     {
         $field = $methodName . 'ID';
         if (isset($this->page->{$field})) {
-            if($this->page->hasMethod($methodName)) {
+            if ($this->page->hasMethod($methodName)) {
                 $this->shareImageCache[$this->page->ID] = $this->page->{$methodName}();
-                if(
+                if (
                     $this->shareImageCache[$this->page->ID] &&
                     $this->shareImageCache[$this->page->ID]->exists() &&
                     $this->shareImageCache[$this->page->ID] instanceof Image
@@ -419,6 +413,7 @@ class MetatagsApie implements Flushable
             }
         }
         $this->shareImageCache[$this->page->ID] = false;
+
         return false;
     }
 
@@ -432,5 +427,4 @@ class MetatagsApie implements Flushable
             'RawHTML' => '',
         ];
     }
-
 }
