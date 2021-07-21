@@ -12,7 +12,7 @@ use Sunnysideup\MetaTags\Api\MetatagsApi;
 /**
  * adds meta tag functionality to the Page_Controller.
  */
-class MetaTagsContentControllerEXT extends Extension implements Flushable
+class MetaTagsContentControllerEXT extends Extension
 {
     private static $metatag_builder_class = MetatagsApi::class;
 

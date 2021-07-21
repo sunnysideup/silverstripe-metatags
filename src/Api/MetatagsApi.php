@@ -17,7 +17,7 @@ use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\ThemeResourceLoader;
 
-class MetatagsApie implements Flushable
+class MetatagsApi implements Flushable
 {
     use Extensible;
     use Injectable;
@@ -109,7 +109,7 @@ class MetatagsApie implements Flushable
                 $this->metatags = [];
                 $title = $this->MetaTagsMetaTitle();
                 //base tag
-                $this->addToMetatags('base', ['href' => $base]);
+                $this->addToMetatags('base', ['href' => $this->baseUrl]);
                 $this->addToMetatags('meta', ['charset' => 'utf-8']);
                 $titleArray = [
                     $this->siteConfig->PrependToMetaTitle,
@@ -164,7 +164,7 @@ class MetatagsApie implements Flushable
                 ];
                 $this->addOGTags();
                 $this->addTwitterTags();
-                $this->addIconTags($faviconBase);
+                $this->addIconTags($hasBaseFolderFavicon);
                 if ($cacheKey && $cache) {
                     $cache->set($cacheKey, serialize($this->metatags));
                 }
@@ -222,7 +222,6 @@ class MetatagsApie implements Flushable
      *
      * @see: http://ogp.me/
      *
-     * @return string (HTML)
      */
     protected function addOGTags()
     {
@@ -285,11 +284,18 @@ class MetatagsApie implements Flushable
             . preg_replace(
                 '#[^a-z0-9]#i',
                 '_',
-                $baseURL
+                $this->baseURL
             );
         $baseURL = rtrim($this->baseURL, '/');
         $cache = self::get_meta_tag_cache();
-
+        $faviconImage = false;
+        if ($this->siteConfig->FaviconID) {
+            $faviconImage = $this->siteConfig->Favicon();
+            if ($faviconImage && $faviconImage->exists() && $faviconImage instanceof Image) {
+            } else {
+                $faviconImage = false;
+            }
+        }
         $icons = unserialize($cache->get($cacheKey));
         if (empty($icons)) {
             $sizes = Config::inst()->get(self::class, 'favicon_sizes');
@@ -308,19 +314,11 @@ class MetatagsApie implements Flushable
                     $this->addToMetatags('link', ['name' => 'icon', 'type' => 'image/png', 'sizes' => $sizes]);
                     $this->addToMetatags('link', ['name' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes]);
                 } else {
-                    if (! isset($faviconImage)) {
-                        $faviconImage = false;
-                        if ($this->siteConfig->FaviconID) {
-                            $faviconImage = $this->siteConfig->Favicon();
-                        }
-                    }
-                    if ($faviconImage && $faviconImage->exists() && $faviconImage instanceof Image) {
+                    if ($faviconImage) {
                         $generatedImage = $faviconImage->ScaleWidth($size);
-                        if ($generatedImage && $generatedImage->exists()) {
-                            $sizes = $size . 'x' . $size . '"  href="' . $baseURL . $generatedImage->Link();
-                            $this->addToMetatags('link', ['name' => 'icon', 'type' => 'image/png', 'sizes' => $sizes]);
-                            $this->addToMetatags('link', ['name' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes]);
-                        }
+                        $sizes = $size . 'x' . $size . '"  href="' . $baseURL . $generatedImage->Link();
+                        $this->addToMetatags('link', ['name' => 'icon', 'type' => 'image/png', 'sizes' => $sizes]);
+                        $this->addToMetatags('link', ['name' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes]);
                     }
                 }
             }
