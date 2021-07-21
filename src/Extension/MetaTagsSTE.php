@@ -310,6 +310,13 @@ class MetaTagsSTE extends SiteTreeExtension
         $provider = Config::inst()->get(self::class, 'metatag_builder_class');
         $builder = Injector::inst()->get($provider, false, [$this->owner]);
         $tags = array_merge($tags, $builder->getMetatags());
+        foreach($tags as $key => $array) {
+            $tags[$key]['tag'] = $array['tag'] ?? 'meta';
+            $tags[$key]['attributes'] = $array['attributes'] ?? [];
+            $tags[$key]['selfclosing'] = $array['selfclosing'] ?? true;
+            $tags[$key]['content'] = $array['content'] ?? '';
+            $tags[$key]['html'] = $array['html'] ?? '';
+        }
 
         return $tags;
     }
