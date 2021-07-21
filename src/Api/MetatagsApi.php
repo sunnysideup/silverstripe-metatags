@@ -327,9 +327,7 @@ class MetatagsApie implements Flushable
                     }
                 }
             }
-            if ($hasBaseFolderFavicon) {
-                //do nothing
-            } else {
+            if (! $hasBaseFolderFavicon) {
                 $faviconLink = '';
                 $faviconLocation = ThemeResourceLoader::inst()->findThemedResource('icons/favicon.ico');
                 if ($faviconLocation) {
