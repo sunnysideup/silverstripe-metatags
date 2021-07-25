@@ -124,7 +124,7 @@ class MetatagsApi implements Flushable
                     }
                 }
                 //these go first - for some reason ...
-                $this->addToMetatags('ie', 'meta', ['httpEquiv' => 'X-UA-Compatible', 'name' => 'IE=edge']);
+                $this->addToMetatags('ie', 'meta', ['http-equiv' => 'X-UA-Compatible', 'name' => 'IE=edge']);
                 $this->addToMetatags('viewport', 'meta', ['name' => 'viewport', 'content' => Config::inst()->get(self::class, 'viewport_setting')]);
 
                 if ($this->page->MetaDescription) {
@@ -334,13 +334,21 @@ class MetatagsApi implements Flushable
             $this->metatagMetaTitle = '';
             if (Config::inst()->get(self::class, 'use_separate_metatitle')) {
                 if (! empty($this->page->MetaTitle)) {
+<<<<<<< HEAD
+                    $this->metatagMetaTitle = (string) $this->page->MetaTitle;
+=======
                     (string) $this->metatagMetaTitle = $this->page->MetaTitle;
+>>>>>>> d12b15cb651a1ad0c5c8ffbb4901aa159711ccc6
                 }
             }
             if (! $this->metatagMetaTitle) {
                 $this->metatagMetaTitle = (string) $this->page->Title;
                 if (! $this->metatagMetaTitle) {
+<<<<<<< HEAD
+                    $this->metatagMetaTitle = (string) $this->page->MenuTitle;
+=======
                     (string) $this->metatagMetaTitle = $this->page->MenuTitle;
+>>>>>>> d12b15cb651a1ad0c5c8ffbb4901aa159711ccc6
                 }
             }
         }
