@@ -334,13 +334,13 @@ class MetatagsApi implements Flushable
             $this->metatagMetaTitle = '';
             if (Config::inst()->get(self::class, 'use_separate_metatitle')) {
                 if (! empty($this->page->MetaTitle)) {
-                    (string) $this->metatagMetaTitle = $this->page->MetaTitle;
+                    $this->metatagMetaTitle = (string) $this->page->MetaTitle;
                 }
             }
             if (! $this->metatagMetaTitle) {
                 $this->metatagMetaTitle = (string) $this->page->Title;
                 if (! $this->metatagMetaTitle) {
-                    (string) $this->metatagMetaTitle = $this->page->MenuTitle;
+                    $this->metatagMetaTitle = (string) $this->page->MenuTitle;
                 }
             }
         }
