@@ -124,7 +124,7 @@ class MetatagsApi implements Flushable
                     }
                 }
                 //these go first - for some reason ...
-                $this->addToMetatags('ie', 'meta', ['httpEquiv' => 'X-UA-Compatible', 'name' => 'IE=edge']);
+                $this->addToMetatags('ie', 'meta', ['http-equiv' => 'X-UA-Compatible', 'name' => 'IE=edge']);
                 $this->addToMetatags('viewport', 'meta', ['name' => 'viewport', 'content' => Config::inst()->get(self::class, 'viewport_setting')]);
 
                 if ($this->page->MetaDescription) {
