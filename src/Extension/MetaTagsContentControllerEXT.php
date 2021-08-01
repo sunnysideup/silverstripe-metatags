@@ -5,6 +5,8 @@ namespace Sunnysideup\MetaTags\Extension;
 use SilverStripe\Core\Extension;
 use SilverStripe\View\Requirements;
 
+use SilverStripe\ORM\FieldType\DBField;
+
 /**
  * adds meta tag functionality to the Page_Controller.
  */
@@ -25,7 +27,7 @@ class MetaTagsContentControllerEXT extends Extension
     {
         $this->addBasicMetatagRequirements();
 
-        return $this->Metatags($includeTitle);
+        return DBField::create_field('HTMLText', $this->owner->Metatags($includeTitle));
     }
 
     /**
