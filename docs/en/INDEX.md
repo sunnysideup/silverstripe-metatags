@@ -57,4 +57,5 @@ you can usually find some examples of config options (if any).
 Note, you can add two variables:
 ExtendedMetatags($includeTitle = true, $addExtraSearchEngineData = true)
 
-
+5. to turn caching off for a specific page / URL: add `metatagsCacheKey` method to the PageController and let it return `false`.
+   Or a specific value to set a specific cache (e.g. Country ID)

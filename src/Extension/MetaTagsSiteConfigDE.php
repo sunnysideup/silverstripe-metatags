@@ -15,7 +15,7 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataExtension;
 
 /**
- * adding functionality to SiteConfig
+ * adding functionality to SiteConfig.
  */
 class MetaTagsSiteConfigDE extends DataExtension
 {
@@ -123,7 +123,7 @@ class MetaTagsSiteConfigDE extends DataExtension
                     ->setDescription('E.g. your twitter handle (e.g. BarackObama) - without the @ sign!')
             );
         }
-        if (count($tabs)) {
+        if (count($tabs) > 0) {
             $fields->addFieldToTab(
                 'Root.SearchEngines',
                 $tabSet = TabSet::create(
@@ -145,8 +145,6 @@ class MetaTagsSiteConfigDE extends DataExtension
                 icons can also be loaded onto the server directly into the /themes/mytheme/icons/ folder
                 and as a favicon.ico in the root directory.'
         );
-
-        return $fields;
     }
 
     /**
