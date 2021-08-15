@@ -236,7 +236,7 @@ class MetaTagsSTE extends SiteTreeExtension
             }
             $fields->removeByName('ExtraMeta');
         }
-        if ($this->owner->URLSegment === Config::inst()->get('RootURLController', 'default_homepage_link')) {
+        if ($this->owner->URLSegment === Config::inst()->get(RootURLController::class, 'default_homepage_link')) {
             $fields->dataFieldByName('URLSegment')
                 ->setDescription("
                     Careful! changing the URL from 'home'
