@@ -286,28 +286,30 @@ class MetatagsApi implements Flushable
                 $faviconImage = false;
             }
         }
-        $sizes = Config::inst()->get(self::class, 'favicon_sizes');
+        $sizes = (array) Config::inst()->get(self::class, 'favicon_sizes');
         if ($hasBaseFolderFavicon) {
             if (is_array($sizes)) {
                 $sizes = array_diff($sizes, [16]);
             }
         }
-        foreach ($sizes as $size) {
-            $fileName = 'icons/' . 'icon-' . $size . 'x' . $size . '.png';
-            $file = ThemeResourceLoader::inst()->findThemedResource(
-                $fileName
-            );
-            if ($file) {
-                $sizes = $size . 'x' . $size;
-                $href = Controller::join_links($this->baseURL, $file);
-                $this->addToMetatags('icon' . $size, 'link', ['name' => 'icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
-                $this->addToMetatags('iconApple' . $size, 'link', ['name' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
-            } elseif ($faviconImage) {
-                $generatedImage = $faviconImage->ScaleWidth($size);
-                $sizes = $size . 'x' . $size;
-                $href = Controller::join_links($this->baseURL, $generatedImage->Link());
-                $this->addToMetatags('icon' . $size, 'link', ['name' => 'icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
-                $this->addToMetatags('iconApple' . $size, 'link', ['name' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes]);
+        if(! empty($sizes)) {
+            foreach ($sizes as $size) {
+                $fileName = 'icons/' . 'icon-' . $size . 'x' . $size . '.png';
+                $file = ThemeResourceLoader::inst()->findThemedResource(
+                    $fileName
+                );
+                if ($file) {
+                    $sizes = $size . 'x' . $size;
+                    $href = Controller::join_links($this->baseURL, $file);
+                    $this->addToMetatags('icon' . $size, 'link', ['name' => 'icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
+                    $this->addToMetatags('iconApple' . $size, 'link', ['name' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
+                } elseif ($faviconImage) {
+                    $generatedImage = $faviconImage->ScaleWidth($size);
+                    $sizes = $size . 'x' . $size;
+                    $href = Controller::join_links($this->baseURL, $generatedImage->Link());
+                    $this->addToMetatags('icon' . $size, 'link', ['name' => 'icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
+                    $this->addToMetatags('iconApple' . $size, 'link', ['name' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes]);
+                }
             }
         }
         if (! $hasBaseFolderFavicon) {
