@@ -292,7 +292,7 @@ class MetatagsApi implements Flushable
                 $sizes = array_diff($sizes, [16]);
             }
         }
-        if(! empty($sizes)) {
+        if (! empty($sizes)) {
             foreach ($sizes as $size) {
                 $fileName = 'icons/' . 'icon-' . $size . 'x' . $size . '.png';
                 $file = ThemeResourceLoader::inst()->findThemedResource(

@@ -3,9 +3,8 @@
 namespace Sunnysideup\MetaTags\Extension;
 
 use SilverStripe\Core\Extension;
-use SilverStripe\View\Requirements;
-
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\View\Requirements;
 
 /**
  * adds meta tag functionality to the Page_Controller.
