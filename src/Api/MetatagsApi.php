@@ -155,8 +155,20 @@ class MetatagsApi implements Flushable
                 $botsValue = $this->page->ExcludeFromSearchEngines ? $noopd . 'none, noindex, nofollow' : $noopd . 'all, index, follow';
                 $this->addToMetatags('robots', 'meta', ['name' => 'robots', 'content' => $botsValue]);
                 $this->addToMetatags('googlebot', 'meta', ['name' => 'googlebot', 'content' => $botsValue]);
-                $this->addToMetatags('rights', 'meta', ['name' => 'rights', 'content' => Convert::raw2att($this->siteConfig->MetaDataCopyright)]);
                 $this->addToMetatags('created', 'meta', ['name' => 'created', 'content' => date('Ymd', strtotime($this->page->LastEdited))]);
+                if($this->siteConfig->MetaDataCopyright) {
+                    $this->addToMetatags('rights', 'meta', ['name' => 'rights', 'content' => Convert::raw2att($this->siteConfig->MetaDataCopyright)]);
+                }
+                if($this->siteConfig->MetaDataDesign) {
+                    $this->addToMetatags('designer', 'meta', ['name' => 'web_author', 'content' => $this->siteConfig->MetaDataDesign]);
+                }
+                if($this->siteConfig->MetaDataCoding) {
+                    $this->addToMetatags('web_author', 'meta', ['name' => 'web_author', 'content' => $this->siteConfig->MetaDataCoding]);
+                }
+                if($this->siteConfig->MetaDataCountry) {
+                    $this->addToMetatags('geo.placename”', 'meta', ['geo.placename”' => 'web_author', 'content' => $this->siteConfig->MetaDataCountry]);
+                    $this->addToMetatags('geo.region', 'meta', ['name' => 'geo.region', 'content' => $this->siteConfig->MetaDataCountry]);
+                }
                 if ($this->page->ExtraMeta) {
                     $this->metatags[] = [
                         'html' => $this->page->ExtraMeta,
