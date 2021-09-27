@@ -373,10 +373,12 @@ class MetatagsApi implements Flushable
             $this->addToShareImageCache('ShareOnFacebookImage');
             if (! $this->shareImageCache[$this->page->ID]) {
                 $methods = Config::inst()->get(self::class, 'og_image_method_map');
-                foreach($methods as $method) {
-                    $this->addToShareImageCache($method);
-                    if($this->shareImageCache[$this->page->ID]) {
-                        break;
+                if(is_array($methods) && count($methods)) {
+                    foreach($methods as $method) {
+                        $this->addToShareImageCache($method);
+                        if($this->shareImageCache[$this->page->ID]) {
+                            break;
+                        }
                     }
                 }
             }
