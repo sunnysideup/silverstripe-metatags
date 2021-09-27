@@ -46,9 +46,9 @@ class MetaTagsSiteConfigDE extends DataExtension
 
     public function populateDefaults()
     {
-        $this->owner->MetaDataCopyright = 'site owner';
-        $this->owner->MetaDataDesign = 'site owner';
-        $this->owner->MetaDataCoding = 'site owner';
+        $this->owner->MetaDataCopyright = '';
+        $this->owner->MetaDataDesign = '';
+        $this->owner->MetaDataCoding = '';
     }
 
     public function updateCMSFields(FieldList $fields)
@@ -120,7 +120,7 @@ class MetaTagsSiteConfigDE extends DataExtension
             $tabs[] = Tab::create(
                 'Social',
                 TextField::create('TwitterHandle', 'Twitter Handle')
-                    ->setDescription('E.g. your twitter handle (e.g. BarackObama) - without the @ sign!')
+                    ->setDescription('(e.g. BarackObama - how you address people on Twitter but then without the @ sign.')
             );
         }
         if (count($tabs) > 0) {

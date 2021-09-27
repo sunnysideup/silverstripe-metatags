@@ -80,8 +80,10 @@ class MetatagsApi implements Flushable
 
     /**
      * map Page types and methods for use in the
-     * facebook open graph.
-     * e.g.MyProductPage: ProductImage.
+     * facebook open graph. e.g.
+     * Logo
+     * Image
+     *
      *
      * @var array
      */
@@ -370,10 +372,12 @@ class MetatagsApi implements Flushable
         if (null === $this->shareImageCache[$this->page->ID]) {
             $this->addToShareImageCache('ShareOnFacebookImage');
             if (! $this->shareImageCache[$this->page->ID]) {
-                $og_image_method_map = Config::inst()->get(self::class, 'og_image_method_map');
-                $method = $og_image_method_map[$this->page->ClassName] ?? 'ERROR';
-                if ($method) {
+                $methods = Config::inst()->get(self::class, 'og_image_method_map');
+                foreach($methods as $method) {
                     $this->addToShareImageCache($method);
+                    if($this->shareImageCache[$this->page->ID]) {
+                        break;
+                    }
                 }
             }
             if (! $this->shareImageCache[$this->page->ID]) {
@@ -395,17 +399,14 @@ class MetatagsApi implements Flushable
 
     protected function addToShareImageCache(string $methodName): bool
     {
-        $field = $methodName . 'ID';
-        if (isset($this->page->{$field})) {
-            if ($this->page->hasMethod($methodName)) {
-                $this->shareImageCache[$this->page->ID] = $this->page->{$methodName}();
-                if (
-                    $this->shareImageCache[$this->page->ID] &&
-                    $this->shareImageCache[$this->page->ID]->exists() &&
-                    $this->shareImageCache[$this->page->ID] instanceof Image
-                ) {
-                    return true;
-                }
+        if ($this->page->hasMethod($methodName)) {
+            $this->shareImageCache[$this->page->ID] = $this->page->{$methodName}();
+            if (
+                $this->shareImageCache[$this->page->ID] &&
+                $this->shareImageCache[$this->page->ID]->exists() &&
+                $this->shareImageCache[$this->page->ID] instanceof Image
+            ) {
+                return true;
             }
         }
         $this->shareImageCache[$this->page->ID] = false;
