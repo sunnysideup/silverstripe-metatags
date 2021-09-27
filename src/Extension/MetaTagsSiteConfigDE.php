@@ -142,7 +142,7 @@ class MetaTagsSiteConfigDE extends DataExtension
             Upload a 480px wide x 480px high, non-transparent PNG file.
             Ask your developer for help if unsure.
             Note for advanced users:
-                icons can also be loaded onto the server directly into the /themes/mytheme/icons/ folder
+                icons can also be loaded onto the server directly into the /themes/mytheme/dist/favicons/ folder
                 and as a favicon.ico in the root directory.'
         );
     }

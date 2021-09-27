@@ -308,7 +308,7 @@ class MetatagsApi implements Flushable
         }
         if (! empty($sizes)) {
             foreach ($sizes as $size) {
-                $fileName = 'icons/' . 'icon-' . $size . 'x' . $size . '.png';
+                $fileName = 'dist/favicons/' . 'icon-' . $size . 'x' . $size . '.png';
                 $file = ThemeResourceLoader::inst()->findThemedResource(
                     $fileName
                 );
@@ -327,7 +327,7 @@ class MetatagsApi implements Flushable
             }
         }
         if (! $hasBaseFolderFavicon) {
-            $faviconLocation = ThemeResourceLoader::inst()->findThemedResource('icons/favicon.ico');
+            $faviconLocation = ThemeResourceLoader::inst()->findThemedResource('dist/favicons/favicon.ico');
             if ($faviconLocation) {
                 //do nothing
             } elseif ($faviconImage) {

@@ -48,7 +48,7 @@ you can usually find some examples of config options (if any).
 	$ExtendedMetatags
 </head>
 
-4. add icons to /themes/mytheme/icons/, consider using:
+4. add icons to /themes/mytheme/dist/favicons/, consider using:
    - http://www.favicon-generator.org/.
    - http://realfavicongenerator.net/
    - http://iconifier.net/
@@ -56,5 +56,3 @@ you can usually find some examples of config options (if any).
 
 Note, you can add two variables:
 ExtendedMetatags($includeTitle = true, $addExtraSearchEngineData = true)
-
-
