@@ -76,7 +76,7 @@ class MetatagsApi implements Flushable
      * @var string
      *             viewport setting
      */
-    private static $viewport_setting = 'width=device-width,initial-scale=1';
+    private static $viewport_setting = 'width=device-width,minimum-scale=1.0,maximum-scale=10.0,initial-scale=1.0';
 
     /**
      * map Page types and methods for use in the
@@ -125,7 +125,7 @@ class MetatagsApi implements Flushable
                     }
                 }
                 //these go first - for some reason ...
-                $this->addToMetatags('ie', 'meta', ['http-equiv' => 'X-UA-Compatible', 'name' => 'IE=edge']);
+                $this->addToMetatags('ie', 'meta', ['http-equiv' => 'X-UA-Compatible', 'content' => 'IE=edge']);
                 $this->addToMetatags('viewport', 'meta', ['name' => 'viewport', 'content' => Config::inst()->get(self::class, 'viewport_setting')]);
 
                 if ($this->page->MetaDescription) {
