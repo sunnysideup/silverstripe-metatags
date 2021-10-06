@@ -82,8 +82,7 @@ class MetatagsApi implements Flushable
      * map Page types and methods for use in the
      * facebook open graph. e.g.
      * Logo
-     * Image
-     *
+     * Image.
      *
      * @var array
      */
@@ -158,16 +157,16 @@ class MetatagsApi implements Flushable
                 $this->addToMetatags('robots', 'meta', ['name' => 'robots', 'content' => $botsValue]);
                 $this->addToMetatags('googlebot', 'meta', ['name' => 'googlebot', 'content' => $botsValue]);
                 $this->addToMetatags('created', 'meta', ['name' => 'created', 'content' => date('Ymd', strtotime($this->page->LastEdited))]);
-                if($this->siteConfig->MetaDataCopyright) {
+                if ($this->siteConfig->MetaDataCopyright) {
                     $this->addToMetatags('rights', 'meta', ['name' => 'rights', 'content' => Convert::raw2att($this->siteConfig->MetaDataCopyright)]);
                 }
-                if($this->siteConfig->MetaDataDesign) {
+                if ($this->siteConfig->MetaDataDesign) {
                     $this->addToMetatags('designer', 'meta', ['name' => 'web_author', 'content' => $this->siteConfig->MetaDataDesign]);
                 }
-                if($this->siteConfig->MetaDataCoding) {
+                if ($this->siteConfig->MetaDataCoding) {
                     $this->addToMetatags('web_author', 'meta', ['name' => 'web_author', 'content' => $this->siteConfig->MetaDataCoding]);
                 }
-                if($this->siteConfig->MetaDataCountry) {
+                if ($this->siteConfig->MetaDataCountry) {
                     $this->addToMetatags('geo.placename”', 'meta', ['geo.placename”' => 'web_author', 'content' => $this->siteConfig->MetaDataCountry]);
                     $this->addToMetatags('geo.region', 'meta', ['name' => 'geo.region', 'content' => $this->siteConfig->MetaDataCountry]);
                 }
@@ -373,10 +372,10 @@ class MetatagsApi implements Flushable
             $this->addToShareImageCache('ShareOnFacebookImage');
             if (! $this->shareImageCache[$this->page->ID]) {
                 $methods = Config::inst()->get(self::class, 'og_image_method_map');
-                if(is_array($methods) && count($methods)) {
-                    foreach($methods as $method) {
+                if (is_array($methods) && count($methods)) {
+                    foreach ($methods as $method) {
                         $this->addToShareImageCache($method);
-                        if($this->shareImageCache[$this->page->ID]) {
+                        if ($this->shareImageCache[$this->page->ID]) {
                             break;
                         }
                     }

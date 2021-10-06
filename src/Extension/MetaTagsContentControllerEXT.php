@@ -18,7 +18,6 @@ class MetaTagsContentControllerEXT extends Extension
      * yet not invalid in html5.
      *
      * @param bool $includeTitle             - include the title tag
-     * @param bool $addExtraSearchEngineData - add extra tags describing the page
      *
      * @return string (HTML)
      */
