@@ -100,10 +100,10 @@ class MetaTagsSTE extends SiteTreeExtension
                 ''
             )
         );
-        $fields->addFieldToTab('Root.Facebook', $fieldTitle = ReadonlyField::create('fb_title', _t('MetaTagsSTE.FB_TITLE', 'Title'), $this->owner->Title));
+        $fields->addFieldToTab('Root.Facebook', $fieldTitle = ReadonlyField::create('fb_title', _t('MetaTagsSTE.FB_TITLE', 'Title'), $this->getOwner()->Title));
         $fields->addFieldToTab('Root.Facebook', $fieldType = ReadonlyField::create('fb_type', _t('MetaTagsSTE.FB_TITLE', 'Type'), 'website'));
         $fields->addFieldToTab('Root.Facebook', $fieldSiteName = ReadonlyField::create('fb_type', _t('MetaTagsSTE.FB_SITE_NAME', 'Site Name'), SiteConfig::current_site_config()->Title));
-        $fields->addFieldToTab('Root.Facebook', $fieldDescription = ReadonlyField::create('fb_description', _t('MetaTagsSTE.FB_DESCRIPTION', 'Description (from MetaDescription)'), $this->owner->MetaDescription));
+        $fields->addFieldToTab('Root.Facebook', $fieldDescription = ReadonlyField::create('fb_description', _t('MetaTagsSTE.FB_DESCRIPTION', 'Description (from MetaDescription)'), $this->getOwner()->MetaDescription));
         $fields->addFieldToTab(
             'Root.Facebook',
             $shareOnFacebookImageField = UploadField::create(
@@ -118,15 +118,15 @@ class MetaTagsSTE extends SiteTreeExtension
             'Root.Facebook',
             $shareOnFacebookImageField = LiteralField::create(
                 'fb_try_it_out',
-                '<h3><a href="https://www.facebook.com/sharer/sharer.php?u=' . urlencode($this->owner->AbsoluteLink()) . '">' . _t('MetaTagsSTE.FB_TRY_IT_OUT', 'Share on Facebook Now') . '</a></h3>',
-                $this->owner->ShareOnFacebookImage()
+                '<h3><a href="https://www.facebook.com/sharer/sharer.php?u=' . urlencode($this->getOwner()->AbsoluteLink()) . '">' . _t('MetaTagsSTE.FB_TRY_IT_OUT', 'Share on Facebook Now') . '</a></h3>',
+                $this->getOwner()->ShareOnFacebookImage()
             )
         );
         $fields->addFieldToTab(
             'Root.Facebook',
             $debugFacebookSharing = LiteralField::create(
                 'fb_debug_link',
-                '<h3><a href="https://developers.facebook.com/tools/debug/sharing/?q=' . urlencode($this->owner->AbsoluteLink()) . '" target="_blank">' . _t('MetaTagsSTE.FB_DEBUGGER', 'Facebook Sharing Debugger') . '</a></h3>'
+                '<h3><a href="https://developers.facebook.com/tools/debug/sharing/?q=' . urlencode($this->getOwner()->AbsoluteLink()) . '" target="_blank">' . _t('MetaTagsSTE.FB_DEBUGGER', 'Facebook Sharing Debugger') . '</a></h3>'
             )
         );
         //right titles
@@ -220,7 +220,7 @@ class MetaTagsSTE extends SiteTreeExtension
             }
             $fields->removeByName('ExtraMeta');
         }
-        if ($this->owner->URLSegment === Config::inst()->get(RootURLController::class, 'default_homepage_link')) {
+        if ($this->getOwner()->URLSegment === Config::inst()->get(RootURLController::class, 'default_homepage_link')) {
             $fields->dataFieldByName('URLSegment')
                 ->setDescription("
                     Careful! changing the URL from 'home'
@@ -241,10 +241,10 @@ class MetaTagsSTE extends SiteTreeExtension
             // we only update this from the CMS to limit slow-downs in programatic updates
             if (isset($fields['MenuTitle'])) {
                 // Empty MenuTitle
-                $this->owner->MenuTitle = '';
+                $this->getOwner()->MenuTitle = '';
                 // Check for Content, to prevent errors
-                if ($this->owner->Title) {
-                    $this->owner->MenuTitle = $this->cleanInput($this->owner->Title);
+                if ($this->getOwner()->Title) {
+                    $this->getOwner()->MenuTitle = $this->cleanInput($this->getOwner()->Title);
                 }
             }
             if (isset($fields['MetaDescription'])) {
@@ -252,16 +252,16 @@ class MetaTagsSTE extends SiteTreeExtension
                 // Empty MetaDescription
                 // Check for Content, to prevent errors
                 if ($length > 0) {
-                    if ($this->owner->Content) {
+                    if ($this->getOwner()->Content) {
                         //added a few hacks here
-                        $contentField = DBField::create_field('Text', strip_tags($this->owner->Content), 'MetaDescription');
+                        $contentField = DBField::create_field('Text', strip_tags($this->getOwner()->Content), 'MetaDescription');
                         $summary = $contentField->Summary($length);
                         $summary = str_replace('<br>', ' ', $summary);
                         $summary = str_replace('<br />', ' ', $summary);
                         $summary = str_replace('.', '. ', $summary);
-                        $this->owner->MetaDescription = $summary;
+                        $this->getOwner()->MetaDescription = $summary;
                     } else {
-                        $this->owner->MetaDescription = '';
+                        $this->getOwner()->MetaDescription = '';
                     }
                 }
             }
@@ -270,7 +270,7 @@ class MetaTagsSTE extends SiteTreeExtension
 
     public function populateDefaults()
     {
-        $this->owner->AutomateMetatags = 'Inherit';
+        $this->getOwner()->AutomateMetatags = 'Inherit';
     }
 
     /**
@@ -329,18 +329,18 @@ class MetaTagsSTE extends SiteTreeExtension
     private function updatedFieldsArray()
     {
         $fields = [];
-        if ('Custom' === $this->owner->AutomateMetatags) {
+        if ('Custom' === $this->getOwner()->AutomateMetatags) {
             return $fields;
         }
         $config = SiteConfig::current_site_config();
         if (Config::inst()->get(MetaTagsContentControllerEXT::class, 'no_automated_menu_title')) {
             // do nothing
-        } elseif ($config->UpdateMenuTitle || 'Automated' === $this->owner->AutomateMetatags) {
+        } elseif ($config->UpdateMenuTitle || 'Automated' === $this->getOwner()->AutomateMetatags) {
             $fields['MenuTitle'] = _t('SiteTree.MENUTITLE', 'Navigation Label');
         }
         if (Config::inst()->get(MetaTagsContentControllerEXT::class, 'no_automated_meta_description')) {
             //do nothing
-        } elseif ($config->UpdateMetaDescription || 'Automated' === $this->owner->AutomateMetatags) {
+        } elseif ($config->UpdateMetaDescription || 'Automated' === $this->getOwner()->AutomateMetatags) {
             $fields['MetaDescription'] = _t('SiteTree.METADESCRIPTION', 'Meta Description');
         }
 

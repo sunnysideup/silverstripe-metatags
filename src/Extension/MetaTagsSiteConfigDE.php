@@ -46,9 +46,9 @@ class MetaTagsSiteConfigDE extends DataExtension
 
     public function populateDefaults()
     {
-        $this->owner->MetaDataCopyright = '';
-        $this->owner->MetaDataDesign = '';
-        $this->owner->MetaDataCoding = '';
+        $this->getOwner()->MetaDataCopyright = '';
+        $this->getOwner()->MetaDataDesign = '';
+        $this->getOwner()->MetaDataCoding = '';
     }
 
     public function updateCMSFields(FieldList $fields)
@@ -153,12 +153,12 @@ class MetaTagsSiteConfigDE extends DataExtension
     public function onBeforeWrite()
     {
         if (Config::inst()->get(MetaTagsContentControllerEXT::class, 'no_additional_meta_settings')) {
-            $this->owner->MetaDataCountry = '';
-            $this->owner->MetaDataCopyright = '';
-            $this->owner->MetaDataDesign = '';
-            $this->owner->MetaDataCoding = '';
-            $this->owner->ExtraMeta = '';
+            $this->getOwner()->MetaDataCountry = '';
+            $this->getOwner()->MetaDataCopyright = '';
+            $this->getOwner()->MetaDataDesign = '';
+            $this->getOwner()->MetaDataCoding = '';
+            $this->getOwner()->ExtraMeta = '';
         }
-        $this->owner->TwitterHandle = str_replace('@', '', $this->owner->TwitterHandle);
+        $this->getOwner()->TwitterHandle = str_replace('@', '', $this->getOwner()->TwitterHandle);
     }
 }
