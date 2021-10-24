@@ -17,7 +17,7 @@ class MetaTagsContentControllerEXT extends Extension
      * We leave the / closing tags here, but they are not needed
      * yet not invalid in html5.
      *
-     * @param bool $includeTitle             - include the title tag
+     * @param bool $includeTitle - include the title tag
      *
      * @return string (HTML)
      */

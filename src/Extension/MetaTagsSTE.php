@@ -356,7 +356,6 @@ class MetaTagsSTE extends SiteTreeExtension
         if ($numberOfWords) {
             $textFieldObject = DBField::create_field('Text', $newString);
             $newString = strip_tags($textFieldObject->LimitWordCountXML($numberOfWords));
-
         }
         $newString = html_entity_decode($newString, ENT_QUOTES);
 
