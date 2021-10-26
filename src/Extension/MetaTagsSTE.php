@@ -280,14 +280,16 @@ class MetaTagsSTE extends SiteTreeExtension
     {
         $folder = Config::inst()->get(SSViewer::class, 'theme');
         if ($folder) {
-            if ($file = Config::inst()->get(MetaTagsSTE::class, 'default_editor_file')) {
+            $file = Config::inst()->get(MetaTagsSTE::class, 'default_editor_file');
+            if ($file) {
                 $baseFile = Director::baseFolder() . $file;
                 $destinationFile = Director::baseFolder() . '/themes/' . $folder . '/css/editor.css';
                 if (! file_exists($destinationFile) && file_exists($baseFile)) {
                     copy($baseFile, $destinationFile);
                 }
             }
-            if ($file = Config::inst()->get(MetaTagsSTE::class, 'default_reset_file')) {
+            $file = Config::inst()->get(MetaTagsSTE::class, 'default_reset_file');
+            if ($file) {
                 $baseFile = Director::baseFolder() . $file;
                 $destinationFile = Director::baseFolder() . '/themes/' . $folder . '/css/reset.css';
                 if (! file_exists($destinationFile) && file_exists($baseFile)) {
