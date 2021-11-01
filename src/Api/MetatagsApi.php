@@ -196,6 +196,10 @@ class MetatagsApi implements Flushable
         self::get_meta_tag_cache()->clear();
     }
 
+    /**
+     * if metatagsCacheKey returns false then there is not cacheKey.
+     * @return string
+     */
     protected function getCacheKey(): string
     {
         $add = null;
