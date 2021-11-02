@@ -198,7 +198,6 @@ class MetatagsApi implements Flushable
 
     /**
      * if metatagsCacheKey returns false then there is not cacheKey.
-     * @return string
      */
     protected function getCacheKey(): string
     {
