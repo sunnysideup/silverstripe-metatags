@@ -207,7 +207,7 @@ class MetaTagsSTE extends SiteTreeExtension
             );
 
             $automatedFields = $this->updatedFieldsArray();
-            if (count($automatedFields)) {
+            if ([] !== $automatedFields) {
                 foreach (array_keys($automatedFields) as $fieldName) {
                     $oldField = $fields->dataFieldByName($fieldName);
                     if ($oldField) {
@@ -218,8 +218,10 @@ class MetaTagsSTE extends SiteTreeExtension
                     }
                 }
             }
+
             $fields->removeByName('ExtraMeta');
         }
+
         if ($this->getOwner()->URLSegment === Config::inst()->get(RootURLController::class, 'default_homepage_link')) {
             $fields->dataFieldByName('URLSegment')
                 ->setDescription("
@@ -236,7 +238,7 @@ class MetaTagsSTE extends SiteTreeExtension
     public function onBeforeWrite()
     {
         $fields = $this->updatedFieldsArray();
-        if (count($fields)) {
+        if ([] !== $fields) {
             // if UpdateMeta checkbox is checked, update metadata based on content and title
             // we only update this from the CMS to limit slow-downs in programatic updates
             if (isset($fields['MenuTitle'])) {
@@ -247,6 +249,7 @@ class MetaTagsSTE extends SiteTreeExtension
                     $this->getOwner()->MenuTitle = $this->cleanInput($this->getOwner()->Title);
                 }
             }
+
             if (isset($fields['MetaDescription'])) {
                 $length = Config::inst()->get(MetaTagsContentControllerEXT::class, 'meta_desc_length');
                 // Empty MetaDescription
@@ -288,6 +291,7 @@ class MetaTagsSTE extends SiteTreeExtension
                     copy($baseFile, $destinationFile);
                 }
             }
+
             $file = Config::inst()->get(MetaTagsSTE::class, 'default_reset_file');
             if ($file) {
                 $baseFile = Director::baseFolder() . $file;
@@ -297,6 +301,7 @@ class MetaTagsSTE extends SiteTreeExtension
                 }
             }
         }
+
         DB::query('
             UPDATE "SiteTree" SET "AutomateMetatags" = \'Inherit\'
             WHERE "AutomateMetatags" NOT IN (\'' . implode('', array_keys($this->AutomateMetatagsOptions())) . '\')
@@ -334,12 +339,14 @@ class MetaTagsSTE extends SiteTreeExtension
         if ('Custom' === $this->getOwner()->AutomateMetatags) {
             return $fields;
         }
+
         $config = SiteConfig::current_site_config();
         if (Config::inst()->get(MetaTagsContentControllerEXT::class, 'no_automated_menu_title')) {
             // do nothing
         } elseif ($config->UpdateMenuTitle || 'Automated' === $this->getOwner()->AutomateMetatags) {
             $fields['MenuTitle'] = _t('SiteTree.MENUTITLE', 'Navigation Label');
         }
+
         if (Config::inst()->get(MetaTagsContentControllerEXT::class, 'no_automated_meta_description')) {
             //do nothing
         } elseif ($config->UpdateMetaDescription || 'Automated' === $this->getOwner()->AutomateMetatags) {
@@ -359,6 +366,7 @@ class MetaTagsSTE extends SiteTreeExtension
             $textFieldObject = DBField::create_field('Text', $newString);
             $newString = strip_tags($textFieldObject->LimitWordCountXML($numberOfWords));
         }
+
         $newString = html_entity_decode($newString, ENT_QUOTES);
 
         return html_entity_decode($newString, ENT_QUOTES);
@@ -384,6 +392,7 @@ class MetaTagsSTE extends SiteTreeExtension
         } else {
             $v[] = _t('MetaTagsSTE.UPDATE_MENU_TITLE_OFF', 'The Navigation Labels (Menu Titles) can be customised for individual pages');
         }
+
         if (Config::inst()->get(MetaTagsContentControllerEXT::class, 'no_automated_meta_description')) {
             //do nothing
         } elseif ($siteConfig->UpdateMetaDescription) {

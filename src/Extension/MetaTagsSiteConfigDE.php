@@ -77,6 +77,7 @@ class MetaTagsSiteConfigDE extends DataExtension
                     )
                 );
         }
+
         $tabs[] = Tab::create(
             'Meta Title',
             LiteralField::create('MetaTitleExplanation', '<h3>&ldquo;Meta Titles&rdquo;: Bookmark and Browser Titles</h3><p>These are found at the top of your browser bar and these titles are also used when you bookmark a page.</p>'),
@@ -105,6 +106,7 @@ class MetaTagsSiteConfigDE extends DataExtension
                     CheckboxField::create('UpdateMetaDescription', 'Automatically')->setDescription('Automatically fill every meta description on every Page (using the first ' . Config::inst()->get(MetaTagsContentControllerEXT::class, 'meta_desc_length') . ' words of the Page Content field).')
                 );
         }
+
         if (Config::inst()->get(MetaTagsContentControllerEXT::class, 'no_additional_meta_settings')) {
             //do nothing ...
         } else {
@@ -123,7 +125,8 @@ class MetaTagsSiteConfigDE extends DataExtension
                     ->setDescription('(e.g. BarackObama - how you address people on Twitter but then without the @ sign.')
             );
         }
-        if (0 !== count($tabs)) {
+
+        if ([] !== $tabs) {
             $fields->addFieldToTab(
                 'Root.SearchEngines',
                 $tabSet = TabSet::create(
@@ -134,6 +137,7 @@ class MetaTagsSiteConfigDE extends DataExtension
                 $tabSet->push($tab);
             }
         }
+
         $fields->addFieldToTab('Root.Icons', $uploadField = UploadField::create('Favicon', 'Icon'));
 
         $uploadField->setAllowedExtensions(['png']);
@@ -159,6 +163,7 @@ class MetaTagsSiteConfigDE extends DataExtension
             $this->getOwner()->MetaDataCoding = '';
             $this->getOwner()->ExtraMeta = '';
         }
+
         $this->getOwner()->TwitterHandle = str_replace('@', '', $this->getOwner()->TwitterHandle);
     }
 }

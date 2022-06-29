@@ -25,6 +25,7 @@ class MetatagsApi implements Flushable
     use Injectable;
     use Configurable;
     public $this;
+
     public $baseURL;
 
     protected $page;
@@ -110,6 +111,7 @@ class MetatagsApi implements Flushable
             if ($cacheKey) {
                 $this->metatags = unserialize($cache->get($cacheKey));
             }
+
             if (empty($this->metatags)) {
                 //base tag
                 $this->addToMetatags('baseTag', 'base', ['href' => $this->baseUrl]);
@@ -128,6 +130,7 @@ class MetatagsApi implements Flushable
                         $this->addToMetatags('canonical', 'link', ['rel' => 'canonical', 'href' => $canonicalLink]);
                     }
                 }
+
                 //these go first - for some reason ...
                 $this->addToMetatags('ie', 'meta', ['http-equiv' => 'X-UA-Compatible', 'content' => 'IE=edge']);
                 $this->addToMetatags('viewport', 'meta', ['name' => 'viewport', 'content' => Config::inst()->get(self::class, 'viewport_setting')]);
@@ -151,12 +154,15 @@ class MetatagsApi implements Flushable
                     $hasBaseFolderFavicon = true;
                     //ie only...
                 }
+
                 if (! $this->page->ExtraMeta && $this->siteConfig->ExtraMeta) {
                     $this->page->ExtraMeta = $this->siteConfig->ExtraMeta;
                 }
+
                 if (! $this->siteConfig->MetaDataCopyright) {
                     $this->siteConfig->MetaDataCopyright = $this->siteConfig->Title;
                 }
+
                 $botsValue = $this->page->ExcludeFromSearchEngines ? $noopd . 'none, noindex, nofollow' : $noopd . 'all, index, follow';
                 $this->addToMetatags('robots', 'meta', ['name' => 'robots', 'content' => $botsValue]);
                 $this->addToMetatags('googlebot', 'meta', ['name' => 'googlebot', 'content' => $botsValue]);
@@ -164,21 +170,26 @@ class MetatagsApi implements Flushable
                 if ($this->siteConfig->MetaDataCopyright) {
                     $this->addToMetatags('rights', 'meta', ['name' => 'rights', 'content' => Convert::raw2att($this->siteConfig->MetaDataCopyright)]);
                 }
+
                 if ($this->siteConfig->MetaDataDesign) {
                     $this->addToMetatags('designer', 'meta', ['name' => 'web_author', 'content' => $this->siteConfig->MetaDataDesign]);
                 }
+
                 if ($this->siteConfig->MetaDataCoding) {
                     $this->addToMetatags('web_author', 'meta', ['name' => 'web_author', 'content' => $this->siteConfig->MetaDataCoding]);
                 }
+
                 if ($this->siteConfig->MetaDataCountry) {
                     $this->addToMetatags('geo.placename”', 'meta', ['geo.placename”' => 'web_author', 'content' => $this->siteConfig->MetaDataCountry]);
                     $this->addToMetatags('geo.region', 'meta', ['name' => 'geo.region', 'content' => $this->siteConfig->MetaDataCountry]);
                 }
+
                 if ($this->page->ExtraMeta) {
                     $this->metatags[] = [
                         'html' => $this->page->ExtraMeta,
                     ];
                 }
+
                 $this->addOGTags();
                 $this->addTwitterTags();
                 $this->addIconTags($hasBaseFolderFavicon);
@@ -206,21 +217,23 @@ class MetatagsApi implements Flushable
         if ($this->page->hasMethod('metatagsCacheKey')) {
             $add = $this->page->metatagsCacheKey();
         }
+
         if (! isset($_SERVER['REQUEST_URI'])) {
             $_SERVER['REQUEST_URI'] = '';
         }
+
         if (false !== $add) {
             $cacheKey =
                 'ExtendedMetaTags_'
-                . abs($this->page->ID) . '_'
-                . strtotime($this->page->LastEdited) . '_'
-                . strtotime($this->siteConfig->LastEdited) . '_'
-                . $this->baseUrl . '_'
+                . abs($this->page->ID) . \_::class
+                . strtotime($this->page->LastEdited) . \_::class
+                . strtotime($this->siteConfig->LastEdited) . \_::class
+                . $this->baseUrl . \_::class
                 . Versioned::get_stage()
                 . $_SERVER['REQUEST_URI'];
             $cacheKey = preg_replace(
                 '#[^a-z0-9]#i',
-                '_',
+                \_::class,
                 $cacheKey
             );
             if ($add) {
@@ -254,6 +267,7 @@ class MetatagsApi implements Flushable
         if ($shareImage && $shareImage->exists()) {
             $array['image'] = Convert::raw2att($shareImage->getAbsoluteURL());
         }
+
         foreach ($array as $key => $value) {
             if ($value) {
                 $this->addToMetatags('og' . $key, 'meta', ['property' => 'og:' . $key, 'content' => $value]);
@@ -274,6 +288,7 @@ class MetatagsApi implements Flushable
         if (! $handle) {
             $handle = Config::inst()->get(self::class, 'twitter_handle');
         }
+
         if ($handle) {
             $array = [
                 'title' => Convert::raw2att($this->MetaTagsMetaTitle()),
@@ -288,6 +303,7 @@ class MetatagsApi implements Flushable
             } else {
                 $array['card'] = Convert::raw2att('summary');
             }
+
             foreach ($array as $key => $value) {
                 if ($value) {
                     $this->addToMetatags('twitter' . $key, 'meta', ['name' => 'twitter:' . $key, 'content' => $value]);
@@ -306,12 +322,14 @@ class MetatagsApi implements Flushable
                 $faviconImage = false;
             }
         }
+
         $sizes = (array) Config::inst()->get(self::class, 'favicon_sizes');
         if ($hasBaseFolderFavicon) {
             if (is_array($sizes)) {
                 $sizes = array_diff($sizes, [16]);
             }
         }
+
         if (! empty($sizes)) {
             foreach ($sizes as $size) {
                 $href = $this->iconToUrl('icon-' . $size . 'x' . $size . '.png', $faviconImage, $size);
@@ -323,6 +341,7 @@ class MetatagsApi implements Flushable
                 }
             }
         }
+
         if (! $hasBaseFolderFavicon) {
             $href = $this->iconToUrl('favicon.ico', $faviconImage, 16);
             if ($href) {
@@ -343,6 +362,7 @@ class MetatagsApi implements Flushable
                     $this->metatagMetaTitle = (string) $this->page->MetaTitle;
                 }
             }
+
             if (! $this->metatagMetaTitle) {
                 $this->metatagMetaTitle = (string) $this->page->Title;
                 if (! $this->metatagMetaTitle) {
@@ -359,6 +379,7 @@ class MetatagsApi implements Flushable
         if (! isset($this->shareImageCache[$this->page->ID])) {
             $this->shareImageCache[$this->page->ID] = null;
         }
+
         if (null === $this->shareImageCache[$this->page->ID]) {
             $this->addToShareImageCache('ShareOnFacebookImage');
             if (! $this->shareImageCache[$this->page->ID]) {
@@ -372,6 +393,7 @@ class MetatagsApi implements Flushable
                     }
                 }
             }
+
             if (! $this->shareImageCache[$this->page->ID]) {
                 $hasOnes = $this->page->hasOne();
                 foreach ($hasOnes as $hasOneName => $hasOneType) {
@@ -385,6 +407,7 @@ class MetatagsApi implements Flushable
                 }
             }
         }
+
         //make sure to return NULL or Image
         return $this->shareImageCache[$this->page->ID] ?: null;
     }
@@ -401,6 +424,7 @@ class MetatagsApi implements Flushable
                 return true;
             }
         }
+
         $this->shareImageCache[$this->page->ID] = false;
 
         return false;
