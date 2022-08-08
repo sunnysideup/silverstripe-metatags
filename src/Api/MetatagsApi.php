@@ -180,7 +180,6 @@ class MetatagsApi implements Flushable
                 }
 
                 if ($this->siteConfig->MetaDataCountry) {
-                    $this->addToMetatags('geo.placename”', 'meta', ['geo.placename”' => 'web_author', 'content' => $this->siteConfig->MetaDataCountry]);
                     $this->addToMetatags('geo.region', 'meta', ['name' => 'geo.region', 'content' => $this->siteConfig->MetaDataCountry]);
                 }
 
@@ -335,9 +334,9 @@ class MetatagsApi implements Flushable
                 $href = $this->iconToUrl('icon-' . $size . 'x' . $size . '.png', $faviconImage, $size);
                 if ($href) {
                     $sizes = $size . 'x' . $size;
-                    $this->addToMetatags('icon' . $size, 'link', ['name' => 'icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
-                    $this->addToMetatags('iconApple' . $size, 'link', ['name' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
-                    $this->addToMetatags('iconApple' . $size, 'link', ['name' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes]);
+                    $this->addToMetatags('icon' . $size, 'link', ['rel' => 'icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
+                    $this->addToMetatags('iconApple' . $size, 'link', ['rel' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
+                    $this->addToMetatags('iconApple' . $size, 'link', ['rel' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes]);
                 }
             }
         }
