@@ -224,15 +224,15 @@ class MetatagsApi implements Flushable
         if (false !== $add) {
             $cacheKey =
                 'ExtendedMetaTags_'
-                . abs($this->page->ID) . \_::class
-                . strtotime($this->page->LastEdited) . \_::class
-                . strtotime($this->siteConfig->LastEdited) . \_::class
-                . $this->baseUrl . \_::class
+                . abs($this->page->ID) . '_'
+                . strtotime($this->page->LastEdited) . '_'
+                . strtotime($this->siteConfig->LastEdited) . '_'
+                . $this->baseUrl . '_'
                 . Versioned::get_stage()
                 . $_SERVER['REQUEST_URI'];
             $cacheKey = preg_replace(
                 '#[^a-z0-9]#i',
-                \_::class,
+                '_',
                 $cacheKey
             );
             if ($add) {
