@@ -21,3 +21,6 @@ SilverStripe\Core\Injector\Injector:
     factory: SilverStripe\Core\Cache\CacheFactory
     constructor:
       namespace: "metatags"
+
+SilverStripe\i18n\i18n:
+  default_locale: en-NZ
