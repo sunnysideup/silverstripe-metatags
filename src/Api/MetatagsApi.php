@@ -110,6 +110,7 @@ class MetatagsApi implements Flushable
             //useful later on
 
             if ($cacheKey) {
+                /** @property array $metatags */
                 $this->metatags = unserialize($cache->get($cacheKey));
             }
 
@@ -141,7 +142,7 @@ class MetatagsApi implements Flushable
 
                     $noopd = '';
                 } else {
-                    unset($this->metatags['description']);
+                    $this->metatags['description'] = null;
                     $noopd = 'NOODP, ';
                 }
 
@@ -199,7 +200,7 @@ class MetatagsApi implements Flushable
             }
         }
 
-        return $this->metatags;
+        return (array) array_filter($this->metatags);
     }
 
     public static function flush()
