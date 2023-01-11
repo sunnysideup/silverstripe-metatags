@@ -126,7 +126,7 @@ class MetaTagsSTE extends SiteTreeExtension
             'Root.Facebook',
             $debugFacebookSharing = LiteralField::create(
                 'fb_debug_link',
-                '<h3><a href="https://developers.facebook.com/tools/debug/sharing/?q=' . urlencode($this->getOwner()->AbsoluteLink()) . '" target="_blank">' . _t('MetaTagsSTE.FB_DEBUGGER', 'Facebook Sharing Debugger') . '</a></h3>'
+                '<h3><a href="https://developers.facebook.com/tools/debug/sharing/?q=' . urlencode($this->getOwner()->AbsoluteLink()) . '" target="_blank" rel="noreferrer noopener">' . _t('MetaTagsSTE.FB_DEBUGGER', 'Facebook Sharing Debugger') . '</a></h3>'
             )
         );
         //right titles
