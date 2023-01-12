@@ -78,7 +78,7 @@ class MetatagsApi implements Flushable
     /**
      * @var string
      *             viewport setting
-     * consider: shrink-to-fit=no
+     *             consider: shrink-to-fit=no
      */
     private static $viewport_setting = 'width=device-width,minimum-scale=1.0,maximum-scale=10.0,initial-scale=1.0';
 
@@ -110,7 +110,7 @@ class MetatagsApi implements Flushable
             //useful later on
 
             if ($cacheKey) {
-                /** @property array $metatags */
+                // @property array $metatags
                 $this->metatags = unserialize($cache->get($cacheKey));
             }
 
