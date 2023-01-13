@@ -110,10 +110,10 @@ class MetatagsApi implements Flushable
             //useful later on
 
             if ($cacheKey) {
-                if($cache->has($cacheKey)) {
+                if ($cache->has($cacheKey)) {
                     // @property array $metatags
                     $this->metatags = unserialize((string) $cache->get($cacheKey));
-                    if(! is_array($this->metatags)) {
+                    if (! is_array($this->metatags)) {
                         $this->metatags = [];
                     }
                 }
