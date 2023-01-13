@@ -164,6 +164,6 @@ class MetaTagsSiteConfigDE extends DataExtension
             $this->getOwner()->ExtraMeta = '';
         }
 
-        $this->getOwner()->TwitterHandle = str_replace('@', '', $this->getOwner()->TwitterHandle);
+        $this->getOwner()->TwitterHandle = str_replace('@', '', (string) $this->getOwner()->TwitterHandle);
     }
 }

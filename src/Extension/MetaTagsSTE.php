@@ -358,7 +358,7 @@ class MetaTagsSTE extends SiteTreeExtension
 
     private function cleanInput($string, $numberOfWords = 0)
     {
-        $newString = str_replace('&nbsp;', '', $string);
+        $newString = str_replace('&nbsp;', '', (string) $string);
         $newString = str_replace('&amp;', ' and ', $newString);
         $newString = str_replace('&ndash;', ' - ', $newString);
         $newString = strip_tags(str_replace('<', ' <', $newString));
