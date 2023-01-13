@@ -173,7 +173,7 @@ class MetatagsApi implements Flushable
                 $botsValue = $this->page->ExcludeFromSearchEngines ? $noopd . 'none, noindex, nofollow' : $noopd . 'all, index, follow';
                 $this->addToMetatags('robots', 'meta', ['name' => 'robots', 'content' => $botsValue]);
                 $this->addToMetatags('googlebot', 'meta', ['name' => 'googlebot', 'content' => $botsValue]);
-                $this->addToMetatags('created', 'meta', ['name' => 'created', 'content' => date('Ymd', strtotime($this->page->LastEdited))]);
+                $this->addToMetatags('created', 'meta', ['name' => 'created', 'content' => date('Ymd', strtotime((string) $this->page->LastEdited))]);
                 if ($this->siteConfig->MetaDataCopyright) {
                     $this->addToMetatags('rights', 'meta', ['name' => 'rights', 'content' => Convert::raw2att($this->siteConfig->MetaDataCopyright)]);
                 }
@@ -232,8 +232,8 @@ class MetatagsApi implements Flushable
             $cacheKey =
                 'ExtendedMetaTags_'
                 . abs($this->page->ID) . '_'
-                . strtotime($this->page->LastEdited) . '_'
-                . strtotime($this->siteConfig->LastEdited) . '_'
+                . strtotime((string) $this->page->LastEdited) . '_'
+                . strtotime((string) $this->siteConfig->LastEdited) . '_'
                 . $this->baseUrl . '_'
                 . Versioned::get_stage()
                 . $_SERVER['REQUEST_URI'];
