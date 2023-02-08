@@ -24,3 +24,7 @@ SilverStripe\Core\Injector\Injector:
 
 SilverStripe\i18n\i18n:
   default_locale: en-NZ
+
+SilverStripe\CMS\Model\SiteTree:
+  show_meta_generator_version: false
+  meta_generator: 'werawera + aroha'
