@@ -11,6 +11,8 @@ SilverStripe\SiteConfig\SiteConfig:
 SilverStripe\CMS\Model\SiteTree:
   extensions:
     - Sunnysideup\MetaTags\Extension\MetaTagsSTE
+  show_meta_generator_version: false
+  meta_generator: 'werawera + aroha'
 
 SilverStripe\CMS\Controllers\ContentController:
   extensions:
@@ -25,6 +27,3 @@ SilverStripe\Core\Injector\Injector:
 SilverStripe\i18n\i18n:
   default_locale: en-NZ
 
-SilverStripe\CMS\Model\SiteTree:
-  show_meta_generator_version: false
-  meta_generator: 'werawera + aroha'
