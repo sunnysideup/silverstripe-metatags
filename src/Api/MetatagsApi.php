@@ -14,6 +14,7 @@ use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
+use SilverStripe\ORM\DB;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\SSViewer;
@@ -362,17 +363,19 @@ class MetatagsApi implements Flushable
      */
     protected function MetaTagsMetaTitle(): string
     {
-        $this->metatagMetaTitle = '';
-        if (Config::inst()->get(MetaTagsContentControllerEXT::class, 'use_separate_metatitle')) {
-            if (!empty($this->page->MetaTitle)) {
-                $this->metatagMetaTitle = (string) $this->page->MetaTitle;
-            }
-        }
-
         if (!$this->metatagMetaTitle) {
-            $this->metatagMetaTitle = (string) $this->page->Title;
+            $this->metatagMetaTitle = '';
+            if (Config::inst()->get(MetaTagsContentControllerEXT::class, 'use_separate_metatitle')) {
+                if (!empty($this->page->MetaTitle)) {
+                    $this->metatagMetaTitle = (string) $this->page->MetaTitle;
+                }
+            }
+
             if (!$this->metatagMetaTitle) {
-                $this->metatagMetaTitle = (string) $this->page->MenuTitle;
+                $this->metatagMetaTitle = (string) $this->page->Title;
+                if (!$this->metatagMetaTitle) {
+                    $this->metatagMetaTitle = (string) $this->page->MenuTitle;
+                }
             }
         }
 
