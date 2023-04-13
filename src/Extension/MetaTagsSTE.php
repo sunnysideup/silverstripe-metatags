@@ -23,8 +23,14 @@ use SilverStripe\View\SSViewer;
 use Sunnysideup\MetaTags\Api\MetatagsApi;
 
 /**
- * @Author Nicolaas Francken
- * adding meta tag functionality to the SiteTree Model Classes.
+ * Class \Sunnysideup\MetaTags\Extension\MetaTagsSTE
+ *
+ * @property SiteTree|MetaTagsSTE $owner
+ * @property string $MetaTitle
+ * @property string $AutomateMetatags
+ * @property bool $ExcludeFromSearchEngines
+ * @property int $ShareOnFacebookImageID
+ * @method Image ShareOnFacebookImage()
  */
 class MetaTagsSTE extends SiteTreeExtension
 {
