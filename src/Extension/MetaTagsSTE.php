@@ -263,7 +263,7 @@ class MetaTagsSTE extends SiteTreeExtension
                 if ($length > 0) {
                     if ($this->getOwner()->Content) {
                         //added a few hacks here
-                        $contentField = DBField::create_field('Text', strip_tags( (string) $this->getOwner()->Content), 'MetaDescription');
+                        $contentField = DBField::create_field('Text', strip_tags((string) $this->getOwner()->Content), 'MetaDescription');
                         $summary = $contentField->Summary($length);
                         $summary = str_replace('<br>', ' ', $summary);
                         $summary = str_replace('<br />', ' ', $summary);
@@ -370,7 +370,7 @@ class MetaTagsSTE extends SiteTreeExtension
         $newString = strip_tags(str_replace('<', ' <', $newString));
         if ($numberOfWords) {
             $textFieldObject = DBField::create_field('Text', $newString);
-            $newString = strip_tags( (string) $textFieldObject->LimitWordCountXML($numberOfWords));
+            $newString = strip_tags((string) $textFieldObject->LimitWordCountXML($numberOfWords));
         }
 
         $newString = html_entity_decode($newString, ENT_QUOTES);
