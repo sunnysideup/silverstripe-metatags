@@ -25,12 +25,12 @@ use Sunnysideup\MetaTags\Api\MetatagsApi;
 /**
  * Class \Sunnysideup\MetaTags\Extension\MetaTagsSTE
  *
- * @property SiteTree|MetaTagsSTE $owner
+ * @property \SilverStripe\CMS\Model\SiteTree|\Sunnysideup\MetaTags\Extension\MetaTagsSTE $owner
  * @property string $MetaTitle
  * @property string $AutomateMetatags
  * @property bool $ExcludeFromSearchEngines
  * @property int $ShareOnFacebookImageID
- * @method Image ShareOnFacebookImage()
+ * @method \SilverStripe\Assets\Image ShareOnFacebookImage()
  */
 class MetaTagsSTE extends SiteTreeExtension
 {

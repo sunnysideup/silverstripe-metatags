@@ -8,7 +8,7 @@ use SilverStripe\ORM\FieldType\DBHTMLText;
 /**
  * adds meta tag functionality to the Page_Controller.
  *
- * @property ContentController|MetaTagsContentControllerEXT $owner
+ * @property \SilverStripe\CMS\Controllers\ContentController|\Sunnysideup\MetaTags\Extension\MetaTagsContentControllerEXT $owner
  */
 class MetaTagsContentControllerEXT extends Extension
 {
