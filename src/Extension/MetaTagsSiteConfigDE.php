@@ -17,7 +17,7 @@ use SilverStripe\ORM\DataExtension;
 /**
  * adding functionality to SiteConfig.
  *
- * @property \SilverStripe\SiteConfig\SiteConfig|\Sunnysideup\MetaTags\Extension\MetaTagsSiteConfigDE $owner
+ * @property SiteConfig|MetaTagsSiteConfigDE $owner
  * @property string $PrependToMetaTitle
  * @property string $AppendToMetaTitle
  * @property string $MetaDataCountry
@@ -29,7 +29,7 @@ use SilverStripe\ORM\DataExtension;
  * @property string $ExtraMeta
  * @property string $TwitterHandle
  * @property int $FaviconID
- * @method \SilverStripe\Assets\Image Favicon()
+ * @method Image Favicon()
  */
 class MetaTagsSiteConfigDE extends DataExtension
 {
