@@ -23,13 +23,14 @@ use SilverStripe\View\SSViewer;
 use Sunnysideup\MetaTags\Api\MetatagsApi;
 
 /**
- * Class \Sunnysideup\MetaTags\Extension\MetaTagsSTE
+ * Class \Sunnysideup\MetaTags\Extension\MetaTagsSTE.
  *
- * @property SiteTree|MetaTagsSTE $owner
- * @property string $MetaTitle
- * @property string $AutomateMetatags
- * @property bool $ExcludeFromSearchEngines
- * @property int $ShareOnFacebookImageID
+ * @property MetaTagsSTE|SiteTree $owner
+ * @property string               $MetaTitle
+ * @property string               $AutomateMetatags
+ * @property bool                 $ExcludeFromSearchEngines
+ * @property int                  $ShareOnFacebookImageID
+ *
  * @method Image ShareOnFacebookImage()
  */
 class MetaTagsSTE extends SiteTreeExtension
