@@ -460,7 +460,7 @@ class MetatagsApi implements Flushable
         $href = (string) ModuleResourceLoader::singleton()->resolveURL($file);
         if (! $href && $faviconImage && $faviconImage instanceof Image && $faviconImage->exists()) {
             $generatedImage = $faviconImage->ScaleWidth($size);
-            $href = (string) $generatedImage->Link();
+            $href = (string) $generatedImage->getURL();
         }
 
         return $href;
