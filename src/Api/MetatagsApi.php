@@ -237,7 +237,7 @@ class MetatagsApi implements Flushable
                 . strtotime((string) $this->siteConfig->LastEdited) . '_'
                 . $this->baseUrl . '_'
                 . Versioned::get_stage()
-                . $_SERVER['REQUEST_URI'];
+                . filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL);
             $cacheKey = preg_replace(
                 '#[^a-z0-9]#i',
                 '_',
