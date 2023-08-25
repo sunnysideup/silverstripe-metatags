@@ -110,7 +110,7 @@ class MetatagsApi implements Flushable
             //useful later on
 
             if ($cacheKey) {
-                $this->metatags = unserialize($cache->get($cacheKey));
+                $this->metatags = unserialize((string) $cache->get($cacheKey));
             }
 
             if (empty($this->metatags)) {
