@@ -23,8 +23,14 @@ use SilverStripe\View\SSViewer;
 use Sunnysideup\MetaTags\Api\MetatagsApi;
 
 /**
- * @Author Nicolaas Francken
- * adding meta tag functionality to the SiteTree Model Classes.
+ * Class \Sunnysideup\MetaTags\Extension\MetaTagsSTE.
+ *
+ * @property SiteTree|MetaTagsSTE $owner
+ * @property string $MetaTitle
+ * @property string $AutomateMetatags
+ * @property bool $ExcludeFromSearchEngines
+ * @property int $ShareOnFacebookImageID
+ * @method Image ShareOnFacebookImage()
  */
 class MetaTagsSTE extends SiteTreeExtension
 {
@@ -126,7 +132,7 @@ class MetaTagsSTE extends SiteTreeExtension
             'Root.Facebook',
             $debugFacebookSharing = LiteralField::create(
                 'fb_debug_link',
-                '<h3><a href="https://developers.facebook.com/tools/debug/sharing/?q=' . urlencode($this->getOwner()->AbsoluteLink()) . '" target="_blank">' . _t('MetaTagsSTE.FB_DEBUGGER', 'Facebook Sharing Debugger') . '</a></h3>'
+                '<h3><a href="https://developers.facebook.com/tools/debug/sharing/?q=' . urlencode($this->getOwner()->AbsoluteLink()) . '" target="_blank" rel="noreferrer noopener">' . _t('MetaTagsSTE.FB_DEBUGGER', 'Facebook Sharing Debugger') . '</a></h3>'
             )
         );
         //right titles
@@ -257,7 +263,7 @@ class MetaTagsSTE extends SiteTreeExtension
                 if ($length > 0) {
                     if ($this->getOwner()->Content) {
                         //added a few hacks here
-                        $contentField = DBField::create_field('Text', strip_tags($this->getOwner()->Content), 'MetaDescription');
+                        $contentField = DBField::create_field('Text', strip_tags((string) $this->getOwner()->Content), 'MetaDescription');
                         $summary = $contentField->Summary($length);
                         $summary = str_replace('<br>', ' ', $summary);
                         $summary = str_replace('<br />', ' ', $summary);
@@ -358,13 +364,13 @@ class MetaTagsSTE extends SiteTreeExtension
 
     private function cleanInput($string, $numberOfWords = 0)
     {
-        $newString = str_replace('&nbsp;', '', $string);
+        $newString = str_replace('&nbsp;', '', (string) $string);
         $newString = str_replace('&amp;', ' and ', $newString);
         $newString = str_replace('&ndash;', ' - ', $newString);
         $newString = strip_tags(str_replace('<', ' <', $newString));
         if ($numberOfWords) {
             $textFieldObject = DBField::create_field('Text', $newString);
-            $newString = strip_tags($textFieldObject->LimitWordCountXML($numberOfWords));
+            $newString = strip_tags((string) $textFieldObject->LimitWordCountXML($numberOfWords));
         }
 
         $newString = html_entity_decode($newString, ENT_QUOTES);

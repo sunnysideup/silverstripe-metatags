@@ -3,11 +3,12 @@
 namespace Sunnysideup\MetaTags\Extension;
 
 use SilverStripe\Core\Extension;
-use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\View\Requirements;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 
 /**
  * adds meta tag functionality to the Page_Controller.
+ *
+ * @property ContentController|MetaTagsContentControllerEXT $owner
  */
 class MetaTagsContentControllerEXT extends Extension
 {
@@ -21,11 +22,11 @@ class MetaTagsContentControllerEXT extends Extension
      *
      * @return string (HTML)
      */
-    public function ExtendedMetatags(?bool $includeTitle = true)
+    public function ExtendedMetatags(?bool $includeTitle = true): DBHTMLText
     {
         $this->addBasicMetatagRequirements();
 
-        return DBField::create_field('HTMLText', $this->getOwner()->Metatags($includeTitle));
+        return DBHTMLText::create_field('HTMLText', $this->getOwner()->Metatags($includeTitle));
     }
 
     /**

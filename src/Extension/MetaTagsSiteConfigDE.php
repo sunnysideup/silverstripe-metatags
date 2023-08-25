@@ -16,6 +16,20 @@ use SilverStripe\ORM\DataExtension;
 
 /**
  * adding functionality to SiteConfig.
+ *
+ * @property SiteConfig|MetaTagsSiteConfigDE $owner
+ * @property string $PrependToMetaTitle
+ * @property string $AppendToMetaTitle
+ * @property string $MetaDataCountry
+ * @property string $MetaDataCopyright
+ * @property string $MetaDataDesign
+ * @property string $MetaDataCoding
+ * @property bool $UpdateMenuTitle
+ * @property bool $UpdateMetaDescription
+ * @property string $ExtraMeta
+ * @property string $TwitterHandle
+ * @property int $FaviconID
+ * @method Image Favicon()
  */
 class MetaTagsSiteConfigDE extends DataExtension
 {
@@ -164,6 +178,6 @@ class MetaTagsSiteConfigDE extends DataExtension
             $this->getOwner()->ExtraMeta = '';
         }
 
-        $this->getOwner()->TwitterHandle = str_replace('@', '', $this->getOwner()->TwitterHandle);
+        $this->getOwner()->TwitterHandle = str_replace('@', '', (string) $this->getOwner()->TwitterHandle);
     }
 }

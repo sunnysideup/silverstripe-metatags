@@ -18,6 +18,7 @@ use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
+use Sunnysideup\MetaTags\Extension\MetaTagsContentControllerEXT;
 
 class MetatagsApi implements Flushable
 {
@@ -78,7 +79,7 @@ class MetatagsApi implements Flushable
     /**
      * @var string
      *             viewport setting
-     * consider: shrink-to-fit=no
+     *             consider: shrink-to-fit=no
      */
     private static $viewport_setting = 'width=device-width,minimum-scale=1.0,maximum-scale=10.0,initial-scale=1.0';
 
@@ -110,7 +111,13 @@ class MetatagsApi implements Flushable
             //useful later on
 
             if ($cacheKey) {
-                $this->metatags = unserialize((string) $cache->get($cacheKey));
+                if ($cache->has($cacheKey)) {
+                    // @property array $metatags
+                    $this->metatags = unserialize((string) $cache->get($cacheKey));
+                    if (! is_array($this->metatags)) {
+                        $this->metatags = [];
+                    }
+                }
             }
 
             if (empty($this->metatags)) {
@@ -141,7 +148,7 @@ class MetatagsApi implements Flushable
 
                     $noopd = '';
                 } else {
-                    unset($this->metatags['description']);
+                    $this->metatags['description'] = null;
                     $noopd = 'NOODP, ';
                 }
 
@@ -167,7 +174,7 @@ class MetatagsApi implements Flushable
                 $botsValue = $this->page->ExcludeFromSearchEngines ? $noopd . 'none, noindex, nofollow' : $noopd . 'all, index, follow';
                 $this->addToMetatags('robots', 'meta', ['name' => 'robots', 'content' => $botsValue]);
                 $this->addToMetatags('googlebot', 'meta', ['name' => 'googlebot', 'content' => $botsValue]);
-                $this->addToMetatags('created', 'meta', ['name' => 'created', 'content' => date('Ymd', strtotime($this->page->LastEdited))]);
+                $this->addToMetatags('created', 'meta', ['name' => 'created', 'content' => date('Ymd', strtotime((string) $this->page->LastEdited))]);
                 if ($this->siteConfig->MetaDataCopyright) {
                     $this->addToMetatags('rights', 'meta', ['name' => 'rights', 'content' => Convert::raw2att($this->siteConfig->MetaDataCopyright)]);
                 }
@@ -199,7 +206,7 @@ class MetatagsApi implements Flushable
             }
         }
 
-        return $this->metatags;
+        return (array) array_filter($this->metatags);
     }
 
     public static function flush()
@@ -226,11 +233,11 @@ class MetatagsApi implements Flushable
             $cacheKey =
                 'ExtendedMetaTags_'
                 . abs($this->page->ID) . '_'
-                . strtotime($this->page->LastEdited) . '_'
-                . strtotime($this->siteConfig->LastEdited) . '_'
+                . strtotime((string) $this->page->LastEdited) . '_'
+                . strtotime((string) $this->siteConfig->LastEdited) . '_'
                 . $this->baseUrl . '_'
                 . Versioned::get_stage()
-                . $_SERVER['REQUEST_URI'];
+                . filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL);
             $cacheKey = preg_replace(
                 '#[^a-z0-9]#i',
                 '_',
@@ -357,7 +364,7 @@ class MetatagsApi implements Flushable
     {
         if (! $this->metatagMetaTitle) {
             $this->metatagMetaTitle = '';
-            if (Config::inst()->get(self::class, 'use_separate_metatitle')) {
+            if (Config::inst()->get(MetaTagsContentControllerEXT::class, 'use_separate_metatitle')) {
                 if (! empty($this->page->MetaTitle)) {
                     $this->metatagMetaTitle = (string) $this->page->MetaTitle;
                 }
@@ -453,7 +460,7 @@ class MetatagsApi implements Flushable
         $href = (string) ModuleResourceLoader::singleton()->resolveURL($file);
         if (! $href && $faviconImage && $faviconImage instanceof Image && $faviconImage->exists()) {
             $generatedImage = $faviconImage->ScaleWidth($size);
-            $href = (string) $generatedImage->Link();
+            $href = (string) $generatedImage->getURL();
         }
 
         return $href;
