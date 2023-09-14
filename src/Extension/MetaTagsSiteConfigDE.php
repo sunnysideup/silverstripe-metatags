@@ -17,19 +17,18 @@ use SilverStripe\ORM\DataExtension;
 /**
  * adding functionality to SiteConfig.
  *
- * @property MetaTagsSiteConfigDE|SiteConfig $owner
- * @property string                          $PrependToMetaTitle
- * @property string                          $AppendToMetaTitle
- * @property string                          $MetaDataCountry
- * @property string                          $MetaDataCopyright
- * @property string                          $MetaDataDesign
- * @property string                          $MetaDataCoding
- * @property bool                            $UpdateMenuTitle
- * @property bool                            $UpdateMetaDescription
- * @property string                          $ExtraMeta
- * @property string                          $TwitterHandle
- * @property int                             $FaviconID
- *
+ * @property SiteConfig|MetaTagsSiteConfigDE $owner
+ * @property string $PrependToMetaTitle
+ * @property string $AppendToMetaTitle
+ * @property string $MetaDataCountry
+ * @property string $MetaDataCopyright
+ * @property string $MetaDataDesign
+ * @property string $MetaDataCoding
+ * @property bool $UpdateMenuTitle
+ * @property bool $UpdateMetaDescription
+ * @property string $ExtraMeta
+ * @property string $TwitterHandle
+ * @property int $FaviconID
  * @method Image Favicon()
  */
 class MetaTagsSiteConfigDE extends DataExtension
