@@ -264,7 +264,7 @@ class MetaTagsSTE extends SiteTreeExtension
                     if ($this->getOwner()->Content) {
                         //added a few hacks here
                         $contentField = DBField::create_field('Text', strip_tags((string) $this->getOwner()->Content), 'MetaDescription');
-                        $summary = $contentField->Summary($length);
+                        $summary = (string) $contentField->Summary($length);
                         $summary = str_replace('<br>', ' ', $summary);
                         $summary = str_replace('<br />', ' ', $summary);
                         $summary = str_replace('.', '. ', $summary);
