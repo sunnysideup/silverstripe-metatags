@@ -114,7 +114,7 @@ class MetatagsApi implements Flushable
                 if ($cache->has($cacheKey)) {
                     // @property array $metatags
                     $this->metatags = unserialize((string) $cache->get($cacheKey));
-                    if (! is_array($this->metatags)) {
+                    if (!is_array($this->metatags)) {
                         $this->metatags = [];
                     }
                 }
@@ -163,11 +163,11 @@ class MetatagsApi implements Flushable
                     //ie only...
                 }
 
-                if (! $this->page->ExtraMeta && $this->siteConfig->ExtraMeta) {
+                if (!$this->page->ExtraMeta && $this->siteConfig->ExtraMeta) {
                     $this->page->ExtraMeta = $this->siteConfig->ExtraMeta;
                 }
 
-                if (! $this->siteConfig->MetaDataCopyright) {
+                if (!$this->siteConfig->MetaDataCopyright) {
                     $this->siteConfig->MetaDataCopyright = $this->siteConfig->Title;
                 }
 
@@ -225,7 +225,7 @@ class MetatagsApi implements Flushable
             $add = $this->page->metatagsCacheKey();
         }
 
-        if (! isset($_SERVER['REQUEST_URI'])) {
+        if (!isset($_SERVER['REQUEST_URI'])) {
             $_SERVER['REQUEST_URI'] = '';
         }
 
@@ -292,7 +292,7 @@ class MetatagsApi implements Flushable
     protected function addTwitterTags()
     {
         $handle = $this->siteConfig->TwitterHandle;
-        if (! $handle) {
+        if (!$handle) {
             $handle = Config::inst()->get(self::class, 'twitter_handle');
         }
 
@@ -337,19 +337,18 @@ class MetatagsApi implements Flushable
             }
         }
 
-        if (! empty($sizes)) {
+        if (!empty($sizes)) {
             foreach ($sizes as $size) {
                 $href = $this->iconToUrl('icon-' . $size . 'x' . $size . '.png', $faviconImage, $size);
                 if ($href) {
                     $sizes = $size . 'x' . $size;
                     $this->addToMetatags('icon' . $size, 'link', ['rel' => 'icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
                     $this->addToMetatags('iconApple' . $size, 'link', ['rel' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
-                    $this->addToMetatags('iconApple' . $size, 'link', ['rel' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes]);
                 }
             }
         }
 
-        if (! $hasBaseFolderFavicon) {
+        if (!$hasBaseFolderFavicon) {
             $href = $this->iconToUrl('favicon.ico', $faviconImage, 16);
             if ($href) {
                 $this->addToMetatags('favicon', 'link', ['rel' => 'SHORTCUT ICON', 'href' => $href]);
@@ -362,17 +361,17 @@ class MetatagsApi implements Flushable
      */
     protected function MetaTagsMetaTitle(): string
     {
-        if (! $this->metatagMetaTitle) {
+        if (!$this->metatagMetaTitle) {
             $this->metatagMetaTitle = '';
             if (Config::inst()->get(MetaTagsContentControllerEXT::class, 'use_separate_metatitle')) {
-                if (! empty($this->page->MetaTitle)) {
+                if (!empty($this->page->MetaTitle)) {
                     $this->metatagMetaTitle = (string) $this->page->MetaTitle;
                 }
             }
 
-            if (! $this->metatagMetaTitle) {
+            if (!$this->metatagMetaTitle) {
                 $this->metatagMetaTitle = (string) $this->page->Title;
-                if (! $this->metatagMetaTitle) {
+                if (!$this->metatagMetaTitle) {
                     $this->metatagMetaTitle = (string) $this->page->MenuTitle;
                 }
             }
@@ -383,13 +382,13 @@ class MetatagsApi implements Flushable
 
     protected function shareImage(): ?Image
     {
-        if (! isset($this->shareImageCache[$this->page->ID])) {
+        if (!isset($this->shareImageCache[$this->page->ID])) {
             $this->shareImageCache[$this->page->ID] = null;
         }
 
         if (null === $this->shareImageCache[$this->page->ID]) {
             $this->addToShareImageCache('ShareOnFacebookImage');
-            if (! $this->shareImageCache[$this->page->ID]) {
+            if (!$this->shareImageCache[$this->page->ID]) {
                 $methods = Config::inst()->get(self::class, 'og_image_method_map');
                 if (is_array($methods) && count($methods)) {
                     foreach ($methods as $method) {
@@ -401,7 +400,7 @@ class MetatagsApi implements Flushable
                 }
             }
 
-            if (! $this->shareImageCache[$this->page->ID]) {
+            if (!$this->shareImageCache[$this->page->ID]) {
                 $hasOnes = $this->page->hasOne();
                 foreach ($hasOnes as $hasOneName => $hasOneType) {
                     if ('ShareOnFacebookImage' !== $hasOneName) {
@@ -458,7 +457,7 @@ class MetatagsApi implements Flushable
         );
 
         $href = (string) ModuleResourceLoader::singleton()->resolveURL($file);
-        if (! $href && $faviconImage && $faviconImage instanceof Image && $faviconImage->exists()) {
+        if (!$href && $faviconImage && $faviconImage instanceof Image && $faviconImage->exists()) {
             $generatedImage = $faviconImage->ScaleWidth($size);
             $href = (string) $generatedImage->getURL();
         }
