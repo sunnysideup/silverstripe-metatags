@@ -26,7 +26,7 @@ class MetaTagsContentControllerEXT extends Extension
     {
         $this->addBasicMetatagRequirements();
 
-        return DBHTMLText::create_field('HTMLText', $this->getOwner()->Metatags($includeTitle));
+        return DBHTMLText::create_field('HTMLText', $this->getOwner()->MetaTags($includeTitle));
     }
 
     /**

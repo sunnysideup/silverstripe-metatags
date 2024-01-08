@@ -277,52 +277,11 @@ class MetaTagsSTE extends SiteTreeExtension
         }
     }
 
-    public function populateDefaults()
-    {
-        $this->getOwner()->AutomateMetatags = 'Inherit';
-    }
-
-    /**
-     * add default css files.
-     */
-    public function requireDefaultRecords()
-    {
-        $folder = Config::inst()->get(SSViewer::class, 'theme');
-        if ($folder) {
-            $file = Config::inst()->get(MetaTagsSTE::class, 'default_editor_file');
-            if ($file) {
-                $baseFile = Director::baseFolder() . $file;
-                $destinationFile = Director::baseFolder() . '/themes/' . $folder . '/css/editor.css';
-                if (! file_exists($destinationFile) && file_exists($baseFile)) {
-                    copy($baseFile, $destinationFile);
-                }
-            }
-
-            $file = Config::inst()->get(MetaTagsSTE::class, 'default_reset_file');
-            if ($file) {
-                $baseFile = Director::baseFolder() . $file;
-                $destinationFile = Director::baseFolder() . '/themes/' . $folder . '/css/reset.css';
-                if (! file_exists($destinationFile) && file_exists($baseFile)) {
-                    copy($baseFile, $destinationFile);
-                }
-            }
-        }
-
-        DB::query('
-            UPDATE "SiteTree" SET "AutomateMetatags" = \'Inherit\'
-            WHERE "AutomateMetatags" NOT IN (\'' . implode('', array_keys($this->AutomateMetatagsOptions())) . '\')
-        ');
-        DB::query('
-            UPDATE "SiteTree_Live" SET "AutomateMetatags" = \'Inherit\'
-            WHERE "AutomateMetatags" NOT IN (\'' . implode('', array_keys($this->AutomateMetatagsOptions())) . '\')
-        ');
-    }
-
     public function MetaComponents(&$tags)
     {
         $provider = Config::inst()->get(self::class, 'metatag_builder_class');
         $builder = Injector::inst()->get($provider, false, [$this->owner]);
-        $tags = array_merge($tags, $builder->getMetatags());
+        $tags = array_merge($tags, $builder->getMetaTags());
         foreach ($tags as $key => $array) {
             $tags[$key]['tag'] = $array['tag'] ?? 'meta';
             $tags[$key]['attributes'] = $array['attributes'] ?? [];

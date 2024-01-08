@@ -102,7 +102,7 @@ class MetatagsApi implements Flushable
         $this->siteConfig = SiteConfig::current_site_config();
     }
 
-    public function getMetatags(): array
+    public function getMetaTags(): array
     {
         if (empty($this->metatags)) {
             $cacheKey = $this->getCacheKey();
