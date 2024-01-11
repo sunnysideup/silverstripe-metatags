@@ -20,7 +20,7 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\View\SSViewer;
-use Sunnysideup\MetaTags\Api\MetatagsApi;
+use Sunnysideup\MetaTags\Api\MetaTagsApi;
 
 /**
  * Class \Sunnysideup\MetaTags\Extension\MetaTagsSTE.
@@ -34,7 +34,7 @@ use Sunnysideup\MetaTags\Api\MetatagsApi;
  */
 class MetaTagsSTE extends SiteTreeExtension
 {
-    private static $metatag_builder_class = MetatagsApi::class;
+    private static $metatag_builder_class = MetaTagsApi::class;
 
     /**
      * standard SS method.

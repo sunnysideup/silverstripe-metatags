@@ -20,7 +20,7 @@ use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
 use Sunnysideup\MetaTags\Extension\MetaTagsContentControllerEXT;
 
-class MetatagsApi implements Flushable
+class MetaTagsApi implements Flushable
 {
     use Extensible;
     use Injectable;
@@ -122,29 +122,29 @@ class MetatagsApi implements Flushable
 
             if (empty($this->metatags)) {
                 //base tag
-                $this->addToMetatags('baseTag', 'base', ['href' => $this->baseUrl]);
+                $this->addToMetaTags('baseTag', 'base', ['href' => $this->baseUrl]);
                 $titleArray = [
                     $this->siteConfig->PrependToMetaTitle,
                     $this->MetaTagsMetaTitle(),
                     $this->siteConfig->AppendToMetaTitle,
                 ];
                 $content = trim(implode(' ', array_filter($titleArray)));
-                $this->addToMetatags('title', 'title', [], false, Convert::raw2att($content));
-                $this->addToMetatags('metaTitle', 'meta', ['name' => 'title', 'content' => Convert::raw2att($content)]);
+                $this->addToMetaTags('title', 'title', [], false, Convert::raw2att($content));
+                $this->addToMetaTags('metaTitle', 'meta', ['name' => 'title', 'content' => Convert::raw2att($content)]);
 
                 if ($this->page->hasMethod('CanonicalLink')) {
                     $canonicalLink = $this->page->CanonicalLink();
                     if ($canonicalLink) {
-                        $this->addToMetatags('canonical', 'link', ['rel' => 'canonical', 'href' => $canonicalLink]);
+                        $this->addToMetaTags('canonical', 'link', ['rel' => 'canonical', 'href' => $canonicalLink]);
                     }
                 }
 
                 //these go first - for some reason ...
-                $this->addToMetatags('ie', 'meta', ['http-equiv' => 'X-UA-Compatible', 'content' => 'IE=edge']);
-                $this->addToMetatags('viewport', 'meta', ['name' => 'viewport', 'content' => Config::inst()->get(self::class, 'viewport_setting')]);
+                $this->addToMetaTags('ie', 'meta', ['http-equiv' => 'X-UA-Compatible', 'content' => 'IE=edge']);
+                $this->addToMetaTags('viewport', 'meta', ['name' => 'viewport', 'content' => Config::inst()->get(self::class, 'viewport_setting')]);
 
                 if ($this->page->MetaDescription) {
-                    $this->addToMetatags('description', 'meta', ['name' => 'description', 'content' => Convert::raw2att($this->page->MetaDescription)]);
+                    $this->addToMetaTags('description', 'meta', ['name' => 'description', 'content' => Convert::raw2att($this->page->MetaDescription)]);
 
                     $noopd = '';
                 } else {
@@ -158,7 +158,7 @@ class MetatagsApi implements Flushable
                 $faviconFileName = 'favicon.ico';
                 $faviconLocation = Controller::join_links($this->baseUrl, $publicDir, $faviconFileName);
                 if (file_exists($faviconLocation)) {
-                    $this->addToMetatags('favicon', 'link', ['rel' => 'SHORTCUT ICON', 'href' => $faviconFileName]);
+                    $this->addToMetaTags('favicon', 'link', ['rel' => 'SHORTCUT ICON', 'href' => $faviconFileName]);
                     $hasBaseFolderFavicon = true;
                     //ie only...
                 }
@@ -172,23 +172,23 @@ class MetatagsApi implements Flushable
                 }
 
                 $botsValue = $this->page->ExcludeFromSearchEngines ? $noopd . 'none, noindex, nofollow' : $noopd . 'all, index, follow';
-                $this->addToMetatags('robots', 'meta', ['name' => 'robots', 'content' => $botsValue]);
-                $this->addToMetatags('googlebot', 'meta', ['name' => 'googlebot', 'content' => $botsValue]);
-                $this->addToMetatags('created', 'meta', ['name' => 'created', 'content' => date('Ymd', strtotime((string) $this->page->LastEdited))]);
+                $this->addToMetaTags('robots', 'meta', ['name' => 'robots', 'content' => $botsValue]);
+                $this->addToMetaTags('googlebot', 'meta', ['name' => 'googlebot', 'content' => $botsValue]);
+                $this->addToMetaTags('created', 'meta', ['name' => 'created', 'content' => date('Ymd', strtotime((string) $this->page->LastEdited))]);
                 if ($this->siteConfig->MetaDataCopyright) {
-                    $this->addToMetatags('rights', 'meta', ['name' => 'rights', 'content' => Convert::raw2att($this->siteConfig->MetaDataCopyright)]);
+                    $this->addToMetaTags('rights', 'meta', ['name' => 'rights', 'content' => Convert::raw2att($this->siteConfig->MetaDataCopyright)]);
                 }
 
                 if ($this->siteConfig->MetaDataDesign) {
-                    $this->addToMetatags('designer', 'meta', ['name' => 'web_author', 'content' => $this->siteConfig->MetaDataDesign]);
+                    $this->addToMetaTags('designer', 'meta', ['name' => 'web_author', 'content' => $this->siteConfig->MetaDataDesign]);
                 }
 
                 if ($this->siteConfig->MetaDataCoding) {
-                    $this->addToMetatags('web_author', 'meta', ['name' => 'web_author', 'content' => $this->siteConfig->MetaDataCoding]);
+                    $this->addToMetaTags('web_author', 'meta', ['name' => 'web_author', 'content' => $this->siteConfig->MetaDataCoding]);
                 }
 
                 if ($this->siteConfig->MetaDataCountry) {
-                    $this->addToMetatags('geo.region', 'meta', ['name' => 'geo.region', 'content' => $this->siteConfig->MetaDataCountry]);
+                    $this->addToMetaTags('geo.region', 'meta', ['name' => 'geo.region', 'content' => $this->siteConfig->MetaDataCountry]);
                 }
 
                 if ($this->page->ExtraMeta) {
@@ -277,7 +277,7 @@ class MetatagsApi implements Flushable
 
         foreach ($array as $key => $value) {
             if ($value) {
-                $this->addToMetatags('og' . $key, 'meta', ['property' => 'og:' . $key, 'content' => $value]);
+                $this->addToMetaTags('og' . $key, 'meta', ['property' => 'og:' . $key, 'content' => $value]);
             }
         }
     }
@@ -313,7 +313,7 @@ class MetatagsApi implements Flushable
 
             foreach ($array as $key => $value) {
                 if ($value) {
-                    $this->addToMetatags('twitter' . $key, 'meta', ['name' => 'twitter:' . $key, 'content' => $value]);
+                    $this->addToMetaTags('twitter' . $key, 'meta', ['name' => 'twitter:' . $key, 'content' => $value]);
                 }
             }
         }
@@ -342,8 +342,8 @@ class MetatagsApi implements Flushable
                 $href = $this->iconToUrl('icon-' . $size . 'x' . $size . '.png', $faviconImage, $size);
                 if ($href) {
                     $sizes = $size . 'x' . $size;
-                    $this->addToMetatags('icon' . $size, 'link', ['rel' => 'icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
-                    $this->addToMetatags('iconApple' . $size, 'link', ['rel' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
+                    $this->addToMetaTags('icon' . $size, 'link', ['rel' => 'icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
+                    $this->addToMetaTags('iconApple' . $size, 'link', ['rel' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
                 }
             }
         }
@@ -351,7 +351,7 @@ class MetatagsApi implements Flushable
         if (!$hasBaseFolderFavicon) {
             $href = $this->iconToUrl('favicon.ico', $faviconImage, 16);
             if ($href) {
-                $this->addToMetatags('favicon', 'link', ['rel' => 'SHORTCUT ICON', 'href' => $href]);
+                $this->addToMetaTags('favicon', 'link', ['rel' => 'SHORTCUT ICON', 'href' => $href]);
             }
         }
     }
@@ -436,7 +436,7 @@ class MetatagsApi implements Flushable
         return false;
     }
 
-    protected function addToMetatags(string $name, string $tag, ?array $attributes = [], $selfClosing = true, ?string $content = '')
+    protected function addToMetaTags(string $name, string $tag, ?array $attributes = [], $selfClosing = true, ?string $content = '')
     {
         $this->metatags[$name] = [
             'tag' => $tag,

@@ -4,7 +4,7 @@ Meta Tags
 This module simplifies the management of the header
 tags for any html document.  It adds all the basics by
 adding just one line to your silverstripe template:
-$ExtendedMetatags.
+$ExtendedMetaTags.
 
 Secondly, this module can help with search engine optimisation.
 This module contains extensive systems for improving
@@ -45,7 +45,7 @@ you can usually find some examples of config options (if any).
 
 3. add the following to your Page.ss file:
 <head>
-	$ExtendedMetatags
+	$ExtendedMetaTags
 </head>
 
 4. add icons to /themes/mytheme/dist/favicons/, consider using:
@@ -55,4 +55,4 @@ you can usually find some examples of config options (if any).
    - https://developer.chrome.com/multidevice/android/installtohomescreen
 
 Note, you can add two variables:
-ExtendedMetatags($includeTitle = true, $addExtraSearchEngineData = true)
+ExtendedMetaTags($includeTitle = true, $addExtraSearchEngineData = true)

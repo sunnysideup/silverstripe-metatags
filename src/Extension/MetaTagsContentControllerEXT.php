@@ -12,17 +12,7 @@ use SilverStripe\ORM\FieldType\DBHTMLText;
  */
 class MetaTagsContentControllerEXT extends Extension
 {
-    /**
-     * this function will add more metatags to your template -
-     * make sure to add it at the start of your metatags
-     * We leave the / closing tags here, but they are not needed
-     * yet not invalid in html5.
-     *
-     * @param bool $includeTitle - include the title tag
-     *
-     * @return string (HTML)
-     */
-    public function ExtendedMetatags(?bool $includeTitle = true): DBHTMLText
+    public function ExtendedMetaTags(?bool $includeTitle = true): DBHTMLText
     {
         $this->addBasicMetatagRequirements();
 
