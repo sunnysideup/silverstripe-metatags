@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\MetaTags\Extension;
 
+use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\Core\Extension;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 

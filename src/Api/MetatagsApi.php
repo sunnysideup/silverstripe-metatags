@@ -228,7 +228,7 @@ class MetaTagsApi implements Flushable
         if (!isset($_SERVER['REQUEST_URI'])) {
             $_SERVER['REQUEST_URI'] = '';
         }
-
+        // if metatagsCacheKey returns false then it should not be cached.
         if (false !== $add) {
             $cacheKey =
                 'ExtendedMetaTags_'

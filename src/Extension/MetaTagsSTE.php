@@ -5,6 +5,7 @@ namespace Sunnysideup\MetaTags\Extension;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\Image;
 use SilverStripe\CMS\Controllers\RootURLController;
+use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\CMS\Model\SiteTreeExtension;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
