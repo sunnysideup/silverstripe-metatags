@@ -7,7 +7,6 @@ use SilverStripe\Assets\Image;
 use SilverStripe\CMS\Controllers\RootURLController;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\CMS\Model\SiteTreeExtension;
-use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxField;
@@ -17,10 +16,8 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\OptionsetField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
-use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\SiteConfig\SiteConfig;
-use SilverStripe\View\SSViewer;
 use Sunnysideup\MetaTags\Api\MetaTagsApi;
 
 /**

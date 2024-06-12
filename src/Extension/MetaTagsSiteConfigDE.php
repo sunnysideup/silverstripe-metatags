@@ -139,17 +139,14 @@ class MetaTagsSiteConfigDE extends DataExtension
                     ->setDescription('(e.g. BarackObama - how you address people on Twitter but then without the @ sign.')
             );
         }
-
-        if ([] !== $tabs) {
-            $fields->addFieldToTab(
-                'Root.SearchEngines',
-                $tabSet = TabSet::create(
-                    'Options'
-                )
-            );
-            foreach ($tabs as $tab) {
-                $tabSet->push($tab);
-            }
+        $fields->addFieldToTab(
+            'Root.SearchEngines',
+            $tabSet = TabSet::create(
+                'Options'
+            )
+        );
+        foreach ($tabs as $tab) {
+            $tabSet->push($tab);
         }
 
         $fields->addFieldToTab('Root.Icons', $uploadField = UploadField::create('Favicon', 'Icon'));
