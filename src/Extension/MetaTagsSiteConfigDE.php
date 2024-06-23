@@ -143,7 +143,7 @@ class MetaTagsSiteConfigDE extends DataExtension
             'Root.SearchEngines',
             $tabSet = TabSet::create(
                 'Options'
-            )
+            )->setTitle('SEO (Google et al.)')
         );
         foreach ($tabs as $tab) {
             $tabSet->push($tab);
