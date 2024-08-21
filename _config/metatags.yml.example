@@ -34,6 +34,31 @@ Sunnysideup\MetaTags\Extension\MetaTagsContentControllerEXT:
   combine_css_files_into_one: true
   combine_js_files_into_one: true
 
+Sunnysideup\MetaTags\Api\MetaTagsApi:
+  skipped_tags:
+    - baseTag
+    - title
+    - metaTitle
+    - canonical
+    - ie
+    - viewport
+    - description
+    - robots
+    - googlebot
+    - created
+    - rights
+    - ogtitle
+    - ogtype
+    - ogurl
+    - ogsite_name
+    - ogdescription
+    - ogimage
+    - twittertitle
+    - twitterdescription
+    - twitterurl
+    - twittersite
+    - twittercard
+    - twitterimage
 
 #########################
 #########################

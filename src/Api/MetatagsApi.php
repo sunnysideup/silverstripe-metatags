@@ -272,7 +272,7 @@ class MetaTagsApi implements Flushable
     {
         $array = [
             'title' => Convert::raw2att($this->MetaTagsMetaTitle()),
-            'type' => 'website',
+            'type' => 'article',
             'url' => Convert::raw2att($this->page->AbsoluteLink()),
             'site_name' => Convert::raw2att($this->siteConfig->Title),
             'description' => Convert::raw2att($this->page->MetaDescription),
@@ -436,6 +436,7 @@ class MetaTagsApi implements Flushable
     {
         $skipped = (array) Config::inst()->get(self::class, 'skipped_tags');
         if(!empty($skipped) && in_array($name, $skipped)) {
+            echo $name.', ';
             return;
         }
         $this->metatags[$name] = [
