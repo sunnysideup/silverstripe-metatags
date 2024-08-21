@@ -64,6 +64,8 @@ class MetaTagsApi implements Flushable
 
     private static array $skipped_tags = [];
 
+    private static array $always_use_canonical = [];
+
     /**
      * the twitter handle used by the site
      * do not include @ sign.
@@ -138,6 +140,10 @@ class MetaTagsApi implements Flushable
                     if ($canonicalLink) {
                         $this->addToMetaTags('canonical', 'link', ['rel' => 'canonical', 'href' => $canonicalLink]);
                     }
+                } elseif($this->page->CanonicalURL) {
+                    $this->addToMetaTags('canonical', 'link', ['rel' => 'canonical', 'href' => $this->page->CanonicalURL]);
+                } elseif($this->Config()->get('always_use_canonical')) {
+                    $this->addToMetaTags('canonical', 'link', ['rel' => 'canonical', 'href' => $this->page->AbsoluteLink()]);
                 }
 
                 //these go first - for some reason ...
