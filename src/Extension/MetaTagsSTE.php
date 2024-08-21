@@ -43,6 +43,7 @@ class MetaTagsSTE extends SiteTreeExtension
         'MetaTitle' => 'Varchar(100)',
         'AutomateMetatags' => 'Enum("Inherit,Custom,Automated", "Inherit")',
         'ExcludeFromSearchEngines' => 'Boolean',
+        'CanonicalURL' => 'ExternalURL(700)',
     ];
 
     /**
@@ -128,7 +129,7 @@ class MetaTagsSTE extends SiteTreeExtension
         );
         $fields->addFieldToTab(
             'Root.Facebook',
-            $debugFacebookSharing = LiteralField::create(
+            LiteralField::create(
                 'fb_debug_link',
                 '<h3><a href="https://developers.facebook.com/tools/debug/sharing/?q=' . urlencode($this->getOwner()->AbsoluteLink()) . '" target="_blank" rel="noreferrer noopener">' . _t('MetaTagsSTE.FB_DEBUGGER', 'Facebook Sharing Debugger') . '</a></h3>'
             )
