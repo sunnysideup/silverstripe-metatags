@@ -45,7 +45,7 @@ class MetaTagsApi implements Flushable
     /**
      * @var array
      */
-    private static $favicon_sizes = [
+    private static array $favicon_sizes = [
         '16',
         '32',
         //"57",
@@ -61,6 +61,8 @@ class MetaTagsApi implements Flushable
         //"192",
         '310',
     ];
+
+    private static array $skipped_tags = [];
 
     /**
      * the twitter handle used by the site
@@ -426,6 +428,10 @@ class MetaTagsApi implements Flushable
 
     protected function addToMetaTags(string $name, string $tag, ?array $attributes = [], $selfClosing = true, ?string $content = '')
     {
+        $skipped = (array) Config::inst()->get(self::class, 'skipped_tags');
+        if(!empty($skipped) && in_array($name, $skipped)) {
+            return;
+        }
         $this->metatags[$name] = [
             'tag' => $tag,
             'attributes' => $attributes,
