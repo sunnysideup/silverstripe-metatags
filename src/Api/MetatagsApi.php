@@ -436,7 +436,6 @@ class MetaTagsApi implements Flushable
     {
         $skipped = (array) Config::inst()->get(self::class, 'skipped_tags');
         if(!empty($skipped) && in_array($name, $skipped)) {
-            echo $name.', ';
             return;
         }
         $this->metatags[$name] = [
