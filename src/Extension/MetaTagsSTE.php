@@ -19,6 +19,7 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\SiteConfig\SiteConfig;
 use Sunnysideup\ExternalURLField\ExternalURL;
+use Sunnysideup\ExternalURLField\ExternalURLField;
 use Sunnysideup\MetaTags\Api\MetaTagsApi;
 
 /**
@@ -210,7 +211,7 @@ class MetaTagsSTE extends SiteTreeExtension
                         _t('MetatagSTE.BY_DEFAULT', '<strong><a href="/admin/settings/">Default Settings</a></strong>:') .
                         $this->defaultSettingDescription()
                     ),
-                    ExternalURL::create('CanonicalURL', 'Canonical URL')
+                    ExternalURLField::create('CanonicalURL', 'Canonical URL')
                         ->setDescription('OPTIONAL: If you would like to specify a canonical URL for this page, enter it here. This is useful if you have multiple URLs for the same content, or if you would like to specify a URL for a page that is not on this site.'),
                 ],
                 'MetaDescription'
