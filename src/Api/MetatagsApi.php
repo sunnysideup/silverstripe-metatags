@@ -135,6 +135,7 @@ class MetaTagsApi implements Flushable
                 $this->addToMetaTags('title', 'title', [], false, Convert::raw2att($content));
                 $this->addToMetaTags('metaTitle', 'meta', ['name' => 'title', 'content' => Convert::raw2att($content)]);
                 $controller = Controller::curr();
+                $canonicalLink = '';
                 if ($controller && $controller->hasMethod('CanonicalLink')) {
                     $canonicalLink = $controller->CanonicalLink();
                 } elseif ($this->page->hasMethod('CanonicalLink')) {
@@ -145,7 +146,7 @@ class MetaTagsApi implements Flushable
                     $canonicalLink = $this->page->AbsoluteLink();
                 }
                 if ($canonicalLink) {
-                    $this->addToMetaTags('canonical', 'link', ['rel' => 'canonical', 'href' => $canonicalLink]);
+                    $this->addToMetaTags('canonical', 'link', ['rel' => 'canonical', 'href' => Director::absoluteURL($canonicalLink)]);
                 }
                 //these go first - for some reason ...
                 $this->addToMetaTags('ie', 'meta', ['http-equiv' => 'X-UA-Compatible', 'content' => 'IE=edge']);
