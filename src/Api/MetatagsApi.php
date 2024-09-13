@@ -134,18 +134,19 @@ class MetaTagsApi implements Flushable
                 $content = trim(implode(' ', array_filter($titleArray)));
                 $this->addToMetaTags('title', 'title', [], false, Convert::raw2att($content));
                 $this->addToMetaTags('metaTitle', 'meta', ['name' => 'title', 'content' => Convert::raw2att($content)]);
-
-                if ($this->page->hasMethod('CanonicalLink')) {
+                $controller = Controller::curr();
+                if ($controller && $controller->hasMethod('CanonicalLink')) {
+                    $canonicalLink = $controller->CanonicalLink();
+                } elseif ($this->page->hasMethod('CanonicalLink')) {
                     $canonicalLink = $this->page->CanonicalLink();
-                    if ($canonicalLink) {
-                        $this->addToMetaTags('canonical', 'link', ['rel' => 'canonical', 'href' => $canonicalLink]);
-                    }
-                } elseif($this->page->CanonicalURL) {
-                    $this->addToMetaTags('canonical', 'link', ['rel' => 'canonical', 'href' => $this->page->CanonicalURL]);
-                } elseif($this->Config()->get('always_use_canonical')) {
-                    $this->addToMetaTags('canonical', 'link', ['rel' => 'canonical', 'href' => $this->page->AbsoluteLink()]);
+                } elseif ($this->page->CanonicalURL) {
+                    $canonicalLink = $this->page->CanonicalURL;
+                } elseif ($this->Config()->get('always_use_canonical')) {
+                    $canonicalLink = $this->page->AbsoluteLink();
                 }
-
+                if ($canonicalLink) {
+                    $this->addToMetaTags('canonical', 'link', ['rel' => 'canonical', 'href' => $canonicalLink]);
+                }
                 //these go first - for some reason ...
                 $this->addToMetaTags('ie', 'meta', ['http-equiv' => 'X-UA-Compatible', 'content' => 'IE=edge']);
                 $this->addToMetaTags('viewport', 'meta', ['name' => 'viewport', 'content' => Config::inst()->get(self::class, 'viewport_setting')]);
@@ -254,7 +255,6 @@ class MetaTagsApi implements Flushable
                 $cacheKey .= $add;
             }
         }
-
         return $cacheKey;
     }
 
@@ -435,7 +435,7 @@ class MetaTagsApi implements Flushable
     protected function addToMetaTags(string $name, string $tag, ?array $attributes = [], $selfClosing = true, ?string $content = '')
     {
         $skipped = (array) Config::inst()->get(self::class, 'skipped_tags');
-        if(!empty($skipped) && in_array($name, $skipped)) {
+        if (!empty($skipped) && in_array($name, $skipped)) {
             return;
         }
         $this->metatags[$name] = [
