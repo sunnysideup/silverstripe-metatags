@@ -29,6 +29,7 @@ use Sunnysideup\MetaTags\Api\MetaTagsApi;
  * @property string $MetaTitle
  * @property string $AutomateMetatags
  * @property bool $ExcludeFromSearchEngines
+ * @property string $CanonicalURL
  * @property int $ShareOnFacebookImageID
  * @method Image ShareOnFacebookImage()
  */
