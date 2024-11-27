@@ -14,6 +14,7 @@ use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
+use SilverStripe\ErrorPage\ErrorPage;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\SSViewer;
@@ -179,7 +180,9 @@ class MetaTagsApi implements Flushable
                 if (! $this->siteConfig->MetaDataCopyright) {
                     $this->siteConfig->MetaDataCopyright = $this->siteConfig->Title;
                 }
-
+                if ($this->page instanceof ErrorPage) {
+                    $this->page->ExcludeFromSearchEngines = true;
+                }
                 $botsValue = $this->page->ExcludeFromSearchEngines ? $noopd . 'none, noindex, nofollow' : $noopd . 'all, index, follow';
                 $this->addToMetaTags('robots', 'meta', ['name' => 'robots', 'content' => $botsValue]);
                 $this->addToMetaTags('googlebot', 'meta', ['name' => 'googlebot', 'content' => $botsValue]);
