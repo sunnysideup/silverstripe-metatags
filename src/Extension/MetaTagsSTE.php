@@ -254,7 +254,7 @@ class MetaTagsSTE extends SiteTreeExtension
     {
         $owner = $this->getOwner();
         if ($owner instanceof ErrorPage) {
-            $this->ExcludeFromSearchEngines = true;
+            $owner->ExcludeFromSearchEngines = true;
         }
         $fields = $this->updatedFieldsArray();
         if ([] !== $fields) {
