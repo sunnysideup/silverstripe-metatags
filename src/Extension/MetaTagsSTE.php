@@ -8,6 +8,7 @@ use SilverStripe\CMS\Controllers\RootURLController;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\CMS\Model\SiteTreeExtension;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Extension;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ErrorPage\ErrorPage;
 use SilverStripe\Forms\CheckboxField;
@@ -34,7 +35,7 @@ use Sunnysideup\MetaTags\Api\MetaTagsApi;
  * @property int $ShareOnFacebookImageID
  * @method Image ShareOnFacebookImage()
  */
-class MetaTagsSTE extends SiteTreeExtension
+class MetaTagsSTE extends Extension
 {
     private static $metatag_builder_class = MetaTagsApi::class;
 

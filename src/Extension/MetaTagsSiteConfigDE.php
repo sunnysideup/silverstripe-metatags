@@ -5,6 +5,7 @@ namespace Sunnysideup\MetaTags\Extension;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\Image;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Extension;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\LiteralField;
@@ -31,7 +32,7 @@ use SilverStripe\ORM\DataExtension;
  * @property int $FaviconID
  * @method Image Favicon()
  */
-class MetaTagsSiteConfigDE extends DataExtension
+class MetaTagsSiteConfigDE extends Extension
 {
     private static $db = [
         //meta title embelishments
