@@ -2,9 +2,6 @@
 # METATAGS
 #########################
 
-Sunnysideup\MetaTags\Extension\MetaTagsSTE:
-  default_editor_file: "/path/to/detault/editor/css/file.css"
-  default_reset_file: "/path/to/detault/editor/css/file.css"
 
 
 Sunnysideup\MetaTags\Extension\MetaTagsContentControllerEXT:

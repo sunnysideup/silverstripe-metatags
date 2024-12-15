@@ -76,20 +76,6 @@ class MetaTagsSTE extends Extension
     ];
 
     /**
-     * @var string
-     *             set to empty string to stop it being copied
-     *             by default to the theme
-     */
-    private static $default_editor_file = 'metatags/client/css/editor.css';
-
-    /**
-     * @var string
-     *             set to empty string to stop it being copied
-     *             by default to the theme
-     */
-    private static $default_reset_file = 'metatags/client/css/reset.css';
-
-    /**
      * standard SS method.
      *
      * @var array
@@ -214,7 +200,7 @@ class MetaTagsSTE extends Extension
                         $this->AutomateMetatagsOptions()
                     )->setDescription(
                         _t('MetatagSTE.BY_DEFAULT', '<strong><a href="/admin/settings/">Default Settings</a></strong>:') .
-                        $this->defaultSettingDescription()
+                            $this->defaultSettingDescription()
                     ),
                     ExternalURLField::create('CanonicalURL', 'Canonical URL')
                         ->setDescription('OPTIONAL: If you would like to specify a canonical URL for this page, enter it here. This is useful if you have multiple URLs for the same content, or if you would like to specify a URL for a page that is not on this site.'),
