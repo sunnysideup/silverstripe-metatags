@@ -310,8 +310,8 @@ class MetaTagsApi implements Flushable
             //ie only...
         } else {
             $faviconImage = false;
-            if ($this->siteConfig->FaviconID) {
-                $faviconImage = $this->siteConfig->Favicon();
+            if ($this->siteConfig->hasMethod('WebAppManifestIcon') && $this->siteConfig->WebAppManifestIconID) {
+                $faviconImage = $this->siteConfig->WebAppManifestIcon();
                 if (! ($faviconImage && $faviconImage->exists() && $faviconImage instanceof Image)) {
                     $faviconImage = false;
                 }

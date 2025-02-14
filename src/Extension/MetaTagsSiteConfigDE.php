@@ -30,8 +30,6 @@ use SilverStripe\SiteConfig\SiteConfig;
  * @property bool $UpdateMetaDescription
  * @property string $ExtraMeta
  * @property string $TwitterHandle
- * @property int $FaviconID
- * @method Image Favicon()
  */
 class MetaTagsSiteConfigDE extends Extension
 {
