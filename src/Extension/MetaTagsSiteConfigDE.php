@@ -13,7 +13,8 @@ use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
-
+use SilverStripe\ORM\DB;
+use SilverStripe\SiteConfig\SiteConfig;
 
 /**
  * adding functionality to SiteConfig.
@@ -49,14 +50,6 @@ class MetaTagsSiteConfigDE extends Extension
         // extra meta
         'ExtraMeta' => 'HTMLText',
         'TwitterHandle' => 'HTMLText',
-    ];
-
-    private static $has_one = [
-        'Favicon' => Image::class,
-    ];
-
-    private static $owns = [
-        'Favicon',
     ];
 
     public function populateDefaults()
@@ -149,18 +142,6 @@ class MetaTagsSiteConfigDE extends Extension
         foreach ($tabs as $tab) {
             $tabSet->push($tab);
         }
-
-        $fields->addFieldToTab('Root.Icons', $uploadField = UploadField::create('Favicon', 'Icon'));
-
-        $uploadField->setAllowedExtensions(['png']);
-        $uploadField->setDescription(
-            '
-            Upload a 480px wide x 480px high, non-transparent PNG file.
-            Ask your developer for help if unsure.
-            Note for advanced users:
-                icons can also be loaded onto the server directly into the /themes/mytheme/dist/favicons/ folder
-                and as a favicon.ico in the root directory.'
-        );
     }
 
     /**
@@ -177,5 +158,29 @@ class MetaTagsSiteConfigDE extends Extension
         }
 
         $this->getOwner()->TwitterHandle = str_replace('@', '', (string) $this->getOwner()->TwitterHandle);
+    }
+
+    public function requireDefaultRecords()
+    {
+        $table = 'SiteConfig';
+        $faviconQuery = 'SHOW COLUMNS FROM ' . $table . ' LIKE \'FaviconID\'';
+        $webAppIconQuery = 'SHOW COLUMNS FROM ' . $table . ' LIKE \'WebAppManifestIconID\'';
+
+        $faviconResult = DB::query($faviconQuery);
+        $webAppIconResult = DB::query($webAppIconQuery);
+
+        if ($faviconResult->numRecords() > 0 && $webAppIconResult->numRecords() > 0) {
+            DB::query(
+                '
+                    UPDATE "' . $table . '"
+                    SET WebAppManifestIconID = FaviconID
+                    WHERE WebAppManifestIconID IS NULL OR WebAppManifestIconID = \'\'
+                '
+            );
+            DB::query('ALTER TABLE "' . $table . '" DROP COLUMN "FaviconID"');
+            echo 'Migration complete.';
+        } else {
+            echo 'Required columns do not exist.';
+        }
     }
 }
