@@ -43,25 +43,6 @@ class MetaTagsApi implements Flushable
 
     protected $metatagMetaTitle = [];
 
-    /**
-     * @var array
-     */
-    private static array $favicon_sizes = [
-        '16',
-        '32',
-        //"57",
-        //"72",
-        //"76",
-        //"96",
-        //"114",
-        //"120",
-        '128',
-        '144',
-        //"152",
-        //"180",
-        //"192",
-        '310',
-    ];
 
     private static array $skipped_tags = [];
 
@@ -163,15 +144,6 @@ class MetaTagsApi implements Flushable
                 }
 
                 //use base url rather than / so that sites that aren't a run from the root directory can have a favicon
-                $hasBaseFolderFavicon = false;
-                $publicDir = PUBLIC_DIR;
-                $faviconFileName = 'favicon.ico';
-                $faviconLocation = Controller::join_links($this->baseUrl, $publicDir, $faviconFileName);
-                if (file_exists($faviconLocation)) {
-                    $this->addToMetaTags('favicon', 'link', ['rel' => 'SHORTCUT ICON', 'href' => $faviconFileName]);
-                    $hasBaseFolderFavicon = true;
-                    //ie only...
-                }
 
                 if (! $this->page->ExtraMeta && $this->siteConfig->ExtraMeta) {
                     $this->page->ExtraMeta = $this->siteConfig->ExtraMeta;
@@ -211,7 +183,7 @@ class MetaTagsApi implements Flushable
 
                 $this->addOGTags();
                 $this->addTwitterTags();
-                $this->addIconTags($hasBaseFolderFavicon);
+                $this->addIconTags();
                 if ($cacheKey && $cache) {
                     $cache->set($cacheKey, serialize($this->metatags));
                 }
@@ -332,33 +304,22 @@ class MetaTagsApi implements Flushable
 
     protected function addIconTags(?bool $hasBaseFolderFavicon = false)
     {
-        $faviconImage = false;
-        if ($this->siteConfig->FaviconID) {
-            $faviconImage = $this->siteConfig->Favicon();
-            if (! ($faviconImage && $faviconImage->exists() && $faviconImage instanceof Image)) {
-                $faviconImage = false;
+        $faviconFileName = 'favicon.ico';
+        if (file_exists(PUBLIC_PATH . '/' . $faviconFileName)) {
+            $href = $faviconFileName;
+            //ie only...
+        } else {
+            $faviconImage = false;
+            if ($this->siteConfig->FaviconID) {
+                $faviconImage = $this->siteConfig->Favicon();
+                if (! ($faviconImage && $faviconImage->exists() && $faviconImage instanceof Image)) {
+                    $faviconImage = false;
+                }
             }
-        }
-
-        $sizes = (array) Config::inst()->get(self::class, 'favicon_sizes');
-        if ($hasBaseFolderFavicon && is_array($sizes)) {
-            $sizes = array_diff($sizes, [16]);
-        }
-
-        foreach ($sizes as $size) {
-            $href = $this->iconToUrl('icon-' . $size . 'x' . $size . '.png', $faviconImage, $size);
-            if ($href !== '' && $href !== '0') {
-                $sizes = $size . 'x' . $size;
-                $this->addToMetaTags('icon' . $size, 'link', ['rel' => 'icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
-                $this->addToMetaTags('iconApple' . $size, 'link', ['rel' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
-            }
-        }
-
-        if (! $hasBaseFolderFavicon) {
             $href = $this->iconToUrl('favicon.ico', $faviconImage, 16);
-            if ($href !== '' && $href !== '0') {
-                $this->addToMetaTags('favicon', 'link', ['rel' => 'SHORTCUT ICON', 'href' => $href]);
-            }
+        }
+        if ($href !== '' && $href !== '0') {
+            $this->addToMetaTags('favicon', 'link', ['rel' => 'SHORTCUT ICON', 'href' => $href]);
         }
     }
 
@@ -461,9 +422,11 @@ class MetaTagsApi implements Flushable
         );
 
         $href = (string) ModuleResourceLoader::singleton()->resolveURL($file);
-        if (! $href && $faviconImage && $faviconImage instanceof Image && $faviconImage->exists()) {
-            $generatedImage = $faviconImage->ScaleWidth($size);
-            $href = (string) $generatedImage->getURL();
+        if (! $href) {
+            if ($faviconImage && $faviconImage instanceof Image && $faviconImage->exists()) {
+                $generatedImage = $faviconImage->ScaleWidth($size);
+                $href = (string) $generatedImage->getURL();
+            }
         }
 
         return $href;
