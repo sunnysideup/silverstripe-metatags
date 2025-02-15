@@ -190,9 +190,7 @@ class MetaTagsApi implements Flushable
                     $cache->set($cacheKey, serialize($this->metatags));
                 }
                 foreach (Config::inst()->get(self::class, 'fonts') as $fontURL) {
-                    if (stristr($fontURL, 'googleapis.com')) {
-                        $this->addFontLink($fontURL);
-                    }
+                    $this->addFontLink($fontURL);
                 }
             }
         }
@@ -446,12 +444,14 @@ class MetaTagsApi implements Flushable
             return;
         }
         $preconnectUrl = $parsedUrl['scheme'] . '://' . $parsedUrl['host'];
+
+        // extras for google fonts
         if (stripos($preconnectUrl, 'fonts.googleapis.com') !== false) {
             $this->addGoogleFontsExtras();
         }
         // Preconnect
         $this->addToMetaTags(
-            'font-preconnect' . $fontURL,
+            'font-preconnect' . $preconnectUrl,
             'link',
             [
                 'rel'  => 'preconnect',
@@ -472,27 +472,28 @@ class MetaTagsApi implements Flushable
         );
 
         // Noscript fallback
-        $noscriptContent = '<link rel=\'stylesheet\' href=\'' . $fontURL . '\'>';
         $this->addToMetaTags(
             'font-noscript' . $fontURL,
             'noscript',
             [],
             false,
-            $noscriptContent
+            '<link rel=\'stylesheet\' href=\'' . $fontURL . '\'>'
         );
     }
 
     protected function addGoogleFontsExtras()
     {
         //<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        $this->addToMetaTags(
-            'font-preconnect-google-extra',
-            'link',
-            [
-                'rel'      => 'preconnect',
-                'href'     => 'https://fonts.gstatic.com',
-                'crossorigin' => null,
-            ]
-        );
+        if (! isset($this->metatags['font-preconnect-google'])) {
+            $this->addToMetaTags(
+                'font-preconnect-google-extra',
+                'link',
+                [
+                    'rel'      => 'preconnect',
+                    'href'     => 'https://fonts.gstatic.com',
+                    'crossorigin' => null,
+                ]
+            );
+        }
     }
 }
