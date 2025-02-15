@@ -48,6 +48,8 @@ class MetaTagsApi implements Flushable
 
     private static array $always_use_canonical = [];
 
+    private static $fonts = [];
+
     /**
      * the twitter handle used by the site
      * do not include @ sign.
@@ -186,6 +188,11 @@ class MetaTagsApi implements Flushable
                 $this->addIconTags();
                 if ($cacheKey && $cache) {
                     $cache->set($cacheKey, serialize($this->metatags));
+                }
+                foreach (Config::inst()->get(self::class, 'fonts') as $fontURL) {
+                    if (stristr($fontURL, 'googleapis.com')) {
+                        $this->addFontLink($fontURL);
+                    }
                 }
             }
         }
@@ -430,5 +437,62 @@ class MetaTagsApi implements Flushable
         }
 
         return $href;
+    }
+
+    protected function addFontLink(string $fontURL): void
+    {
+        $parsedUrl = parse_url($fontURL);
+        if (!isset($parsedUrl['scheme'], $parsedUrl['host'])) {
+            return;
+        }
+        $preconnectUrl = $parsedUrl['scheme'] . '://' . $parsedUrl['host'];
+        if (stripos($preconnectUrl, 'fonts.googleapis.com') !== false) {
+            $this->addGoogleFontsExtras();
+        }
+        // Preconnect
+        $this->addToMetaTags(
+            'font-preconnect' . $fontURL,
+            'link',
+            [
+                'rel'  => 'preconnect',
+                'href' => $preconnectUrl,
+            ]
+        );
+
+        // Preload
+        $this->addToMetaTags(
+            'font-preload' . $fontURL,
+            'link',
+            [
+                'rel'     => 'preload',
+                'href'    => $fontURL,
+                'as'      => 'style',
+                'onload'  => 'this.onload=null;this.rel="stylesheet"',
+            ]
+        );
+
+        // Noscript fallback
+        $noscriptContent = '<link rel=\'stylesheet\' href=\'' . $fontURL . '\'>';
+        $this->addToMetaTags(
+            'font-noscript' . $fontURL,
+            'noscript',
+            [],
+            false,
+            $noscriptContent
+        );
+    }
+
+    protected function addGoogleFontsExtras()
+    {
+        //<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        $this->addToMetaTags(
+            'font-preconnect-google-extra',
+            'link',
+            [
+                'rel'      => 'preconnect',
+                'href'     => 'https://fonts.gstatic.com',
+                'crossorigin' => null,
+            ]
+        );
     }
 }
