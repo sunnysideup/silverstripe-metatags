@@ -160,9 +160,8 @@ class MetaTagsSiteConfigDE extends Extension
 
     public function requireDefaultRecords()
     {
-        $table = 'SiteConfig';
-        $faviconQuery = 'SHOW COLUMNS FROM ' . $table . ' LIKE \'FaviconID\'';
-        $webAppIconQuery = 'SHOW COLUMNS FROM ' . $table . ' LIKE \'WebAppManifestIconID\'';
+        $faviconQuery = 'SHOW COLUMNS FROM SiteConfig LIKE \'FaviconID\'';
+        $webAppIconQuery = 'SHOW COLUMNS FROM SiteConfig LIKE \'WebAppManifestIconID\'';
 
         $faviconResult = DB::query($faviconQuery);
         $webAppIconResult = DB::query($webAppIconQuery);
@@ -170,15 +169,15 @@ class MetaTagsSiteConfigDE extends Extension
         if ($faviconResult->numRecords() > 0 && $webAppIconResult->numRecords() > 0) {
             DB::query(
                 '
-                    UPDATE "' . $table . '"
-                    SET WebAppManifestIconID = FaviconID
-                    WHERE WebAppManifestIconID IS NULL OR WebAppManifestIconID = \'\'
+                    UPDATE "SiteConfig"
+                    SET "WebAppManifestIconID" = "FaviconID"
+                    WHERE "WebAppManifestIconID" IS NULL OR "WebAppManifestIconID" = \'\' OR "WebAppManifestIconID" = 0
                 '
             );
-            DB::query('ALTER TABLE "' . $table . '" DROP COLUMN "FaviconID"');
+            DB::query('ALTER TABLE "SiteConfig" DROP COLUMN "FaviconID"');
             echo 'Migration complete.';
         } else {
-            echo 'Required columns do not exist.';
+            echo 'SiteConfig.FaviconID OR SiteConfig.WebAppManifestIconID does not exist.';
         }
     }
 }
