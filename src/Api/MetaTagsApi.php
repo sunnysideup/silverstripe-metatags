@@ -186,11 +186,9 @@ class MetaTagsApi implements Flushable
                 $this->addOGTags();
                 $this->addTwitterTags();
                 $this->addIconTags();
+                $this->addFontsLink();
                 if ($cacheKey && $cache) {
                     $cache->set($cacheKey, serialize($this->metatags));
-                }
-                foreach (Config::inst()->get(self::class, 'fonts') as $fontURL) {
-                    $this->addFontLink($fontURL);
                 }
             }
         }
@@ -435,6 +433,13 @@ class MetaTagsApi implements Flushable
         }
 
         return $href;
+    }
+
+    protected function addFontsLink(string $fontURL): void
+    {
+        foreach (Config::inst()->get(self::class, 'fonts') as $fontURL) {
+            $this->addFontLink($fontURL);
+        }
     }
 
     protected function addFontLink(string $fontURL): void
