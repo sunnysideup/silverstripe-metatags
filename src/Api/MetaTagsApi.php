@@ -435,7 +435,7 @@ class MetaTagsApi implements Flushable
         return $href;
     }
 
-    protected function addFontsLink(string $fontURL): void
+    protected function addFontsLink(): void
     {
         foreach (Config::inst()->get(self::class, 'fonts') as $fontURL) {
             $this->addFontLink($fontURL);
