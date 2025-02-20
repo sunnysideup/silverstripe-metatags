@@ -187,6 +187,8 @@ class MetaTagsApi implements Flushable
                 $this->addTwitterTags();
                 $this->addIconTags();
                 $this->addFontsLink();
+
+                // cache it all ...
                 if ($cacheKey && $cache) {
                     $cache->set($cacheKey, serialize($this->metatags));
                 }
