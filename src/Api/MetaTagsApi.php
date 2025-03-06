@@ -33,15 +33,16 @@ class MetaTagsApi implements Flushable
 
     protected $page;
 
-    protected $baseUrl = '';
+    protected string $baseUrl = '';
 
     protected $siteConfig;
 
-    protected $metatags = [];
+    protected array $metatags = [];
 
-    protected $shareImageCache = [];
+    protected array $shareImageCache = [];
 
-    protected $metatagMetaTitle = [];
+    protected array $metatagMetaTitle = '';
+    protected bool $iconSet = false;
 
 
     private static array $skipped_tags = [];
@@ -323,8 +324,11 @@ class MetaTagsApi implements Flushable
             }
             $href = $this->iconToUrl('favicon.ico', $faviconImage, 16);
         }
-        if ($href !== '' && $href !== '0') {
-            $this->addToMetaTags('favicon', 'link', ['rel' => 'SHORTCUT ICON', 'href' => $href]);
+        if (! $this->iconSet) {
+            if ($href !== '' && $href !== '0') {
+                $this->iconSet = true;
+                $this->addToMetaTags('favicon', 'link', ['rel' => 'shortcut icon', 'href' => $href]);
+            }
         }
     }
 
