@@ -41,7 +41,7 @@ class MetaTagsApi implements Flushable
 
     protected array $shareImageCache = [];
 
-    protected array $metatagMetaTitle = '';
+    protected string $metatagMetaTitle = '';
     protected bool $iconSet = false;
 
 
