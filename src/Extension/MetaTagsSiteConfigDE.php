@@ -52,9 +52,10 @@ class MetaTagsSiteConfigDE extends Extension
 
     public function populateDefaults()
     {
-        $this->getOwner()->MetaDataCopyright = '';
-        $this->getOwner()->MetaDataDesign = '';
-        $this->getOwner()->MetaDataCoding = '';
+        $owner = $this->getOwner();
+        $owner->MetaDataCopyright = '';
+        $owner->MetaDataDesign = '';
+        $owner->MetaDataCoding = '';
     }
 
     public function updateCMSFields(FieldList $fields)
@@ -175,9 +176,9 @@ class MetaTagsSiteConfigDE extends Extension
                 '
             );
             DB::query('ALTER TABLE "SiteConfig" DROP COLUMN "FaviconID"');
-            echo 'Migration complete.';
+            DB::alteration_message('Migration complete.');
         } else {
-            echo 'SiteConfig.FaviconID OR SiteConfig.WebAppManifestIconID does not exist.';
+            DB::alteration_message('SiteConfig.FaviconID OR SiteConfig.WebAppManifestIconID does not exist.');
         }
     }
 }
