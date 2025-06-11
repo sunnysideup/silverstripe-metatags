@@ -116,9 +116,9 @@ class MetaTagsApi implements Flushable
                     $this->MetaTagsMetaTitle(),
                     $this->siteConfig->AppendToMetaTitle,
                 ];
-                $content = trim(implode(' ', array_filter($titleArray)));
-                $this->addToMetaTags('title', 'title', [], false, Convert::raw2att($content));
-                $this->addToMetaTags('metaTitle', 'meta', ['name' => 'title', 'content' => Convert::raw2att($content)]);
+                $titleAsString = trim(implode(' ', array_filter($titleArray)));
+                $this->addToMetaTags('title', 'title', [], false, Convert::raw2att($titleAsString));
+                $this->addToMetaTags('metaTitle', 'meta', ['name' => 'title', 'content' => Convert::raw2att($titleAsString)]);
                 $controller = Controller::curr();
                 $canonicalLink = '';
                 if ($controller && $controller->hasMethod('CanonicalLink')) {
@@ -339,7 +339,7 @@ class MetaTagsApi implements Flushable
     {
         if (! $this->metatagMetaTitle) {
             $this->metatagMetaTitle = '';
-            if (Config::inst()->get(MetaTagsContentControllerEXT::class, 'use_separate_metatitle') && ! empty($this->page->MetaTitle)) {
+            if (Config::inst()->get(MetaTagsApi::class, 'use_separate_metatitle') && ! empty($this->page->MetaTitle)) {
                 $this->metatagMetaTitle = (string) $this->page->MetaTitle;
             }
 

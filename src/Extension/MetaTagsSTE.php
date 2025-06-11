@@ -176,7 +176,7 @@ class MetaTagsSTE extends Extension
         $owner = $this->getOwner();
         if ($fields->fieldByName('Root.Main.Metadata')) {
             //separate MetaTitle?
-            if (Config::inst()->get(MetaTagsContentControllerEXT::class, 'use_separate_metatitle')) {
+            if (Config::inst()->get(MetaTagsApi::class, 'use_separate_metatitle')) {
                 $fields->addFieldToTab(
                     'Root.Main.Metadata',
                     $allowField0 = TextField::create(
