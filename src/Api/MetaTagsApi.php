@@ -118,7 +118,6 @@ class MetaTagsApi implements Flushable
                 ];
                 $titleAsString = trim(implode(' ', array_filter($titleArray)));
                 $this->addToMetaTags('title', 'title', [], false, Convert::raw2att($titleAsString));
-                $this->addToMetaTags('metaTitle', 'meta', ['name' => 'title', 'content' => Convert::raw2att($titleAsString)]);
                 $controller = Controller::curr();
                 $canonicalLink = '';
                 if ($controller && $controller->hasMethod('CanonicalLink')) {
