@@ -20,16 +20,16 @@ use SilverStripe\SiteConfig\SiteConfig;
  * adding functionality to SiteConfig.
  *
  * @property SiteConfig|MetaTagsSiteConfigDE $owner
- * @property string $PrependToMetaTitle
- * @property string $AppendToMetaTitle
- * @property string $MetaDataCountry
- * @property string $MetaDataCopyright
- * @property string $MetaDataDesign
- * @property string $MetaDataCoding
+ * @property ?string $PrependToMetaTitle
+ * @property ?string $AppendToMetaTitle
+ * @property ?string $MetaDataCountry
+ * @property ?string $MetaDataCopyright
+ * @property ?string $MetaDataDesign
+ * @property ?string $MetaDataCoding
  * @property bool $UpdateMenuTitle
  * @property bool $UpdateMetaDescription
- * @property string $ExtraMeta
- * @property string $TwitterHandle
+ * @property ?string $ExtraMeta
+ * @property ?string $TwitterHandle
  */
 class MetaTagsSiteConfigDE extends Extension
 {
