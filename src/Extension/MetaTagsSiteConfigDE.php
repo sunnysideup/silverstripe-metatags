@@ -129,7 +129,7 @@ class MetaTagsSiteConfigDE extends Extension
             $tabs[] = Tab::create(
                 'Social',
                 TextField::create('TwitterHandle', 'Twitter Handle')
-                    ->setDescription('(e.g. BarackObama - how you address people on Twitter (x.com) but then without the @ sign.')
+                    ->setDescription('e.g. BarackObama - how you address people on Twitter (x.com) but then without the @ sign.')
             );
         }
         $fields->addFieldToTab(
