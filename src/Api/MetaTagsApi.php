@@ -98,8 +98,6 @@ class MetaTagsApi implements Flushable
             $cacheKey = $this->getCacheKey();
             $cache = self::get_meta_tag_cache();
 
-            //useful later on
-
             if ($cacheKey !== '' && $cacheKey !== '0' && $cache->has($cacheKey)) {
                 // @property array $metatags
                 $this->metatags = unserialize((string) $cache->get($cacheKey));
@@ -107,6 +105,11 @@ class MetaTagsApi implements Flushable
                     $this->metatags = [];
                 }
             }
+            // always run!
+            if (! $this->page->ExtraMeta && $this->siteConfig->ExtraMeta) {
+                $this->page->ExtraMeta = $this->siteConfig->ExtraMeta;
+            }
+
 
             if (empty($this->metatags)) {
                 //base tag
@@ -146,10 +149,6 @@ class MetaTagsApi implements Flushable
                 }
 
                 //use base url rather than / so that sites that aren't a run from the root directory can have a favicon
-
-                if (! $this->page->ExtraMeta && $this->siteConfig->ExtraMeta) {
-                    $this->page->ExtraMeta = $this->siteConfig->ExtraMeta;
-                }
 
                 if (! $this->siteConfig->MetaDataCopyright) {
                     $this->siteConfig->MetaDataCopyright = $this->siteConfig->Title;
