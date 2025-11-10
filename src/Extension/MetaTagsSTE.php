@@ -294,7 +294,6 @@ class MetaTagsSTE extends Extension
         foreach ($skipped as $key) {
             unset($tags[$key]);
         }
-        print_r($tags);
 
         return $tags;
     }
