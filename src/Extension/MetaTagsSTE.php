@@ -28,10 +28,10 @@ use Sunnysideup\MetaTags\Api\MetaTagsApi;
  * Class \Sunnysideup\MetaTags\Extension\MetaTagsSTE.
  *
  * @property SiteTree|MetaTagsSTE $owner
- * @property string $MetaTitle
- * @property string $AutomateMetatags
+ * @property ?string $MetaTitle
+ * @property ?string $AutomateMetatags
  * @property bool $ExcludeFromSearchEngines
- * @property string $CanonicalURL
+ * @property ?string $CanonicalURL
  * @property int $ShareOnFacebookImageID
  * @method Image ShareOnFacebookImage()
  */
