@@ -178,7 +178,7 @@ class MetaTagsApi implements Flushable
                 }
 
                 if ($this->page->ExtraMeta) {
-                    $this->metatags[] = [
+                    $this->metatags['ExtraMeta'] = [
                         'html' => $this->page->ExtraMeta,
                     ];
                 }
@@ -251,21 +251,35 @@ class MetaTagsApi implements Flushable
      */
     protected function addOGTags()
     {
-        $array = [
-            'title' => Convert::raw2att($this->MetaTagsMetaTitle()),
-            'type' => 'article',
-            'url' => Convert::raw2att($this->page->AbsoluteLink()),
-            'site_name' => Convert::raw2att($this->siteConfig->Title),
-            'description' => Convert::raw2att($this->page->MetaDescription),
-        ];
+        $metaTitle = Convert::raw2att($this->MetaTagsMetaTitle());
+        $metaDesc = Convert::raw2att($this->page->MetaDescription ?? '');
+        $metaUrl = Convert::raw2att($this->page->AbsoluteLink());
+        $siteName = Convert::raw2att($this->siteConfig->Title ?? '');
         $shareImage = $this->shareImage();
+
+        $tags = [
+            'og:title' => $metaTitle,
+            'og:type' => 'article',
+            'og:url' => $metaUrl,
+            'og:site_name' => $siteName,
+            'og:description' => $metaDesc,
+        ];
+
         if ($shareImage && $shareImage->exists()) {
-            $array['image'] = Convert::raw2att($shareImage->getAbsoluteURL());
+            $imageUrl = Convert::raw2att($shareImage->getAbsoluteURL());
+            $tags['og:image'] = $imageUrl;
+            $tags['og:image:secure_url'] = str_replace('http://', 'https://', $imageUrl);
+            $tags['og:image:type'] = 'image/' . strtolower($shareImage->getExtension() ?? 'jpeg');
+            $tags['og:image:alt'] = Convert::raw2att($shareImage->Title ?: $shareImage->Name);
         }
 
-        foreach ($array as $key => $value) {
-            if ($value) {
-                $this->addToMetaTags('og' . $key, 'meta', ['property' => 'og:' . $key, 'content' => $value]);
+        foreach ($tags as $property => $content) {
+            if ($content) {
+                $key = str_replace(':', '', ucfirst($property));
+                $this->addToMetaTags($key, 'meta', [
+                    'property' => $property,
+                    'content' => $content,
+                ]);
             }
         }
     }
@@ -277,32 +291,40 @@ class MetaTagsApi implements Flushable
      *     MetaTagsContentControllerEXT:
      *       twitter_handle: "relevant_twitter_handle"
      */
-    protected function addTwitterTags()
+
+    protected function addTwitterTags(): void
     {
-        $handle = $this->siteConfig->TwitterHandle;
+        $handle = $this->siteConfig->TwitterHandle ?: Config::inst()->get(self::class, 'twitter_handle');
+
         if (! $handle) {
-            $handle = Config::inst()->get(self::class, 'twitter_handle');
+            return;
         }
 
-        if ($handle) {
-            $array = [
-                'title' => Convert::raw2att($this->MetaTagsMetaTitle()),
-                'description' => Convert::raw2att($this->page->MetaDescription),
-                'url' => Convert::raw2att($this->page->AbsoluteLink()),
-                'site' => '@' . $handle,
-            ];
-            $shareImage = $this->shareImage();
-            if ($shareImage && $shareImage->exists()) {
-                $array['card'] = Convert::raw2att('summary_large_image');
-                $array['image'] = Convert::raw2att($shareImage->getAbsoluteURL());
-            } else {
-                $array['card'] = Convert::raw2att('summary');
-            }
+        $metaTitle = Convert::raw2att($this->MetaTagsMetaTitle());
+        $metaDesc = Convert::raw2att($this->page->MetaDescription ?? '');
+        $metaUrl = Convert::raw2att($this->page->AbsoluteLink());
+        $shareImage = $this->shareImage();
 
-            foreach ($array as $key => $value) {
-                if ($value) {
-                    $this->addToMetaTags('twitter' . $key, 'meta', ['name' => 'twitter:' . $key, 'content' => $value]);
-                }
+        $tags = [
+            'card' => 'summary_large_image',
+            'site' => '@' . ltrim($handle, '@'),
+            'creator' => '@' . ltrim($handle, '@'), // X now prefers a creator tag
+            'title' => $metaTitle,
+            'description' => $metaDesc,
+            'url' => $metaUrl,
+        ];
+
+        if ($shareImage && $shareImage->exists()) {
+            $tags['image'] = Convert::raw2att($shareImage->getAbsoluteURL());
+        }
+
+        foreach ($tags as $key => $value) {
+            if ($value) {
+                $this->addToMetaTags(
+                    'twitter' . ucfirst($key),
+                    'meta',
+                    ['name' => 'twitter:' . $key, 'content' => $value]
+                );
             }
         }
     }
