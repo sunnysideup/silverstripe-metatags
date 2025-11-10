@@ -282,7 +282,7 @@ class MetaTagsSTE extends Extension
         // $owner = $this->getOwner();
         $provider = Config::inst()->get(self::class, 'metatag_builder_class');
         $builder = Injector::inst()->get($provider, false, [$this->owner]);
-        $tags = array_merge($tags, $builder->getMetaTags());
+        $tags = array_merge($builder->getMetaTags(), $tags);
         foreach ($tags as $key => $array) {
             $tags[$key]['tag'] = $array['tag'] ?? 'meta';
             $tags[$key]['attributes'] = $array['attributes'] ?? [];
@@ -294,6 +294,7 @@ class MetaTagsSTE extends Extension
         foreach ($skipped as $key) {
             unset($tags[$key]);
         }
+        print_r($tags);
 
         return $tags;
     }
