@@ -33,39 +33,23 @@ class MetaTagsApi implements Flushable
 
     protected $page;
 
-    protected $baseUrl = '';
+    protected string $baseUrl = '';
 
     protected $siteConfig;
 
-    protected $metatags = [];
+    protected array $metatags = [];
 
-    protected $shareImageCache = [];
+    protected array $shareImageCache = [];
 
-    protected $metatagMetaTitle = [];
+    protected string $metatagMetaTitle = '';
+    protected bool $iconSet = false;
 
-    /**
-     * @var array
-     */
-    private static array $favicon_sizes = [
-        '16',
-        '32',
-        //"57",
-        //"72",
-        //"76",
-        //"96",
-        //"114",
-        //"120",
-        '128',
-        '144',
-        //"152",
-        //"180",
-        //"192",
-        '310',
-    ];
 
     private static array $skipped_tags = [];
 
     private static array $always_use_canonical = [];
+
+    private static $fonts = [];
 
     /**
      * the twitter handle used by the site
@@ -114,8 +98,6 @@ class MetaTagsApi implements Flushable
             $cacheKey = $this->getCacheKey();
             $cache = self::get_meta_tag_cache();
 
-            //useful later on
-
             if ($cacheKey !== '' && $cacheKey !== '0' && $cache->has($cacheKey)) {
                 // @property array $metatags
                 $this->metatags = unserialize((string) $cache->get($cacheKey));
@@ -123,6 +105,11 @@ class MetaTagsApi implements Flushable
                     $this->metatags = [];
                 }
             }
+            // always run!
+            if (! $this->page->ExtraMeta && $this->siteConfig->ExtraMeta) {
+                $this->page->ExtraMeta = $this->siteConfig->ExtraMeta;
+            }
+
 
             if (empty($this->metatags)) {
                 //base tag
@@ -132,9 +119,8 @@ class MetaTagsApi implements Flushable
                     $this->MetaTagsMetaTitle(),
                     $this->siteConfig->AppendToMetaTitle,
                 ];
-                $content = trim(implode(' ', array_filter($titleArray)));
-                $this->addToMetaTags('title', 'title', [], false, Convert::raw2att($content));
-                $this->addToMetaTags('metaTitle', 'meta', ['name' => 'title', 'content' => Convert::raw2att($content)]);
+                $titleAsString = trim(implode(' ', array_filter($titleArray)));
+                $this->addToMetaTags('title', 'title', [], false, Convert::raw2att($titleAsString));
                 $controller = Controller::curr();
                 $canonicalLink = '';
                 if ($controller && $controller->hasMethod('CanonicalLink')) {
@@ -163,19 +149,6 @@ class MetaTagsApi implements Flushable
                 }
 
                 //use base url rather than / so that sites that aren't a run from the root directory can have a favicon
-                $hasBaseFolderFavicon = false;
-                $publicDir = PUBLIC_DIR;
-                $faviconFileName = 'favicon.ico';
-                $faviconLocation = Controller::join_links($this->baseUrl, $publicDir, $faviconFileName);
-                if (file_exists($faviconLocation)) {
-                    $this->addToMetaTags('favicon', 'link', ['rel' => 'SHORTCUT ICON', 'href' => $faviconFileName]);
-                    $hasBaseFolderFavicon = true;
-                    //ie only...
-                }
-
-                if (! $this->page->ExtraMeta && $this->siteConfig->ExtraMeta) {
-                    $this->page->ExtraMeta = $this->siteConfig->ExtraMeta;
-                }
 
                 if (! $this->siteConfig->MetaDataCopyright) {
                     $this->siteConfig->MetaDataCopyright = $this->siteConfig->Title;
@@ -204,14 +177,17 @@ class MetaTagsApi implements Flushable
                 }
 
                 if ($this->page->ExtraMeta) {
-                    $this->metatags[] = [
+                    $this->metatags['ExtraMeta'] = [
                         'html' => $this->page->ExtraMeta,
                     ];
                 }
 
                 $this->addOGTags();
                 $this->addTwitterTags();
-                $this->addIconTags($hasBaseFolderFavicon);
+                $this->addIconTags();
+                $this->addFontsLink();
+
+                // cache it all ...
                 if ($cacheKey && $cache) {
                     $cache->set($cacheKey, serialize($this->metatags));
                 }
@@ -274,21 +250,35 @@ class MetaTagsApi implements Flushable
      */
     protected function addOGTags()
     {
-        $array = [
-            'title' => Convert::raw2att($this->MetaTagsMetaTitle()),
-            'type' => 'article',
-            'url' => Convert::raw2att($this->page->AbsoluteLink()),
-            'site_name' => Convert::raw2att($this->siteConfig->Title),
-            'description' => Convert::raw2att($this->page->MetaDescription),
-        ];
+        $metaTitle = Convert::raw2att($this->MetaTagsMetaTitle());
+        $metaDesc = Convert::raw2att($this->page->MetaDescription ?? '');
+        $metaUrl = Convert::raw2att($this->page->AbsoluteLink());
+        $siteName = Convert::raw2att($this->siteConfig->Title ?? '');
         $shareImage = $this->shareImage();
+
+        $tags = [
+            'og:title' => $metaTitle,
+            'og:type' => 'article',
+            'og:url' => $metaUrl,
+            'og:site_name' => $siteName,
+            'og:description' => $metaDesc,
+        ];
+
         if ($shareImage && $shareImage->exists()) {
-            $array['image'] = Convert::raw2att($shareImage->getAbsoluteURL());
+            $imageUrl = Convert::raw2att($shareImage->getAbsoluteURL());
+            $tags['og:image'] = $imageUrl;
+            $tags['og:image:secure_url'] = str_replace('http://', 'https://', $imageUrl);
+            $tags['og:image:type'] = 'image/' . strtolower($shareImage->getExtension() ?? 'jpeg');
+            $tags['og:image:alt'] = Convert::raw2att($shareImage->Title ?: $shareImage->Name);
         }
 
-        foreach ($array as $key => $value) {
-            if ($value) {
-                $this->addToMetaTags('og' . $key, 'meta', ['property' => 'og:' . $key, 'content' => $value]);
+        foreach ($tags as $property => $content) {
+            if ($content) {
+                $key = str_replace(':', '', ucfirst($property));
+                $this->addToMetaTags($key, 'meta', [
+                    'property' => $property,
+                    'content' => $content,
+                ]);
             }
         }
     }
@@ -300,64 +290,64 @@ class MetaTagsApi implements Flushable
      *     MetaTagsContentControllerEXT:
      *       twitter_handle: "relevant_twitter_handle"
      */
-    protected function addTwitterTags()
+
+    protected function addTwitterTags(): void
     {
-        $handle = $this->siteConfig->TwitterHandle;
+        $handle = $this->siteConfig->TwitterHandle ?: Config::inst()->get(self::class, 'twitter_handle');
+
         if (! $handle) {
-            $handle = Config::inst()->get(self::class, 'twitter_handle');
+            return;
         }
 
-        if ($handle) {
-            $array = [
-                'title' => Convert::raw2att($this->MetaTagsMetaTitle()),
-                'description' => Convert::raw2att($this->page->MetaDescription),
-                'url' => Convert::raw2att($this->page->AbsoluteLink()),
-                'site' => '@' . $handle,
-            ];
-            $shareImage = $this->shareImage();
-            if ($shareImage && $shareImage->exists()) {
-                $array['card'] = Convert::raw2att('summary_large_image');
-                $array['image'] = Convert::raw2att($shareImage->getAbsoluteURL());
-            } else {
-                $array['card'] = Convert::raw2att('summary');
-            }
+        $metaTitle = Convert::raw2att($this->MetaTagsMetaTitle());
+        $metaDesc = Convert::raw2att($this->page->MetaDescription ?? '');
+        $metaUrl = Convert::raw2att($this->page->AbsoluteLink());
+        $shareImage = $this->shareImage();
 
-            foreach ($array as $key => $value) {
-                if ($value) {
-                    $this->addToMetaTags('twitter' . $key, 'meta', ['name' => 'twitter:' . $key, 'content' => $value]);
-                }
+        $tags = [
+            'card' => 'summary_large_image',
+            'site' => '@' . ltrim($handle, '@'),
+            'creator' => '@' . ltrim($handle, '@'), // X now prefers a creator tag
+            'title' => $metaTitle,
+            'description' => $metaDesc,
+            'url' => $metaUrl,
+        ];
+
+        if ($shareImage && $shareImage->exists()) {
+            $tags['image'] = Convert::raw2att($shareImage->getAbsoluteURL());
+        }
+
+        foreach ($tags as $key => $value) {
+            if ($value) {
+                $this->addToMetaTags(
+                    'twitter' . ucfirst($key),
+                    'meta',
+                    ['name' => 'twitter:' . $key, 'content' => $value]
+                );
             }
         }
     }
 
     protected function addIconTags(?bool $hasBaseFolderFavicon = false)
     {
-        $faviconImage = false;
-        if ($this->siteConfig->FaviconID) {
-            $faviconImage = $this->siteConfig->Favicon();
-            if (! ($faviconImage && $faviconImage->exists() && $faviconImage instanceof Image)) {
-                $faviconImage = false;
+        $faviconFileName = 'favicon.ico';
+        if (file_exists(PUBLIC_PATH . '/' . $faviconFileName)) {
+            $href = $faviconFileName;
+            //ie only...
+        } else {
+            $faviconImage = false;
+            if ($this->siteConfig->hasMethod('WebAppManifestIcon') && $this->siteConfig->WebAppManifestIconID) {
+                $faviconImage = $this->siteConfig->WebAppManifestIcon();
+                if (! ($faviconImage && $faviconImage->exists() && $faviconImage instanceof Image)) {
+                    $faviconImage = false;
+                }
             }
-        }
-
-        $sizes = (array) Config::inst()->get(self::class, 'favicon_sizes');
-        if ($hasBaseFolderFavicon && is_array($sizes)) {
-            $sizes = array_diff($sizes, [16]);
-        }
-
-        foreach ($sizes as $size) {
-            $href = $this->iconToUrl('icon-' . $size . 'x' . $size . '.png', $faviconImage, $size);
-            if ($href !== '' && $href !== '0') {
-                $sizes = $size . 'x' . $size;
-                $this->addToMetaTags('icon' . $size, 'link', ['rel' => 'icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
-                $this->addToMetaTags('iconApple' . $size, 'link', ['rel' => 'apple-touch-icon', 'type' => 'image/png', 'sizes' => $sizes, 'href' => $href]);
-            }
-        }
-
-        if (! $hasBaseFolderFavicon) {
             $href = $this->iconToUrl('favicon.ico', $faviconImage, 16);
+        }
+        if (! $this->iconSet) {
             if ($href !== '' && $href !== '0') {
-                $this->addToMetaTags('favicon', 'link', ['rel' => 'SHORTCUT ICON', 'href' => $href]);
+                $this->iconSet = true;
+                $this->addToMetaTags('favicon', 'link', ['rel' => 'shortcut icon', 'href' => $href]);
             }
         }
     }
@@ -369,7 +359,7 @@ class MetaTagsApi implements Flushable
     {
         if (! $this->metatagMetaTitle) {
             $this->metatagMetaTitle = '';
-            if (Config::inst()->get(MetaTagsContentControllerEXT::class, 'use_separate_metatitle') && ! empty($this->page->MetaTitle)) {
+            if (Config::inst()->get(MetaTagsApi::class, 'use_separate_metatitle') && ! empty($this->page->MetaTitle)) {
                 $this->metatagMetaTitle = (string) $this->page->MetaTitle;
             }
 
@@ -461,11 +451,80 @@ class MetaTagsApi implements Flushable
         );
 
         $href = (string) ModuleResourceLoader::singleton()->resolveURL($file);
-        if (! $href && $faviconImage && $faviconImage instanceof Image && $faviconImage->exists()) {
-            $generatedImage = $faviconImage->ScaleWidth($size);
-            $href = (string) $generatedImage->getURL();
+        if (! $href) {
+            if ($faviconImage && $faviconImage instanceof Image && $faviconImage->exists()) {
+                $generatedImage = $faviconImage->ScaleWidth($size);
+                $href = (string) $generatedImage->getURL();
+            }
         }
 
         return $href;
+    }
+
+    protected function addFontsLink(): void
+    {
+        foreach (Config::inst()->get(self::class, 'fonts') as $fontURL) {
+            $this->addFontLink($fontURL);
+        }
+    }
+
+    protected function addFontLink(string $fontURL): void
+    {
+        $parsedUrl = parse_url($fontURL);
+        if (!isset($parsedUrl['scheme'], $parsedUrl['host'])) {
+            return;
+        }
+        $preconnectUrl = $parsedUrl['scheme'] . '://' . $parsedUrl['host'];
+
+        // extras for google fonts
+        if (stripos($preconnectUrl, 'fonts.googleapis.com') !== false) {
+            $this->addGoogleFontsExtras();
+        }
+        // Preconnect
+        $this->addToMetaTags(
+            'font-preconnect' . $preconnectUrl,
+            'link',
+            [
+                'rel'  => 'preconnect',
+                'href' => $preconnectUrl,
+            ]
+        );
+
+        // Preload
+        $this->addToMetaTags(
+            'font-preload' . $fontURL,
+            'link',
+            [
+                'rel'     => 'preload',
+                'href'    => $fontURL,
+                'as'      => 'style',
+                'onload'  => 'this.onload=null;this.rel="stylesheet"',
+            ]
+        );
+
+        // Noscript fallback
+        $this->addToMetaTags(
+            'font-noscript' . $fontURL,
+            'noscript',
+            [],
+            false,
+            '<link rel=\'stylesheet\' href=\'' . $fontURL . '\'>'
+        );
+    }
+
+    protected function addGoogleFontsExtras()
+    {
+        //<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        if (! isset($this->metatags['font-preconnect-google'])) {
+            $this->addToMetaTags(
+                'font-preconnect-google-extra',
+                'link',
+                [
+                    'rel'      => 'preconnect',
+                    'href'     => 'https://fonts.gstatic.com',
+                    'crossorigin' => null,
+                ]
+            );
+        }
     }
 }

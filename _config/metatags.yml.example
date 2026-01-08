@@ -11,27 +11,17 @@ Sunnysideup\MetaTags\Extension\MetaTagsContentControllerEXT:
   no_automated_meta_description: true
   use_separate_metatitle: true
   no_additional_meta_settings: true
-  default_css:
-    - mycss
-  jquery_cdn_location: "https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"
-  default_js:
-    - 'app/javascript/test.js'
+
+Sunnysideup\MetaTags\Api\MetaTagsApi:
+  fonts:
+    - https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap
   viewport_setting: 'width=device-width,initial-scale=1'
+
+  twitter_handle: "relevant_twitter_handle"
   og_image_method_map:
     "ProductPage": "MyProductImage"
     "Page": "Image"
-  twitter_handle: "relevant_twitter_handle"
-  favicon_sizes:
-    - 16
-    - 64
-    - 128
-  google_font_collection:
-    - Inconsolata
-  folder_for_combined_files: 'cache'
-  combine_css_files_into_one: true
-  combine_js_files_into_one: true
 
-Sunnysideup\MetaTags\Api\MetaTagsApi:
   skipped_tags:
     - baseTag
     - title

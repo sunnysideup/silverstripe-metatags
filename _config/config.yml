@@ -1,9 +1,8 @@
 ---
 Name: metatags
 After:
-  - '#coreconfig'
+  - "#coreconfig"
 ---
-
 SilverStripe\SiteConfig\SiteConfig:
   extensions:
     - Sunnysideup\MetaTags\Extension\MetaTagsSiteConfigDE
@@ -12,7 +11,7 @@ SilverStripe\CMS\Model\SiteTree:
   extensions:
     - Sunnysideup\MetaTags\Extension\MetaTagsSTE
   show_meta_generator_version: false
-  meta_generator: 'werawera + aroha'
+  meta_generator: "Made with aroha in Aotearoa by Sunny Side Up (www.sunnysideup.co.nz)"
 
 SilverStripe\CMS\Controllers\ContentController:
   extensions:
@@ -26,4 +25,3 @@ SilverStripe\Core\Injector\Injector:
 
 SilverStripe\i18n\i18n:
   default_locale: en-NZ
-

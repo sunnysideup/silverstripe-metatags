@@ -25,6 +25,7 @@
   "require": {
     "silverstripe/framework": "^4.0 || ^5.0",
     "silverstripe/recipe-cms": "^4.0 || ^5.0",
+    "bimthebam/silverstripe-web-app-manifest": "^1",
     "sunnysideup/silverstripe-externalurlfield": "dev-master"
   },
   "extra": {

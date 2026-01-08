@@ -1,0 +1,3 @@
+en:
+  SilverStripe\SiteConfig\SiteConfig:
+    TAB_WEB_APP_MANIFEST: "App Manifest"

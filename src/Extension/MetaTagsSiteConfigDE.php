@@ -13,24 +13,23 @@ use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
-
+use SilverStripe\ORM\DB;
+use SilverStripe\SiteConfig\SiteConfig;
 
 /**
  * adding functionality to SiteConfig.
  *
  * @property SiteConfig|MetaTagsSiteConfigDE $owner
- * @property string $PrependToMetaTitle
- * @property string $AppendToMetaTitle
- * @property string $MetaDataCountry
- * @property string $MetaDataCopyright
- * @property string $MetaDataDesign
- * @property string $MetaDataCoding
+ * @property ?string $PrependToMetaTitle
+ * @property ?string $AppendToMetaTitle
+ * @property ?string $MetaDataCountry
+ * @property ?string $MetaDataCopyright
+ * @property ?string $MetaDataDesign
+ * @property ?string $MetaDataCoding
  * @property bool $UpdateMenuTitle
  * @property bool $UpdateMetaDescription
- * @property string $ExtraMeta
- * @property string $TwitterHandle
- * @property int $FaviconID
- * @method Image Favicon()
+ * @property ?string $ExtraMeta
+ * @property ?string $TwitterHandle
  */
 class MetaTagsSiteConfigDE extends Extension
 {
@@ -51,19 +50,12 @@ class MetaTagsSiteConfigDE extends Extension
         'TwitterHandle' => 'HTMLText',
     ];
 
-    private static $has_one = [
-        'Favicon' => Image::class,
-    ];
-
-    private static $owns = [
-        'Favicon',
-    ];
-
     public function populateDefaults()
     {
-        $this->getOwner()->MetaDataCopyright = '';
-        $this->getOwner()->MetaDataDesign = '';
-        $this->getOwner()->MetaDataCoding = '';
+        $owner = $this->getOwner();
+        $owner->MetaDataCopyright = '';
+        $owner->MetaDataDesign = '';
+        $owner->MetaDataCoding = '';
     }
 
     public function updateCMSFields(FieldList $fields)
@@ -137,7 +129,7 @@ class MetaTagsSiteConfigDE extends Extension
             $tabs[] = Tab::create(
                 'Social',
                 TextField::create('TwitterHandle', 'Twitter Handle')
-                    ->setDescription('(e.g. BarackObama - how you address people on Twitter but then without the @ sign.')
+                    ->setDescription('e.g. BarackObama - how you address people on Twitter (x.com) but then without the @ sign.')
             );
         }
         $fields->addFieldToTab(
@@ -149,18 +141,6 @@ class MetaTagsSiteConfigDE extends Extension
         foreach ($tabs as $tab) {
             $tabSet->push($tab);
         }
-
-        $fields->addFieldToTab('Root.Icons', $uploadField = UploadField::create('Favicon', 'Icon'));
-
-        $uploadField->setAllowedExtensions(['png']);
-        $uploadField->setDescription(
-            '
-            Upload a 480px wide x 480px high, non-transparent PNG file.
-            Ask your developer for help if unsure.
-            Note for advanced users:
-                icons can also be loaded onto the server directly into the /themes/mytheme/dist/favicons/ folder
-                and as a favicon.ico in the root directory.'
-        );
     }
 
     /**
@@ -177,5 +157,28 @@ class MetaTagsSiteConfigDE extends Extension
         }
 
         $this->getOwner()->TwitterHandle = str_replace('@', '', (string) $this->getOwner()->TwitterHandle);
+    }
+
+    public function requireDefaultRecords()
+    {
+        $faviconQuery = 'SHOW COLUMNS FROM SiteConfig LIKE \'FaviconID\'';
+        $webAppIconQuery = 'SHOW COLUMNS FROM SiteConfig LIKE \'WebAppManifestIconID\'';
+
+        $faviconResult = DB::query($faviconQuery);
+        $webAppIconResult = DB::query($webAppIconQuery);
+
+        if ($faviconResult->numRecords() > 0 && $webAppIconResult->numRecords() > 0) {
+            DB::query(
+                '
+                    UPDATE "SiteConfig"
+                    SET "WebAppManifestIconID" = "FaviconID"
+                    WHERE "WebAppManifestIconID" IS NULL OR "WebAppManifestIconID" = \'\' OR "WebAppManifestIconID" = 0
+                '
+            );
+            DB::query('ALTER TABLE "SiteConfig" DROP COLUMN "FaviconID"');
+            DB::alteration_message('Migration complete.');
+        } else {
+            DB::alteration_message('SiteConfig.FaviconID OR SiteConfig.WebAppManifestIconID does not exist.');
+        }
     }
 }
