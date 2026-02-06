@@ -94,7 +94,7 @@ class MetaTagsApi implements Flushable
 
     public function getMetaTags(): array
     {
-        if (empty($this->metatags)) {
+        if ($this->metatags === []) {
             $cacheKey = $this->getCacheKey();
             $cache = self::get_meta_tag_cache();
 
@@ -111,7 +111,7 @@ class MetaTagsApi implements Flushable
             }
 
 
-            if (empty($this->metatags)) {
+            if ($this->metatags === []) {
                 //base tag
                 $this->addToMetaTags('baseTag', 'base', ['href' => $this->baseUrl]);
                 $titleArray = [
@@ -344,11 +344,9 @@ class MetaTagsApi implements Flushable
             }
             $href = $this->iconToUrl('favicon.ico', $faviconImage, 16);
         }
-        if (! $this->iconSet) {
-            if ($href !== '' && $href !== '0') {
-                $this->iconSet = true;
-                $this->addToMetaTags('favicon', 'link', ['rel' => 'shortcut icon', 'href' => $href]);
-            }
+        if (!$this->iconSet && ($href !== '' && $href !== '0')) {
+            $this->iconSet = true;
+            $this->addToMetaTags('favicon', 'link', ['rel' => 'shortcut icon', 'href' => $href]);
         }
     }
 
@@ -357,21 +355,21 @@ class MetaTagsApi implements Flushable
      */
     protected function MetaTagsMetaTitle(): string
     {
-        if (! $this->metatagMetaTitle) {
+        if ($this->metatagMetaTitle === '' || $this->metatagMetaTitle === '0') {
             $this->metatagMetaTitle = '';
             if (Config::inst()->get(MetaTagsApi::class, 'use_separate_metatitle') && ! empty($this->page->MetaTitle)) {
                 $this->metatagMetaTitle = (string) $this->page->MetaTitle;
             }
 
-            if (! $this->metatagMetaTitle) {
+            if ($this->metatagMetaTitle === '' || $this->metatagMetaTitle === '0') {
                 $this->metatagMetaTitle = (string) $this->page->Title;
-                if (! $this->metatagMetaTitle) {
+                if ($this->metatagMetaTitle === '' || $this->metatagMetaTitle === '0') {
                     $this->metatagMetaTitle = (string) $this->page->MenuTitle;
                 }
             }
         }
 
-        return (string) $this->metatagMetaTitle;
+        return $this->metatagMetaTitle;
     }
 
     protected function shareImage(): ?Image
@@ -429,7 +427,7 @@ class MetaTagsApi implements Flushable
     protected function addToMetaTags(string $name, string $tag, ?array $attributes = [], $selfClosing = true, ?string $content = '')
     {
         $skipped = (array) Config::inst()->get(self::class, 'skipped_tags');
-        if (!empty($skipped) && in_array($name, $skipped)) {
+        if ($skipped !== [] && in_array($name, $skipped)) {
             return;
         }
         $this->metatags[$name] = [
@@ -451,11 +449,9 @@ class MetaTagsApi implements Flushable
         );
 
         $href = (string) ModuleResourceLoader::singleton()->resolveURL($file);
-        if (! $href) {
-            if ($faviconImage && $faviconImage instanceof Image && $faviconImage->exists()) {
-                $generatedImage = $faviconImage->ScaleWidth($size);
-                $href = (string) $generatedImage->getURL();
-            }
+        if (($href === '' || $href === '0') && ($faviconImage && $faviconImage instanceof Image && $faviconImage->exists())) {
+            $generatedImage = $faviconImage->ScaleWidth($size);
+            $href = (string) $generatedImage->getURL();
         }
 
         return $href;
