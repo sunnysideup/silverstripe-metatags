@@ -42,8 +42,8 @@ class MetaTagsApi implements Flushable
     protected array $shareImageCache = [];
 
     protected string $metatagMetaTitle = '';
-    protected bool $iconSet = false;
 
+    protected bool $iconSet = false;
 
     private static array $skipped_tags = [];
 
@@ -109,7 +109,6 @@ class MetaTagsApi implements Flushable
             if (! $this->page->ExtraMeta && $this->siteConfig->ExtraMeta) {
                 $this->page->ExtraMeta = $this->siteConfig->ExtraMeta;
             }
-
 
             if ($this->metatags === []) {
                 //base tag
@@ -290,7 +289,6 @@ class MetaTagsApi implements Flushable
      *     MetaTagsContentControllerEXT:
      *       twitter_handle: "relevant_twitter_handle"
      */
-
     protected function addTwitterTags(): void
     {
         $handle = $this->siteConfig->TwitterHandle ?: Config::inst()->get(self::class, 'twitter_handle');
@@ -344,7 +342,7 @@ class MetaTagsApi implements Flushable
             }
             $href = $this->iconToUrl('favicon.ico', $faviconImage, 16);
         }
-        if (!$this->iconSet && ($href !== '' && $href !== '0')) {
+        if (! $this->iconSet && ($href !== '' && $href !== '0')) {
             $this->iconSet = true;
             $this->addToMetaTags('favicon', 'link', ['rel' => 'shortcut icon', 'href' => $href]);
         }
@@ -467,7 +465,7 @@ class MetaTagsApi implements Flushable
     protected function addFontLink(string $fontURL): void
     {
         $parsedUrl = parse_url($fontURL);
-        if (!isset($parsedUrl['scheme'], $parsedUrl['host'])) {
+        if (! isset($parsedUrl['scheme'], $parsedUrl['host'])) {
             return;
         }
         $preconnectUrl = $parsedUrl['scheme'] . '://' . $parsedUrl['host'];
@@ -481,7 +479,7 @@ class MetaTagsApi implements Flushable
             'font-preconnect' . $preconnectUrl,
             'link',
             [
-                'rel'  => 'preconnect',
+                'rel' => 'preconnect',
                 'href' => $preconnectUrl,
             ]
         );
@@ -491,10 +489,10 @@ class MetaTagsApi implements Flushable
             'font-preload' . $fontURL,
             'link',
             [
-                'rel'     => 'preload',
-                'href'    => $fontURL,
-                'as'      => 'style',
-                'onload'  => 'this.onload=null;this.rel="stylesheet"',
+                'rel' => 'preload',
+                'href' => $fontURL,
+                'as' => 'style',
+                'onload' => 'this.onload=null;this.rel="stylesheet"',
             ]
         );
 
@@ -516,8 +514,8 @@ class MetaTagsApi implements Flushable
                 'font-preconnect-google-extra',
                 'link',
                 [
-                    'rel'      => 'preconnect',
-                    'href'     => 'https://fonts.gstatic.com',
+                    'rel' => 'preconnect',
+                    'href' => 'https://fonts.gstatic.com',
                     'crossorigin' => null,
                 ]
             );

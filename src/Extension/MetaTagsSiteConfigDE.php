@@ -2,8 +2,6 @@
 
 namespace Sunnysideup\MetaTags\Extension;
 
-use SilverStripe\AssetAdmin\Forms\UploadField;
-use SilverStripe\Assets\Image;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Extension;
 use SilverStripe\Forms\CheckboxField;
