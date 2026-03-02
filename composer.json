@@ -1,41 +1,47 @@
 {
-  "name": "sunnysideup/metatags",
-  "type": "silverstripe-vendormodule",
-  "description": "simplify your metatags - a ton of tools to increase SEO visibility, including file name adjustments",
-  "keywords": [
-    "Silverstripe-CMS",
-    "CMS",
-    "Silverstripe",
-    "metatags",
-    "search engine optimsation",
-    "seo",
-    "filenames",
-    "meta tags",
-    "meta data",
-    "google"
-  ],
-  "license": "BSD-3-Clause",
-  "authors": [
-    {
-      "name": "Nicolaas Francken",
-      "email": "modules@sunnysideup.co.nz",
-      "role": "lead developer"
+    "name": "sunnysideup/metatags",
+    "type": "silverstripe-vendormodule",
+    "description": "simplify your metatags - a ton of tools to increase SEO visibility, including file name adjustments",
+    "keywords": [
+        "Silverstripe-CMS",
+        "CMS",
+        "Silverstripe",
+        "metatags",
+        "search engine optimsation",
+        "seo",
+        "filenames",
+        "meta tags",
+        "meta data",
+        "google"
+    ],
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Nicolaas Francken",
+            "email": "modules@sunnysideup.co.nz",
+            "role": "lead developer"
+        }
+    ],
+    "require": {
+        "silverstripe/framework": "^6.0",
+        "silverstripe/recipe-cms": "^6.0",
+        "bimthebam/silverstripe-web-app-manifest": "^2.0"
+    },
+    "extra": {
+        "expose": [
+            "client"
+        ]
+    },
+    "autoload": {
+        "psr-4": {
+            "Sunnysideup\\MetaTags\\": "src/"
+        }
+    },
+    "yet-to-update": {
+        "sunnysideup/silverstripe-externalurlfield": {
+            "section": "require",
+            "current": "dev-master",
+            "reason": "no-compatible-stable-release"
+        }
     }
-  ],
-  "require": {
-    "silverstripe/framework": "^4.0 || ^5.0",
-    "silverstripe/recipe-cms": "^4.0 || ^5.0",
-    "bimthebam/silverstripe-web-app-manifest": "^1",
-    "sunnysideup/silverstripe-externalurlfield": "dev-master"
-  },
-  "extra": {
-    "expose": [
-      "client"
-    ]
-  },
-  "autoload": {
-    "psr-4": {
-      "Sunnysideup\\MetaTags\\": "src/"
-    }
-  }
 }

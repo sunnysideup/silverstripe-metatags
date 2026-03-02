@@ -88,17 +88,44 @@ class MetaTagsSTE extends Extension
     public function updateSettingsFields(FieldList $fields)
     {
         $owner = $this->getOwner();
+        /** @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $field in FieldList::addFieldToTab() from dynamic to FormField
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $insertBefore in FieldList::addFieldToTab() from dynamic to string|null
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $tabName in FieldList::addFieldToTab() from dynamic to string
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed return type for method FieldList::addFieldToTab() from dynamic to FieldList
+         */
         $fields->addFieldToTab(
             'Root.Facebook',
-            new HeaderField(
-                _t('MetaTagsSTE.FB_HOW_THIS_PAGE_IS_SHARED', 'How is this page shared on Facebook?'),
-                ''
-            )
+            HeaderField::create(_t('MetaTagsSTE.FB_HOW_THIS_PAGE_IS_SHARED', 'How is this page shared on Facebook?'), '')
         );
+        /** @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $field in FieldList::addFieldToTab() from dynamic to FormField
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $insertBefore in FieldList::addFieldToTab() from dynamic to string|null
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $tabName in FieldList::addFieldToTab() from dynamic to string
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed return type for method FieldList::addFieldToTab() from dynamic to FieldList
+         */
         $fields->addFieldToTab('Root.Facebook', $fieldTitle = ReadonlyField::create('fb_title', _t('MetaTagsSTE.FB_TITLE', 'Title'), $owner->Title));
+        /** @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $field in FieldList::addFieldToTab() from dynamic to FormField
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $insertBefore in FieldList::addFieldToTab() from dynamic to string|null
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $tabName in FieldList::addFieldToTab() from dynamic to string
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed return type for method FieldList::addFieldToTab() from dynamic to FieldList
+         */
         $fields->addFieldToTab('Root.Facebook', $fieldType = ReadonlyField::create('fb_type', _t('MetaTagsSTE.FB_TITLE', 'Type'), 'website'));
+        /** @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $field in FieldList::addFieldToTab() from dynamic to FormField
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $insertBefore in FieldList::addFieldToTab() from dynamic to string|null
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $tabName in FieldList::addFieldToTab() from dynamic to string
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed return type for method FieldList::addFieldToTab() from dynamic to FieldList
+         */
         $fields->addFieldToTab('Root.Facebook', $fieldSiteName = ReadonlyField::create('fb_type', _t('MetaTagsSTE.FB_SITE_NAME', 'Site Name'), SiteConfig::current_site_config()->Title));
+        /** @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $field in FieldList::addFieldToTab() from dynamic to FormField
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $insertBefore in FieldList::addFieldToTab() from dynamic to string|null
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $tabName in FieldList::addFieldToTab() from dynamic to string
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed return type for method FieldList::addFieldToTab() from dynamic to FieldList
+         */
         $fields->addFieldToTab('Root.Facebook', $fieldDescription = ReadonlyField::create('fb_description', _t('MetaTagsSTE.FB_DESCRIPTION', 'Description (from MetaDescription)'), $owner->MetaDescription));
+        /** @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $field in FieldList::addFieldToTab() from dynamic to FormField
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $insertBefore in FieldList::addFieldToTab() from dynamic to string|null
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $tabName in FieldList::addFieldToTab() from dynamic to string
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed return type for method FieldList::addFieldToTab() from dynamic to FieldList
+         */
         $fields->addFieldToTab(
             'Root.Facebook',
             $shareOnFacebookImageField = UploadField::create(
@@ -109,19 +136,29 @@ class MetaTagsSTE extends Extension
         $shareOnFacebookImageField->setFolderName('OpenGraphShareImages');
         $shareOnFacebookImageField->setDescription('Use images that are at least 1200 x 630 pixels for the best display on high resolution devices. At the minimum, you should use images that are 600 x 315 pixels.');
 
+        /** @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $field in FieldList::addFieldToTab() from dynamic to FormField
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $insertBefore in FieldList::addFieldToTab() from dynamic to string|null
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $tabName in FieldList::addFieldToTab() from dynamic to string
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed return type for method FieldList::addFieldToTab() from dynamic to FieldList
+         */
         $fields->addFieldToTab(
             'Root.Facebook',
             $shareOnFacebookImageField = LiteralField::create(
                 'fb_try_it_out',
-                '<h3><a href="https://www.facebook.com/sharer/sharer.php?u=' . urlencode($owner->AbsoluteLink()) . '">' . _t('MetaTagsSTE.FB_TRY_IT_OUT', 'Share on Facebook Now') . '</a></h3>',
+                '<h3><a href="https://www.facebook.com/sharer/sharer.php?u=' . urlencode((string) $owner->AbsoluteLink()) . '">' . _t('MetaTagsSTE.FB_TRY_IT_OUT', 'Share on Facebook Now') . '</a></h3>',
                 $owner->ShareOnFacebookImage()
             )
         );
+        /** @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $field in FieldList::addFieldToTab() from dynamic to FormField
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $insertBefore in FieldList::addFieldToTab() from dynamic to string|null
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $tabName in FieldList::addFieldToTab() from dynamic to string
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed return type for method FieldList::addFieldToTab() from dynamic to FieldList
+         */
         $fields->addFieldToTab(
             'Root.Facebook',
             LiteralField::create(
                 'fb_debug_link',
-                '<h3><a href="https://developers.facebook.com/tools/debug/sharing/?q=' . urlencode($owner->AbsoluteLink()) . '" target="_blank" rel="noreferrer noopener">' . _t('MetaTagsSTE.FB_DEBUGGER', 'Facebook Sharing Debugger') . '</a></h3>'
+                '<h3><a href="https://developers.facebook.com/tools/debug/sharing/?q=' . urlencode((string) $owner->AbsoluteLink()) . '" target="_blank" rel="noreferrer noopener">' . _t('MetaTagsSTE.FB_DEBUGGER', 'Facebook Sharing Debugger') . '</a></h3>'
             )
         );
         //right titles
@@ -156,6 +193,11 @@ class MetaTagsSTE extends Extension
             )
         );
 
+        /** @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $field in FieldList::addFieldToTab() from dynamic to FormField
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $insertBefore in FieldList::addFieldToTab() from dynamic to string|null
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $tabName in FieldList::addFieldToTab() from dynamic to string
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed return type for method FieldList::addFieldToTab() from dynamic to FieldList
+         */
         $fields->addFieldToTab(
             'Root.Settings',
             CheckboxField::create(
@@ -175,6 +217,11 @@ class MetaTagsSTE extends Extension
         if ($fields->fieldByName('Root.Main.Metadata')) {
             //separate MetaTitle?
             if (Config::inst()->get(MetaTagsApi::class, 'use_separate_metatitle')) {
+                /** @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $field in FieldList::addFieldToTab() from dynamic to FormField
+                 * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $insertBefore in FieldList::addFieldToTab() from dynamic to string|null
+                 * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $tabName in FieldList::addFieldToTab() from dynamic to string
+                 * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed return type for method FieldList::addFieldToTab() from dynamic to FieldList
+                 */
                 $fields->addFieldToTab(
                     'Root.Main.Metadata',
                     $allowField0 = TextField::create(
@@ -189,6 +236,11 @@ class MetaTagsSTE extends Extension
             }
 
             //choose automation for page
+            /** @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldsToTab: Changed type of parameter $fields in FieldList::addFieldsToTab() from dynamic to array
+             * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldsToTab: Changed type of parameter $insertBefore in FieldList::addFieldsToTab() from dynamic to string|null
+             * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldsToTab: Changed type of parameter $tabName in FieldList::addFieldsToTab() from dynamic to string
+             * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldsToTab: Changed return type for method FieldList::addFieldsToTab() from dynamic to FieldList
+             */
             $fields->addFieldsToTab(
                 'Root.Main.Metadata',
                 [
@@ -214,11 +266,20 @@ class MetaTagsSTE extends Extension
                         $newField = $oldField->performReadonlyTransformation();
                         //$newField->setTitle($newField->Title());
                         $newField->setDescription(_t('MetaTags.AUTOMATICALLY_UPDATED', 'Automatically updated when you save this page.'));
+                        /** @TODO SSU RECTOR UPGRADE TASK - FieldList::replaceField: Changed type of parameter $dataFieldOnly in FieldList::replaceField() from dynamic to bool
+                         * @TODO SSU RECTOR UPGRADE TASK - FieldList::replaceField: Changed type of parameter $fieldName in FieldList::replaceField() from dynamic to string
+                         * @TODO SSU RECTOR UPGRADE TASK - FieldList::replaceField: Changed type of parameter $newField in FieldList::replaceField() from dynamic to FormField
+                         * @TODO SSU RECTOR UPGRADE TASK - FieldList::replaceField: Changed return type for method FieldList::replaceField() from dynamic to bool
+                         */
                         $fields->replaceField($fieldName, $newField);
                     }
                 }
             }
 
+            /** @TODO SSU RECTOR UPGRADE TASK - FieldList::removeByName: Changed type of parameter $dataFieldOnly in FieldList::removeByName() from dynamic to bool
+             * @TODO SSU RECTOR UPGRADE TASK - FieldList::removeByName: Changed type of parameter $fieldName in FieldList::removeByName() from dynamic to string|array
+             * @TODO SSU RECTOR UPGRADE TASK - FieldList::removeByName: Changed return type for method FieldList::removeByName() from dynamic to FieldList
+             */
             $fields->removeByName('ExtraMeta');
         }
 
@@ -241,6 +302,7 @@ class MetaTagsSTE extends Extension
         if ($owner instanceof ErrorPage) {
             $owner->ExcludeFromSearchEngines = true;
         }
+
         $fields = $this->updatedFieldsArray();
         if ([] !== $fields) {
             // if UpdateMeta checkbox is checked, update metadata based on content and title
@@ -275,11 +337,11 @@ class MetaTagsSTE extends Extension
         }
     }
 
-    public function MetaComponents(&$tags)
+    public function updateMetaComponents(&$tags)
     {
         // $owner = $this->getOwner();
         $provider = Config::inst()->get(self::class, 'metatag_builder_class');
-        $builder = Injector::inst()->get($provider, false, [$this->owner]);
+        $builder = Injector::inst()->get($provider, false, [$this->getOwner()]);
         $tags = array_merge($builder->getMetaTags(), $tags);
         foreach ($tags as $key => $array) {
             $tags[$key]['tag'] = $array['tag'] ?? 'meta';
@@ -288,10 +350,12 @@ class MetaTagsSTE extends Extension
             $tags[$key]['content'] = $array['content'] ?? '';
             $tags[$key]['html'] = $array['html'] ?? '';
         }
+
         $skipped = Config::inst()->get(MetaTagsApi::class, 'skipped_tags');
         foreach ($skipped as $key) {
             unset($tags[$key]);
         }
+
         unset($tags['ExtraMeta']);
 
         return $tags;

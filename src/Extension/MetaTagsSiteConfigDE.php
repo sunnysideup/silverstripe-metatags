@@ -48,7 +48,7 @@ class MetaTagsSiteConfigDE extends Extension
         'TwitterHandle' => 'HTMLText',
     ];
 
-    public function populateDefaults()
+    public function onAfterPopulateDefaults()
     {
         $owner = $this->getOwner();
         $owner->MetaDataCopyright = '';
@@ -130,6 +130,12 @@ class MetaTagsSiteConfigDE extends Extension
                     ->setDescription('e.g. BarackObama - how you address people on Twitter (x.com) but then without the @ sign.')
             );
         }
+
+        /** @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $field in FieldList::addFieldToTab() from dynamic to FormField
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $insertBefore in FieldList::addFieldToTab() from dynamic to string|null
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $tabName in FieldList::addFieldToTab() from dynamic to string
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed return type for method FieldList::addFieldToTab() from dynamic to FieldList
+         */
         $fields->addFieldToTab(
             'Root.SearchEngines',
             $tabSet = TabSet::create(
@@ -157,10 +163,10 @@ class MetaTagsSiteConfigDE extends Extension
         $this->getOwner()->TwitterHandle = str_replace('@', '', (string) $this->getOwner()->TwitterHandle);
     }
 
-    public function requireDefaultRecords()
+    public function onRequireDefaultRecords()
     {
-        $faviconQuery = 'SHOW COLUMNS FROM SiteConfig LIKE \'FaviconID\'';
-        $webAppIconQuery = 'SHOW COLUMNS FROM SiteConfig LIKE \'WebAppManifestIconID\'';
+        $faviconQuery = "SHOW COLUMNS FROM SiteConfig LIKE 'FaviconID'";
+        $webAppIconQuery = "SHOW COLUMNS FROM SiteConfig LIKE 'WebAppManifestIconID'";
 
         $faviconResult = DB::query($faviconQuery);
         $webAppIconResult = DB::query($webAppIconQuery);
