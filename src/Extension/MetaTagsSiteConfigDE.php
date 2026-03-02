@@ -48,7 +48,7 @@ class MetaTagsSiteConfigDE extends Extension
         'TwitterHandle' => 'HTMLText',
     ];
 
-    public function populateDefaults()
+    public function onAfterPopulateDefaults()
     {
         $owner = $this->getOwner();
         $owner->MetaDataCopyright = '';
@@ -130,6 +130,7 @@ class MetaTagsSiteConfigDE extends Extension
                     ->setDescription('e.g. BarackObama - how you address people on Twitter (x.com) but then without the @ sign.')
             );
         }
+
         $fields->addFieldToTab(
             'Root.SearchEngines',
             $tabSet = TabSet::create(
@@ -157,10 +158,10 @@ class MetaTagsSiteConfigDE extends Extension
         $this->getOwner()->TwitterHandle = str_replace('@', '', (string) $this->getOwner()->TwitterHandle);
     }
 
-    public function requireDefaultRecords()
+    public function onRequireDefaultRecords()
     {
-        $faviconQuery = 'SHOW COLUMNS FROM SiteConfig LIKE \'FaviconID\'';
-        $webAppIconQuery = 'SHOW COLUMNS FROM SiteConfig LIKE \'WebAppManifestIconID\'';
+        $faviconQuery = "SHOW COLUMNS FROM SiteConfig LIKE 'FaviconID'";
+        $webAppIconQuery = "SHOW COLUMNS FROM SiteConfig LIKE 'WebAppManifestIconID'";
 
         $faviconResult = DB::query($faviconQuery);
         $webAppIconResult = DB::query($webAppIconQuery);
