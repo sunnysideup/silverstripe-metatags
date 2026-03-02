@@ -23,10 +23,9 @@
         }
     ],
     "require": {
-        "silverstripe/framework": "^4.0 || ^5.0",
-        "silverstripe/recipe-cms": "^4.0 || ^5.0",
-        "bimthebam/silverstripe-web-app-manifest": "^1",
-        "sunnysideup/silverstripe-externalurlfield": "dev-master"
+        "silverstripe/framework": "^6.0",
+        "silverstripe/recipe-cms": "^6.0",
+        "bimthebam/silverstripe-web-app-manifest": "^2.0"
     },
     "extra": {
         "expose": [
@@ -36,6 +35,13 @@
     "autoload": {
         "psr-4": {
             "Sunnysideup\\MetaTags\\": "src/"
+        }
+    },
+    "yet-to-update": {
+        "sunnysideup/silverstripe-externalurlfield": {
+            "section": "require",
+            "current": "dev-master",
+            "reason": "no-compatible-stable-release"
         }
     }
 }
