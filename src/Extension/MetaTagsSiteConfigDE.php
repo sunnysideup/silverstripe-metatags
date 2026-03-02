@@ -131,6 +131,11 @@ class MetaTagsSiteConfigDE extends Extension
             );
         }
 
+        /** @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $field in FieldList::addFieldToTab() from dynamic to FormField
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $insertBefore in FieldList::addFieldToTab() from dynamic to string|null
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed type of parameter $tabName in FieldList::addFieldToTab() from dynamic to string
+         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldToTab: Changed return type for method FieldList::addFieldToTab() from dynamic to FieldList
+         */
         $fields->addFieldToTab(
             'Root.SearchEngines',
             $tabSet = TabSet::create(
