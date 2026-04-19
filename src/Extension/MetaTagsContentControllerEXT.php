@@ -27,7 +27,7 @@ class MetaTagsContentControllerEXT extends Extension
      */
     protected function addBasicMetatagRequirements($force = false)
     {
-        if (isset($_SERVER['HTTP_USER_AGENT']) && (false !== strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE'))) {
+        if (isset($_SERVER['HTTP_USER_AGENT']) && (str_contains((string) $_SERVER['HTTP_USER_AGENT'], 'MSIE'))) {
             header('X-UA-Compatible: IE=edge,chrome=1');
         }
     }
