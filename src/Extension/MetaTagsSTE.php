@@ -90,10 +90,7 @@ class MetaTagsSTE extends Extension
         $owner = $this->getOwner();
         $fields->addFieldToTab(
             'Root.Facebook',
-            new HeaderField(
-                _t('MetaTagsSTE.FB_HOW_THIS_PAGE_IS_SHARED', 'How is this page shared on Facebook?'),
-                ''
-            )
+            HeaderField::create(_t('MetaTagsSTE.FB_HOW_THIS_PAGE_IS_SHARED', 'How is this page shared on Facebook?'), '')
         );
         $fields->addFieldToTab('Root.Facebook', $fieldTitle = ReadonlyField::create('fb_title', _t('MetaTagsSTE.FB_TITLE', 'Title'), $owner->Title));
         $fields->addFieldToTab('Root.Facebook', $fieldType = ReadonlyField::create('fb_type', _t('MetaTagsSTE.FB_TITLE', 'Type'), 'website'));
@@ -113,7 +110,7 @@ class MetaTagsSTE extends Extension
             'Root.Facebook',
             $shareOnFacebookImageField = LiteralField::create(
                 'fb_try_it_out',
-                '<h3><a href="https://www.facebook.com/sharer/sharer.php?u=' . urlencode($owner->AbsoluteLink()) . '">' . _t('MetaTagsSTE.FB_TRY_IT_OUT', 'Share on Facebook Now') . '</a></h3>',
+                '<h3><a href="https://www.facebook.com/sharer/sharer.php?u=' . urlencode((string) $owner->AbsoluteLink()) . '">' . _t('MetaTagsSTE.FB_TRY_IT_OUT', 'Share on Facebook Now') . '</a></h3>',
                 $owner->ShareOnFacebookImage()
             )
         );
@@ -121,7 +118,7 @@ class MetaTagsSTE extends Extension
             'Root.Facebook',
             LiteralField::create(
                 'fb_debug_link',
-                '<h3><a href="https://developers.facebook.com/tools/debug/sharing/?q=' . urlencode($owner->AbsoluteLink()) . '" target="_blank" rel="noreferrer noopener">' . _t('MetaTagsSTE.FB_DEBUGGER', 'Facebook Sharing Debugger') . '</a></h3>'
+                '<h3><a href="https://developers.facebook.com/tools/debug/sharing/?q=' . urlencode((string) $owner->AbsoluteLink()) . '" target="_blank" rel="noreferrer noopener">' . _t('MetaTagsSTE.FB_DEBUGGER', 'Facebook Sharing Debugger') . '</a></h3>'
             )
         );
         //right titles
@@ -241,6 +238,7 @@ class MetaTagsSTE extends Extension
         if ($owner instanceof ErrorPage) {
             $owner->ExcludeFromSearchEngines = true;
         }
+
         $fields = $this->updatedFieldsArray();
         if ([] !== $fields) {
             // if UpdateMeta checkbox is checked, update metadata based on content and title
@@ -275,11 +273,11 @@ class MetaTagsSTE extends Extension
         }
     }
 
-    public function MetaComponents(&$tags)
+    public function updateMetaComponents(&$tags)
     {
         // $owner = $this->getOwner();
         $provider = Config::inst()->get(self::class, 'metatag_builder_class');
-        $builder = Injector::inst()->get($provider, false, [$this->owner]);
+        $builder = Injector::inst()->get($provider, false, [$this->getOwner()]);
         $tags = array_merge($builder->getMetaTags(), $tags);
         foreach ($tags as $key => $array) {
             $tags[$key]['tag'] = $array['tag'] ?? 'meta';
@@ -288,10 +286,12 @@ class MetaTagsSTE extends Extension
             $tags[$key]['content'] = $array['content'] ?? '';
             $tags[$key]['html'] = $array['html'] ?? '';
         }
+
         $skipped = Config::inst()->get(MetaTagsApi::class, 'skipped_tags');
         foreach ($skipped as $key) {
             unset($tags[$key]);
         }
+
         unset($tags['ExtraMeta']);
 
         return $tags;

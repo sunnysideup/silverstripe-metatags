@@ -19,7 +19,6 @@ use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
-use Sunnysideup\MetaTags\Extension\MetaTagsContentControllerEXT;
 
 class MetaTagsApi implements Flushable
 {
@@ -30,8 +29,6 @@ class MetaTagsApi implements Flushable
     public $this;
 
     public $baseURL;
-
-    protected $page;
 
     protected string $baseUrl = '';
 
@@ -85,9 +82,8 @@ class MetaTagsApi implements Flushable
 
     private static $favicon_themed_dir = 'dist/favicons';
 
-    public function __construct($page)
+    public function __construct(protected $page)
     {
-        $this->page = $page;
         $this->baseUrl = Director::absoluteBaseURL();
         $this->siteConfig = SiteConfig::current_site_config();
     }
@@ -105,6 +101,7 @@ class MetaTagsApi implements Flushable
                     $this->metatags = [];
                 }
             }
+
             // always run!
             if (! $this->page->ExtraMeta && $this->siteConfig->ExtraMeta) {
                 $this->page->ExtraMeta = $this->siteConfig->ExtraMeta;
@@ -131,9 +128,11 @@ class MetaTagsApi implements Flushable
                 } elseif ($this->Config()->get('always_use_canonical')) {
                     $canonicalLink = $this->page->AbsoluteLink();
                 }
+
                 if ($canonicalLink) {
                     $this->addToMetaTags('canonical', 'link', ['rel' => 'canonical', 'href' => Director::absoluteURL($canonicalLink)]);
                 }
+
                 //these go first - for some reason ...
                 $this->addToMetaTags('ie', 'meta', ['http-equiv' => 'X-UA-Compatible', 'content' => 'IE=edge']);
                 $this->addToMetaTags('viewport', 'meta', ['name' => 'viewport', 'content' => Config::inst()->get(self::class, 'viewport_setting')]);
@@ -152,9 +151,11 @@ class MetaTagsApi implements Flushable
                 if (! $this->siteConfig->MetaDataCopyright) {
                     $this->siteConfig->MetaDataCopyright = $this->siteConfig->Title;
                 }
+
                 if ($this->page instanceof ErrorPage) {
                     $this->page->ExcludeFromSearchEngines = true;
                 }
+
                 $botsValue = $this->page->ExcludeFromSearchEngines ? $noopd . 'none, noindex, nofollow' : $noopd . 'all, index, follow';
                 $this->addToMetaTags('robots', 'meta', ['name' => 'robots', 'content' => $botsValue]);
                 $this->addToMetaTags('googlebot', 'meta', ['name' => 'googlebot', 'content' => $botsValue]);
@@ -215,6 +216,7 @@ class MetaTagsApi implements Flushable
         if (! isset($_SERVER['REQUEST_URI'])) {
             $_SERVER['REQUEST_URI'] = '';
         }
+
         // if metatagsCacheKey returns false then it should not be cached.
         if (false !== $add) {
             $cacheKey =
@@ -234,6 +236,7 @@ class MetaTagsApi implements Flushable
                 $cacheKey .= $add;
             }
         }
+
         return $cacheKey;
     }
 
@@ -304,8 +307,8 @@ class MetaTagsApi implements Flushable
 
         $tags = [
             'card' => 'summary_large_image',
-            'site' => '@' . ltrim($handle, '@'),
-            'creator' => '@' . ltrim($handle, '@'), // X now prefers a creator tag
+            'site' => '@' . ltrim((string) $handle, '@'),
+            'creator' => '@' . ltrim((string) $handle, '@'), // X now prefers a creator tag
             'title' => $metaTitle,
             'description' => $metaDesc,
             'url' => $metaUrl,
@@ -340,8 +343,10 @@ class MetaTagsApi implements Flushable
                     $faviconImage = false;
                 }
             }
+
             $href = $this->iconToUrl('favicon.ico', $faviconImage, 16);
         }
+
         if (! $this->iconSet && ($href !== '' && $href !== '0')) {
             $this->iconSet = true;
             $this->addToMetaTags('favicon', 'link', ['rel' => 'shortcut icon', 'href' => $href]);
@@ -428,6 +433,7 @@ class MetaTagsApi implements Flushable
         if ($skipped !== [] && in_array($name, $skipped)) {
             return;
         }
+
         $this->metatags[$name] = [
             'tag' => $tag,
             'attributes' => $attributes,
@@ -468,12 +474,14 @@ class MetaTagsApi implements Flushable
         if (! isset($parsedUrl['scheme'], $parsedUrl['host'])) {
             return;
         }
+
         $preconnectUrl = $parsedUrl['scheme'] . '://' . $parsedUrl['host'];
 
         // extras for google fonts
         if (stripos($preconnectUrl, 'fonts.googleapis.com') !== false) {
             $this->addGoogleFontsExtras();
         }
+
         // Preconnect
         $this->addToMetaTags(
             'font-preconnect' . $preconnectUrl,
@@ -502,7 +510,7 @@ class MetaTagsApi implements Flushable
             'noscript',
             [],
             false,
-            '<link rel=\'stylesheet\' href=\'' . $fontURL . '\'>'
+            "<link rel='stylesheet' href='" . $fontURL . "'>"
         );
     }
 
