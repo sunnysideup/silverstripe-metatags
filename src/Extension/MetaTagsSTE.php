@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\MetaTags\Extension;
 
+use SilverStripe\Forms\FormField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\Image;
 use SilverStripe\CMS\Controllers\RootURLController;
@@ -169,7 +170,7 @@ class MetaTagsSTE extends Extension
     public function updateCMSFields(FieldList $fields)
     {
         $owner = $this->getOwner();
-        if ($fields->fieldByName('Root.Main.Metadata')) {
+        if ($fields->fieldByName('Root.Main.Metadata') instanceof FormField) {
             //separate MetaTitle?
             if (Config::inst()->get(MetaTagsApi::class, 'use_separate_metatitle')) {
                 $fields->addFieldToTab(
@@ -207,7 +208,7 @@ class MetaTagsSTE extends Extension
             if ([] !== $automatedFields) {
                 foreach (array_keys($automatedFields) as $fieldName) {
                     $oldField = $fields->dataFieldByName($fieldName);
-                    if ($oldField) {
+                    if ($oldField instanceof FormField) {
                         $newField = $oldField->performReadonlyTransformation();
                         //$newField->setTitle($newField->Title());
                         $newField->setDescription(_t('MetaTags.AUTOMATICALLY_UPDATED', 'Automatically updated when you save this page.'));
