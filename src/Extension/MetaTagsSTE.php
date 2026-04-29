@@ -18,6 +18,7 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\OptionsetField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\ToggleCompositeField;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\SiteConfig\SiteConfig;
 use Sunnysideup\ExternalURLField\ExternalURLField;
@@ -170,51 +171,54 @@ class MetaTagsSTE extends Extension
     public function updateCMSFields(FieldList $fields)
     {
         $owner = $this->getOwner();
-        if ($fields->fieldByName('Root.Main.Metadata') instanceof FormField) {
-            //separate MetaTitle?
+        $toggleField = $fields->fieldByName('Root.Main.Metadata');
+        if ($toggleField instanceof ToggleCompositeField) {
+            $fieldsToAdd = [];
+
+            // separate MetaTitle?
             if (Config::inst()->get(MetaTagsApi::class, 'use_separate_metatitle')) {
-                $fields->addFieldToTab(
-                    'Root.Main.Metadata',
-                    $allowField0 = TextField::create(
-                        'MetaTitle',
-                        _t('SiteTree.METATITLE', 'Meta Title')
-                    ),
-                    'MetaDescription'
+                $metaTitleField = TextField::create(
+                    'MetaTitle',
+                    _t('SiteTree.METATITLE', 'Meta Title')
                 );
-                $allowField0->setDescription(
+                $metaTitleField->setDescription(
                     _t('SiteTree.METATITLE_EXPLANATION', 'Leave this empty to use the page title')
                 );
+                $fieldsToAdd[] = $metaTitleField;
             }
 
-            //choose automation for page
-            $fields->addFieldsToTab(
-                'Root.Main.Metadata',
-                [
-                    OptionsetField::create(
-                        'AutomateMetatags',
-                        _t('MetaManager.UPDATEMETA', 'Automation for this page ...'),
-                        $this->AutomateMetatagsOptions()
-                    )->setDescription(
-                        _t('MetatagSTE.BY_DEFAULT', '<strong><a href="/admin/settings/">Default Settings</a></strong>:') .
-                            $this->defaultSettingDescription()
-                    ),
-                    ExternalURLField::create('CanonicalURL', 'Canonical URL')
-                        ->setDescription('OPTIONAL: If you would like to specify a canonical URL for this page, enter it here. This is useful if you have multiple URLs for the same content, or if you would like to specify a URL for a page that is not on this site.'),
-                ],
-                'MetaDescription'
+            // choose automation for page
+            $fieldsToAdd[] = OptionsetField::create(
+                'AutomateMetatags',
+                _t('MetaManager.UPDATEMETA', 'Automation for this page ...'),
+                $this->AutomateMetatagsOptions()
+            )->setDescription(
+                _t('MetatagSTE.BY_DEFAULT', '<strong><a href="/admin/settings/">Default Settings</a></strong>:')
+                    . $this->defaultSettingDescription()
             );
 
+            $fieldsToAdd[] = ExternalURLField::create('CanonicalURL', 'Canonical URL')
+                ->setDescription('OPTIONAL: If you would like to specify a canonical URL for this page, enter it here. This is useful if you have multiple URLs for the same content, or if you would like to specify a URL for a page that is not on this site.');
+
+            // mark automated fields as readonly
             $automatedFields = $this->updatedFieldsArray();
             if ([] !== $automatedFields) {
                 foreach (array_keys($automatedFields) as $fieldName) {
                     $oldField = $fields->dataFieldByName($fieldName);
                     if ($oldField instanceof FormField) {
                         $newField = $oldField->performReadonlyTransformation();
-                        //$newField->setTitle($newField->Title());
-                        $newField->setDescription(_t('MetaTags.AUTOMATICALLY_UPDATED', 'Automatically updated when you save this page.'));
+                        $newField->setDescription(
+                            _t('MetaTags.AUTOMATICALLY_UPDATED', 'Automatically updated when you save this page.')
+                        );
                         $fields->replaceField($fieldName, $newField);
                     }
                 }
+            }
+
+            // push all accumulated fields onto the Metadata toggle
+            /** @var FormField $field */
+            foreach ($fieldsToAdd as $field) {
+                $toggleField->push($field);
             }
 
             $fields->removeByName('ExtraMeta');
