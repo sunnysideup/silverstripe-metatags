@@ -198,7 +198,12 @@ class MetaTagsSTE extends Extension
             );
 
             $fieldsToAdd[] = ExternalURLField::create('CanonicalURL', 'Canonical URL')
-                ->setDescription('OPTIONAL: If you would like to specify a canonical URL for this page, enter it here. This is useful if you have multiple URLs for the same content, or if you would like to specify a URL for a page that is not on this site.');
+                ->setDescription(
+                    '
+                    A canonical url is a source of truth address (e.g. https://www.example.com/hello).
+                    This is useful, for example, if you have multiple URLs for the same content.
+                    Please use with care! Only use when strictly necessary, and ensure that the canonical URL points to a page with the same content, otherwise you may be penalised by search engines.'
+                );
 
             // mark automated fields as readonly
             $automatedFields = $this->updatedFieldsArray();
