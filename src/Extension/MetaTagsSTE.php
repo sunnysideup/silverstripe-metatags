@@ -74,7 +74,12 @@ class MetaTagsSTE extends Extension
     private static $owns = [
         'ShareOnFacebookImage',
     ];
-
+    private static array $scaffold_cms_fields_settings = [
+        'ignoreFields' => [
+            'ShareOnFacebookImage',
+            'ShareOnFacebookImageID',
+        ]
+    ];
     /**
      * standard SS method.
      *
