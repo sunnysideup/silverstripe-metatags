@@ -82,12 +82,10 @@ class MetaTagsSTE extends Extension
             'AutomateMetatags',
             'ExcludeFromSearchEngines',
             'CanonicalURL',
+            'ShareOnFacebookImage',
         ],
         'includeRelations' => [],
         'restrictRelations' => [],
-        'ignoreRelations' => [
-            'ShareOnFacebookImage',
-        ],
         'restrictFields' => [],
     ];
 
