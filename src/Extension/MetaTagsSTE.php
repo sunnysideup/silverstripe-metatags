@@ -51,6 +51,7 @@ class MetaTagsSTE extends Extension
         'CanonicalURL' => 'ExternalURL(700)',
     ];
 
+
     /**
      * standard SS method.
      *
@@ -74,12 +75,22 @@ class MetaTagsSTE extends Extension
     private static $owns = [
         'ShareOnFacebookImage',
     ];
+
     private static array $scaffold_cms_fields_settings = [
         'ignoreFields' => [
+            'MetaTitle',
+            'AutomateMetatags',
+            'ExcludeFromSearchEngines',
+            'CanonicalURL',
+        ],
+        'includeRelations' => [],
+        'restrictRelations' => [],
+        'ignoreRelations' => [
             'ShareOnFacebookImage',
-            'ShareOnFacebookImageID',
-        ]
+        ],
+        'restrictFields' => [],
     ];
+
     /**
      * standard SS method.
      *
