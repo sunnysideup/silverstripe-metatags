@@ -134,6 +134,17 @@ class MetaTagsApi implements Flushable
                 if ($canonicalLink) {
                     $this->addToMetaTags('canonical', 'link', ['rel' => 'canonical', 'href' => Director::absoluteURL($canonicalLink)]);
                 }
+
+                if ($controller && $controller->hasMethod('AdjacentPaginationLinks')) {
+                    $adjacentLinks = $controller->AdjacentPaginationLinks();
+                    if (!empty($adjacentLinks['Previous'])) {
+                        $this->addToMetaTags('prev', 'link', ['rel' => 'prev', 'href' => Director::absoluteURL($adjacentLinks['Previous'])]);
+                    }
+                    if (!empty($adjacentLinks['Next'])) {
+                        $this->addToMetaTags('next', 'link', ['rel' => 'next', 'href' => Director::absoluteURL($adjacentLinks['Next'])]);
+                    }
+                }
+
                 //these go first - for some reason ...
                 $this->addToMetaTags('ie', 'meta', ['http-equiv' => 'X-UA-Compatible', 'content' => 'IE=edge']);
                 $this->addToMetaTags('viewport', 'meta', ['name' => 'viewport', 'content' => Config::inst()->get(self::class, 'viewport_setting')]);
