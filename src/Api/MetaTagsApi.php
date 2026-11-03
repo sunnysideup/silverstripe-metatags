@@ -49,6 +49,14 @@ class MetaTagsApi implements Flushable
 
     private static array $always_use_canonical = [];
 
+    /**
+     * Only these query parameters are part of the meta tags cache key (e.g. 'start', 'searchfilter').
+     * Empty = the query string is ignored entirely, so that ?x=random can not create unlimited cache entries.
+     *
+     * @var array<int, string>
+     */
+    private static array $cache_relevant_query_vars = [];
+
     private static $fonts = [];
 
     /**
@@ -223,9 +231,6 @@ class MetaTagsApi implements Flushable
             $add = $this->page->metatagsCacheKey();
         }
 
-        if (! isset($_SERVER['REQUEST_URI'])) {
-            $_SERVER['REQUEST_URI'] = '';
-        }
         // if metatagsCacheKey returns false then it should not be cached.
         if (false !== $add) {
             $cacheKey =
@@ -235,7 +240,7 @@ class MetaTagsApi implements Flushable
                 . strtotime((string) $this->siteConfig->LastEdited) . '_'
                 . $this->baseUrl . '_'
                 . Versioned::get_stage()
-                . filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL);
+                . '_' . $this->getCacheKeyUrlPart();
             $cacheKey = preg_replace(
                 '#[^a-z0-9]#i',
                 '_',
@@ -244,8 +249,31 @@ class MetaTagsApi implements Flushable
             if ($add) {
                 $cacheKey .= $add;
             }
+            // cap the length of the key
+            if (strlen($cacheKey) > 200) {
+                $cacheKey = substr($cacheKey, 0, 150) . '_' . md5($cacheKey);
+            }
         }
         return $cacheKey;
+    }
+
+    /**
+     * the path and only the allow-listed query parameters of the current request.
+     */
+    protected function getCacheKeyUrlPart(): string
+    {
+        $uri = (string) ($_SERVER['REQUEST_URI'] ?? '');
+        $path = (string) (parse_url($uri, PHP_URL_PATH) ?: '');
+        parse_str((string) parse_url($uri, PHP_URL_QUERY), $vars);
+        $relevant = array_flip((array) $this->config()->get('cache_relevant_query_vars'));
+        $vars = array_intersect_key($vars, $relevant);
+        foreach ($vars as $key => $value) {
+            $vars[$key] = is_scalar($value) ? substr((string) $value, 0, 100) : '';
+        }
+        ksort($vars);
+        $query = $vars ? '?' . http_build_query($vars) : '';
+
+        return md5(substr($path, 0, 500) . $query);
     }
 
     protected static function get_meta_tag_cache()
